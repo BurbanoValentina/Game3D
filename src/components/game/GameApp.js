@@ -19,7 +19,6 @@ import SettingsScreen from '../ajustes/SettingsScreen';
 import TutorialScreen from '../tutorial/TutorialScreen';
 import TutorialGame from '../tutorial/TutorialGame';
 import CreditsScreen from '../credits/CreditsScreen';
-import BootSequence from '../tutorial/BootSequence';
 import CinematicScreen from '../tutorial/CinematicScreen';
 import GameViewport from '../level1/GameViewport';
 import PuzzleModal from '../level1/PuzzleModal';
@@ -90,7 +89,6 @@ export default function GameApp() {
       {gameState === GameStates.TUTORIAL && <TutorialScreen />}
       {gameState === GameStates.TUTORIAL_GAME && <TutorialGame />}
       {gameState === GameStates.CREDITS && <CreditsScreen />}
-      {gameState === GameStates.BOOT && <BootSequence />}
       {gameState === GameStates.CINEMATIC && <CinematicScreen />}
 
       {viewportStates.includes(gameState) && <GameViewport />}
