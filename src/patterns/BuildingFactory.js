@@ -16,7 +16,7 @@ const CODE_SNIPPETS = [
   'export default OASIS;', 'while (system.active) {',
   'try { decrypt(); }', 'import { Key } from "halliday";',
   'eva.solve(puzzle);', 'render(scene, camera);',
-  '// TODO: find keys', 'suyin.echo();', 'zuri.memory();',
+  '// TODO: find keys', 'memory.echo();', 'trace.memory();',
 ];
 
 const BuildingFactory = {
