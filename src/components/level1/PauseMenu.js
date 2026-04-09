@@ -54,7 +54,7 @@ export default function PauseMenu() {
   const [tab, setTab] = useState(0);
 
   const handleResume = () => setGameState(GameStates.PLAYING);
-  const handleQuit = () => { audioManager.stopAll(); resetGame(); setGameState(GameStates.MAIN_MENU); };
+  const handleQuit = () => { audioManager.stopAll(); resetGame(); setGameState(GameStates.TRAINING_ROOM); };
 
   const handleVolumeChange = (key, val) => {
     updateSetting(key, val);
