@@ -7,7 +7,7 @@
 
 ## 🎮 Descripción
 
-Eva es la última jugadora en el OASIS. Sus compañeras Suyin y Zuri fueron
+Eva es la última jugadora en el OASIS. Sus compañeras fueron
 eliminadas permanentemente por el Protocolo Veneno_Zagar. Ahora Eva debe
 encontrar las 5 llaves de Halliday sola, atravesando mundos corruptos
 mientras el sistema se desmorona a su alrededor.
