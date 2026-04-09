@@ -32,8 +32,7 @@ export function createGameLoop({
     memoryEchoActive = true;
     memoryEchoTimer = MEMORY_CONFIG.durationFrames;
     setState({ memoryActive: true, memoryAvailable: false });
-    worldAssets.suyinGhost.visible = true;
-    worldAssets.zuriGhost.visible = true;
+    worldAssets.memoryGhost.visible = true;
     audioManager.playInteract();
   }));
 
@@ -264,18 +263,13 @@ export function createGameLoop({
     if (memoryEchoActive) {
       memoryEchoTimer--;
       setState({ memoryTimer: Math.ceil(memoryEchoTimer / 60) });
-      const sg = worldAssets.suyinGhost;
-      const zg = worldAssets.zuriGhost;
-      sg.mesh.material.opacity = 0.3 + Math.sin(time * 4) * 0.15;
-      sg.mesh.position.x = player.position.x + Math.sin(time * 2) * 5;
-      sg.mesh.position.z = player.position.z + Math.cos(time * 2) * 5;
-      zg.mesh.material.opacity = 0.3 + Math.cos(time * 4) * 0.15;
-      zg.mesh.position.x = player.position.x + Math.cos(time * 1.5) * 5;
-      zg.mesh.position.z = player.position.z + Math.sin(time * 1.5) * 5;
+      const ghost = worldAssets.memoryGhost;
+      ghost.mesh.material.opacity = 0.3 + Math.sin(time * 4) * 0.15;
+      ghost.mesh.position.x = player.position.x + Math.sin(time * 2) * 5;
+      ghost.mesh.position.z = player.position.z + Math.cos(time * 2) * 5;
       if (memoryEchoTimer <= 0) {
         memoryEchoActive = false;
-        sg.mesh.material.opacity = 0;
-        zg.mesh.material.opacity = 0;
+        ghost.mesh.material.opacity = 0;
         setState({ memoryActive: false });
       }
     }
@@ -384,7 +378,7 @@ export function createGameLoop({
 
     // ── Random Ghost Appearances ──
     if (!memoryEchoActive && Math.random() < 0.001) {
-      const ghost = Math.random() > 0.5 ? worldAssets.suyinGhost : worldAssets.zuriGhost;
+      const ghost = worldAssets.memoryGhost;
       ghost.mesh.material.opacity = 0.12;
       ghost.mesh.position.set(player.position.x + (Math.random() - 0.5) * 20, 1.75, player.position.z + (Math.random() - 0.5) * 20);
       setTimeout(() => { ghost.mesh.material.opacity = 0; }, 2000);
