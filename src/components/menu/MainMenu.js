@@ -58,7 +58,6 @@ function MenuIcon({ type }) {
 
 export default function MainMenu() {
   const setGameState = useGameStore((s) => s.setGameState);
-  const resetGame = useGameStore((s) => s.resetGame);
   const [visible, setVisible] = useState(false);
   const [corruptPct, setCorruptPct] = useState(0);
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -72,12 +71,11 @@ export default function MainMenu() {
   }, []);
 
   const handleStart = () => {
-    resetGame();
-    setGameState(GameStates.TUTORIAL_GAME);
+    setGameState(GameStates.TRAINING_ROOM);
   };
 
   const menuItems = [
-    { idx: '01', icon: 'play', label: 'COMENZAR MISIÓN', sub: 'Iniciar Tutorial → Nivel 1', action: handleStart, color: 'var(--neon-magenta)' },
+    { idx: '01', icon: 'play', label: 'SALA DE ENTRENAMIENTO', sub: 'Tutorial • Niveles • Créditos', action: handleStart, color: 'var(--neon-magenta)' },
   ];
 
   return (
