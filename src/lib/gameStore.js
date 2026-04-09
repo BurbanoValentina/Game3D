@@ -59,6 +59,8 @@ const useGameStore = create((set, get) => ({
   checkpointsReached: [],
   systemLogs: [],
   currentLevel: 1,
+  level1Completed: false,
+  setLevel1Completed: (val) => set({ level1Completed: val }),
   setKeyObtained: (val) => set({ keyObtained: val }),
   addCheckpoint: (label) => set((s) => ({ checkpointsReached: [...s.checkpointsReached, label] })),
   addLog: (msg) => set((s) => ({ systemLogs: [...s.systemLogs.slice(-8), `[${new Date().toLocaleTimeString()}] ${msg}`] })),
