@@ -8,7 +8,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { GameStates } from '../../constants/gameConstants';
 import useGameStore from '../../lib/gameStore';
-import audioManager from '../../lib/audioManager';
 
 // ─── TUTORIAL STEPS ───
 const TUTORIAL_STEPS = [
@@ -99,7 +98,6 @@ function Crosshair() {
 // ═══════════════════════════════════════════════════════
 export default function TutorialGame() {
   const setGameState = useGameStore((s) => s.setGameState);
-  const resetGame = useGameStore((s) => s.resetGame);
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -143,13 +141,13 @@ export default function TutorialGame() {
 
   const handleSkip = useCallback(async () => {
     if (document.pointerLockElement) document.exitPointerLock();
-    resetGame(); await audioManager.init(); await audioManager.resume(); setGameState(GameStates.BOOT);
-  }, [resetGame, setGameState]);
+    setGameState(GameStates.TRAINING_ROOM);
+  }, [setGameState]);
 
   const handleFinish = useCallback(async () => {
     if (document.pointerLockElement) document.exitPointerLock();
-    resetGame(); await audioManager.init(); await audioManager.resume(); setGameState(GameStates.BOOT);
-  }, [resetGame, setGameState]);
+    setGameState(GameStates.TRAINING_ROOM);
+  }, [setGameState]);
 
   // ═══════════════════════════════════════
   //  THREE.JS DARK CYBERPUNK TRAINING ROOM
