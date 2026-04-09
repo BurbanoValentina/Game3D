@@ -6,6 +6,7 @@
 export const GameStates = {
   LOADING: 'LOADING', LANDING: 'LANDING', REGISTER: 'REGISTER',
   LOGIN: 'LOGIN', MAIN_MENU: 'MAIN_MENU', SETTINGS: 'SETTINGS',
+  TRAINING_ROOM: 'TRAINING_ROOM',
   TUTORIAL: 'TUTORIAL', TUTORIAL_GAME: 'TUTORIAL_GAME',
   CREDITS: 'CREDITS', BOOT: 'BOOT', CINEMATIC: 'CINEMATIC',
   PLAYING: 'PLAYING', PUZZLE: 'PUZZLE', MEMORY: 'MEMORY',
@@ -20,11 +21,12 @@ export const StateTransitions = {
   [GameStates.LANDING]:       [GameStates.REGISTER, GameStates.LOGIN, GameStates.MAIN_MENU],
   [GameStates.REGISTER]:      [GameStates.LANDING, GameStates.LOGIN, GameStates.MAIN_MENU],
   [GameStates.LOGIN]:         [GameStates.LANDING, GameStates.REGISTER, GameStates.MAIN_MENU],
-  [GameStates.MAIN_MENU]:     [GameStates.TUTORIAL_GAME, GameStates.SETTINGS, GameStates.LANDING],
+  [GameStates.MAIN_MENU]:     [GameStates.TRAINING_ROOM, GameStates.SETTINGS, GameStates.LANDING],
   [GameStates.SETTINGS]:      [GameStates.MAIN_MENU],
+  [GameStates.TRAINING_ROOM]: [GameStates.TUTORIAL_GAME, GameStates.BOOT, GameStates.CREDITS, GameStates.MAIN_MENU],
   [GameStates.TUTORIAL]:      [GameStates.MAIN_MENU],
-  [GameStates.TUTORIAL_GAME]: [GameStates.BOOT, GameStates.MAIN_MENU],
-  [GameStates.CREDITS]:       [GameStates.MAIN_MENU],
+  [GameStates.TUTORIAL_GAME]: [GameStates.BOOT, GameStates.TRAINING_ROOM],
+  [GameStates.CREDITS]:       [GameStates.TRAINING_ROOM],
   [GameStates.BOOT]:          [GameStates.CINEMATIC, GameStates.MAIN_MENU],
   [GameStates.CINEMATIC]:     [GameStates.PLAYING],
   [GameStates.PLAYING]:       [GameStates.PUZZLE, GameStates.MEMORY, GameStates.SCREAMER, GameStates.TOKEN_MEMORY, GameStates.PAUSED, GameStates.GAME_OVER, GameStates.KEY_OBTAINED],
@@ -35,7 +37,7 @@ export const StateTransitions = {
   [GameStates.KEY_OBTAINED]:  [GameStates.VICTORY],
   [GameStates.PAUSED]:        [GameStates.PLAYING, GameStates.MAIN_MENU],
   [GameStates.GAME_OVER]:     [GameStates.BOOT, GameStates.MAIN_MENU],
-  [GameStates.VICTORY]:       [GameStates.CREDITS],
+  [GameStates.VICTORY]:       [GameStates.CREDITS, GameStates.TRAINING_ROOM],
 };
 
 // ─── PLAYER CONFIG ───
