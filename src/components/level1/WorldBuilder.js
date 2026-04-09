@@ -26,9 +26,9 @@ function createSVGIllustration(type, THREE) {
     ctx.fillRect(0, 0, 512, 512);
     // Girl 1 (Eva - cyan)
     drawFuturisticGirl(ctx, 160, 180, '#00F0FF', '#0088AA', 'E');
-    // Girl 2 (Suyin - green)
+    // Girl 2 (ally - green)
     drawFuturisticGirl(ctx, 256, 170, '#00FF88', '#00AA55', 'S');
-    // Girl 3 (Zuri - pink)
+    // Girl 3 (ally - pink)
     drawFuturisticGirl(ctx, 352, 180, '#FF0066', '#AA0044', 'Z');
     // Connecting lines between them
     ctx.strokeStyle = 'rgba(255,255,255,0.15)';
@@ -312,7 +312,7 @@ export function createWorldAssets(scene, THREE, buildings) {
   const assets = {
     neonLights: [], puzzleMarkers: [], checkpointMeshes: [],
     npcs: [], particles: null, graffitiMeshes: [],
-    suyinGhost: null, zuriGhost: null,
+    memoryGhost: null,
     keyMesh: null, keyLight: null, keyMat: null,
     parkourBlocks: [], tokenMarkers: [],
     lightBeams: [], illustrations: {},
@@ -658,8 +658,7 @@ export function createWorldAssets(scene, THREE, buildings) {
     scene.add(trail);
     return { mesh: ghost, trail, trailMat, baseX: startX, baseZ: startZ, visible: false, timer: 0 };
   };
-  assets.suyinGhost = createGhost(0x00f0ff, 30, -20);
-  assets.zuriGhost = createGhost(0xff0066, -30, 20);
+  assets.memoryGhost = createGhost(0x00f0ff, 0, 0);
 
   // ═══════════════════════════════════════
   //  NPCs
