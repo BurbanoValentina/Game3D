@@ -25,10 +25,10 @@ export default function GameViewport() {
     const container = mountRef.current;
     const THREE = await import('three');
 
-    // ── BRIGHT ROSE/CREAM DAYLIGHT SCENE ──
+    // ── BLUE SKY DAYLIGHT SCENE ──
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xFFE8E1); // rose-pale
-    scene.fog = new THREE.FogExp2(0xFFE8E1, 0.0012); // soft rose fog for depth
+    scene.background = new THREE.Color(0x6CB4E8); // sky blue
+    scene.fog = new THREE.FogExp2(0x8CC8F0, 0.0012); // soft blue fog for depth
 
     const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 600);
     camera.position.set(0, PLAYER_CONFIG.height, 0);
@@ -48,9 +48,9 @@ export default function GameViewport() {
     container.appendChild(glitchCanvas);
     const glitchCtx = glitchCanvas.getContext('2d');
 
-    // ── BRIGHT DAYLIGHT LIGHTING ──
+    // ── BLUE SKY DAYLIGHT LIGHTING ──
     // Strong ambient for overall brightness
-    scene.add(new THREE.AmbientLight(0xFFF5F0, 1.2));
+    scene.add(new THREE.AmbientLight(0xC8E6F8, 1.2));
 
     // Sun — warm directional light
     const sunLight = new THREE.DirectionalLight(0xFFEEDD, 2.0);
@@ -66,11 +66,11 @@ export default function GameViewport() {
     sunLight.shadow.bias = -0.001;
     scene.add(sunLight);
 
-    // Hemisphere: sky warm top + ground bounce
-    scene.add(new THREE.HemisphereLight(0xFFDDD0, 0xE8C8B8, 1.0));
+    // Hemisphere: blue sky top + warm ground bounce
+    scene.add(new THREE.HemisphereLight(0x88BBEE, 0xD4C4A8, 1.0));
 
     // Fill light from opposite side
-    const fillLight = new THREE.DirectionalLight(0xFFCCBB, 0.6);
+    const fillLight = new THREE.DirectionalLight(0xBBDDFF, 0.6);
     fillLight.position.set(-60, 80, -40);
     scene.add(fillLight);
 
