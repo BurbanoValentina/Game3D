@@ -8,6 +8,8 @@ import { NextResponse } from 'next/server';
 import OasisDatabase from '../../../lib/database';
 import { REGISTER_RULES } from '../../../constants/gameConstants';
 
+export const runtime = 'nodejs';
+
 // ─── SANITIZE INPUT ───
 function sanitize(str) {
   if (typeof str !== 'string') return '';
