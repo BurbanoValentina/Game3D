@@ -1,0 +1,32 @@
+{
+  "name": "oasis-la-ultima-clave",
+  "version": "1.0.0",
+  "description": "OASIS: La Última Clave — Las 5 Llaves de Halliday. Juego 3D cyberpunk con Three.js + Next.js",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.96.0",
+    "@react-three/fiber": "^8.15.0",
+    "better-sqlite3": "^11.0.0",
+    "framer-motion": "^11.0.0",
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "three": "^0.162.0",
+    "tone": "^14.7.77",
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.162.0",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.2.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0"
+  }
+}
