@@ -75,7 +75,7 @@ export default function CinematicScreen() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col justify-center items-center p-8" style={{ background: 'linear-gradient(145deg, #FFF5F0 0%, #FDDDD4 40%, #FFE8E1 70%, #FFF0EB 100%)' }}>
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center p-8" style={{ background: 'linear-gradient(145deg, #FFF5F0 0%, #FDDDD4 40%, #FFE8E1 70%, #FFF0EB 100%)' }}>
       {/* Corruption background */}
       <CorruptionBG />
 
@@ -84,9 +84,9 @@ export default function CinematicScreen() {
         background: 'radial-gradient(ellipse at 30% 50%, rgba(255,0,102,0.04) 0%, transparent 50%), radial-gradient(ellipse at 70% 60%, rgba(157,0,255,0.03) 0%, transparent 50%)',
       }} />
 
-      <div className="w-full max-w-xl relative z-10">
+      <div className="relative z-10 w-full max-w-xl">
         {/* Level indicator */}
-        <div className="mb-6 flex items-center gap-3 animate-fade-in-left">
+        <div className="flex items-center gap-3 mb-6 animate-fade-in-left">
           <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--neon-magenta)', boxShadow: '0 0 8px var(--neon-magenta)' }} />
           <span className="font-sharetm text-[10px] tracking-widest" style={{ color: 'var(--neon-magenta)', opacity: 0.8 }}>
             NIVEL 1 — LAS CENIZAS DE LA CIUDAD
@@ -94,20 +94,8 @@ export default function CinematicScreen() {
           <div className="flex-1 h-[1px]" style={{ background: 'linear-gradient(90deg, rgba(255,0,102,0.3), transparent)' }} />
         </div>
 
-        {/* Suyin & Zuri memorial markers */}
-        <div className="flex gap-4 mb-6 animate-fade-in-up" style={{ animationDelay: '0.3s', opacity: 0 }}>
-          <div className="flex items-center gap-2 px-3 py-1 rounded" style={{ background: 'rgba(255,0,102,0.06)', border: '1px solid rgba(255,0,102,0.15)' }}>
-            <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#FF0066' }} />
-            <span className="font-sharetm text-[9px] tracking-widest" style={{ color: '#006677', opacity: 0.7 }}>SUYIN_WAVE — ELIMINADA</span>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-1 rounded" style={{ background: 'rgba(255,0,102,0.06)', border: '1px solid rgba(255,0,102,0.15)' }}>
-            <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#FF0066' }} />
-            <span className="font-sharetm text-[9px] tracking-widest" style={{ color: '#990033', opacity: 0.7 }}>ZURI_APEX — ELIMINADA</span>
-          </div>
-        </div>
-
         {/* Narrative text */}
-        <div className="pl-6 relative" style={{ borderLeft: '2px solid rgba(255,0,102,0.2)' }}>
+        <div className="relative pl-6" style={{ borderLeft: '2px solid rgba(255,0,102,0.2)' }}>
           {/* Animated dot on border */}
           <div className="absolute left-[-5px] w-2 h-2 rounded-full transition-all duration-300" style={{
             background: 'var(--neon-magenta)', boxShadow: '0 0 8px var(--neon-magenta)',
@@ -134,7 +122,7 @@ export default function CinematicScreen() {
       <EvaSilhouette />
 
       {/* Scanlines */}
-      <div className="fixed inset-0 pointer-events-none z-20" style={{ backgroundImage: 'repeating-linear-gradient(0deg, rgba(255,0,102,0.006) 0px, rgba(255,0,102,0.006) 1px, transparent 1px, transparent 4px)' }} />
+      <div className="fixed inset-0 z-20 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(0deg, rgba(255,0,102,0.006) 0px, rgba(255,0,102,0.006) 1px, transparent 1px, transparent 4px)' }} />
     </div>
   );
 }
