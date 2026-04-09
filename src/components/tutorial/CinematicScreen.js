@@ -111,7 +111,7 @@ export default function CinematicScreen() {
         {/* Continue button */}
         {done && (
           <div className="mt-10 text-center animate-fade-in-up">
-            <button onClick={() => setGameState(GameStates.PLAYING)} className="oasis-btn-premium">
+            <button onClick={() => setGameState(GameStates.AWAKENING)} className="oasis-btn-premium">
               ENTRAR AL OASIS →
             </button>
           </div>
