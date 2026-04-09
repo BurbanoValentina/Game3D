@@ -192,13 +192,6 @@ export const CINEMATIC_LINES = [
   'Busca los recuerdos. Resuelve los puzzles. Encuentra la llave.',
 ];
 
-// ─── CHARACTER DATA ───
-export const CHARACTERS = {
-  eva: { name: 'EVA', role: 'La Estratega', color: '#00f0ff', skills: [{ icon: '🔷', name: 'Análisis de Código' }, { icon: '🔷', name: 'Desencriptado Rápido' }, { icon: '🔷', name: 'Visión de Sistema' }, { icon: '🔷', name: 'Escudo de Datos' }] },
-  suyin: { name: 'SUYIN', role: 'La Exploradora', color: '#00ff88', status: 'ELIMINADA', skills: [{ icon: '🟢', name: 'Rastreo Oculto' }, { icon: '🟢', name: 'Memoria Fotográfica' }, { icon: '🟢', name: 'Comunicación Ambiental' }, { icon: '🟢', name: 'Salto Cuántico' }] },
-  zuri: { name: 'ZURI', role: 'La Ejecutora', color: '#ff0066', status: 'ELIMINADA', skills: [{ icon: '🔴', name: 'Sobrecarga de Sistema' }, { icon: '🔴', name: 'Reacción Predictiva' }, { icon: '🔴', name: 'Ruptura de Barrera' }, { icon: '🔴', name: 'Modo Berserker' }] },
-};
-
 // ─── BUILDING TYPES (Iconic Futuristic Architecture) ───
 export const BUILDING_CONFIGS = {
   skyscraper: { wRange: [8, 14], hRange: [30, 80], dRange: [8, 14], color: 0xD9CDB8, emissiveMul: 0.2 },
