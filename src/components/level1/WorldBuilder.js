@@ -319,76 +319,199 @@ export function createWorldAssets(scene, THREE, buildings) {
   };
 
   // ═══════════════════════════════════════
-  //  BRIGHT ROSE/CREAM SKY (Futuristic Sunset)
+  //  BLUE SKY WITH CLOUDS + GLASS BREACH
   // ═══════════════════════════════════════
   const skyGeo = new THREE.BoxGeometry(500, 500, 500);
   const skyCanvas = document.createElement('canvas');
   skyCanvas.width = 1024; skyCanvas.height = 512;
   const skyCtx = skyCanvas.getContext('2d');
 
-  // Rose/cream gradient sky
+  // Deep blue gradient sky
   const skyGrad = skyCtx.createLinearGradient(0, 0, 0, 512);
-  skyGrad.addColorStop(0, '#FFD4C8');    // warm peach top
-  skyGrad.addColorStop(0.15, '#FFDDD4'); // rose
-  skyGrad.addColorStop(0.3, '#FFE8E1');  // rose-pale
-  skyGrad.addColorStop(0.5, '#FFF0EB');  // cream rose
-  skyGrad.addColorStop(0.7, '#FFF5F0');  // cream
-  skyGrad.addColorStop(0.85, '#FDDDD4'); // rose mid
-  skyGrad.addColorStop(1, '#F8C8BC');    // rose blush (horizon)
+  skyGrad.addColorStop(0, '#0A1628');     // deep space blue top
+  skyGrad.addColorStop(0.1, '#1A3A5C');   // dark blue
+  skyGrad.addColorStop(0.25, '#2E6B9E');  // medium blue
+  skyGrad.addColorStop(0.45, '#4A9BD9');  // sky blue
+  skyGrad.addColorStop(0.6, '#6CB4E8');   // lighter blue
+  skyGrad.addColorStop(0.75, '#8CC8F0');  // pale blue
+  skyGrad.addColorStop(0.88, '#C8E6F8');  // horizon pale
+  skyGrad.addColorStop(1, '#E8D8C8');     // warm horizon glow
   skyCtx.fillStyle = skyGrad;
   skyCtx.fillRect(0, 0, 1024, 512);
 
-  // Soft cloud formations
-  for (let c = 0; c < 18; c++) {
-    const cx = Math.random() * 512;
-    const cy = 40 + Math.random() * 250;
-    const cw = 100 + Math.random() * 200;
-    const ch = 20 + Math.random() * 50;
-    const cloudGrad = skyCtx.createRadialGradient(cx, cy, 0, cx, cy, cw * 0.5);
-    cloudGrad.addColorStop(0, 'rgba(255,255,255,0.35)');
-    cloudGrad.addColorStop(0.3, 'rgba(255,240,235,0.25)');
-    cloudGrad.addColorStop(0.6, 'rgba(255,220,210,0.12)');
-    cloudGrad.addColorStop(1, 'rgba(255,210,200,0)');
-    skyCtx.fillStyle = cloudGrad;
+  // Volumetric cloud formations — realistic puffy clouds
+  const drawCloud = (cx, cy, scale, opacity) => {
+    const puffs = [
+      { dx: 0, dy: 0, rx: 60 * scale, ry: 30 * scale },
+      { dx: -40 * scale, dy: 5, rx: 45 * scale, ry: 25 * scale },
+      { dx: 40 * scale, dy: 5, rx: 50 * scale, ry: 22 * scale },
+      { dx: -70 * scale, dy: 10, rx: 35 * scale, ry: 18 * scale },
+      { dx: 65 * scale, dy: 8, rx: 40 * scale, ry: 20 * scale },
+      { dx: -20 * scale, dy: -12, rx: 50 * scale, ry: 28 * scale },
+      { dx: 25 * scale, dy: -10, rx: 45 * scale, ry: 26 * scale },
+    ];
+    puffs.forEach(p => {
+      const cg = skyCtx.createRadialGradient(cx + p.dx, cy + p.dy, 0, cx + p.dx, cy + p.dy, p.rx);
+      cg.addColorStop(0, `rgba(255,255,255,${0.7 * opacity})`);
+      cg.addColorStop(0.3, `rgba(245,248,255,${0.5 * opacity})`);
+      cg.addColorStop(0.6, `rgba(220,235,250,${0.25 * opacity})`);
+      cg.addColorStop(1, 'rgba(200,220,240,0)');
+      skyCtx.fillStyle = cg;
+      skyCtx.beginPath();
+      skyCtx.ellipse(cx + p.dx, cy + p.dy, p.rx, p.ry, 0, 0, Math.PI * 2);
+      skyCtx.fill();
+    });
+    // Cloud shadow
+    const shadowGrad = skyCtx.createRadialGradient(cx, cy + 15 * scale, 0, cx, cy + 15 * scale, 70 * scale);
+    shadowGrad.addColorStop(0, `rgba(100,130,170,${0.12 * opacity})`);
+    shadowGrad.addColorStop(1, 'rgba(100,130,170,0)');
+    skyCtx.fillStyle = shadowGrad;
     skyCtx.beginPath();
-    skyCtx.ellipse(cx, cy, cw * 0.5, ch * 0.5, 0, 0, Math.PI * 2);
+    skyCtx.ellipse(cx, cy + 15 * scale, 70 * scale, 15 * scale, 0, 0, Math.PI * 2);
     skyCtx.fill();
+  };
+
+  // Place clouds at various positions
+  drawCloud(150, 80, 1.2, 1.0);
+  drawCloud(420, 120, 1.5, 0.9);
+  drawCloud(700, 70, 1.0, 0.85);
+  drawCloud(280, 200, 0.8, 0.7);
+  drawCloud(550, 180, 1.1, 0.75);
+  drawCloud(850, 160, 0.9, 0.8);
+  drawCloud(80, 250, 0.7, 0.6);
+  drawCloud(620, 260, 0.6, 0.55);
+  drawCloud(950, 100, 1.3, 0.85);
+  // Small wispy clouds
+  for (let c = 0; c < 20; c++) {
+    const wx = Math.random() * 1024;
+    const wy = 50 + Math.random() * 280;
+    const ws = 0.2 + Math.random() * 0.4;
+    drawCloud(wx, wy, ws, 0.3 + Math.random() * 0.3);
   }
 
-  // Sun glow (warm golden-pink)
+  // Sun glow (warm golden)
   const sunX = 200, sunY = 90;
   const sunGrad = skyCtx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 200);
-  sunGrad.addColorStop(0, 'rgba(255,240,200,0.9)');
-  sunGrad.addColorStop(0.1, 'rgba(255,220,180,0.6)');
-  sunGrad.addColorStop(0.3, 'rgba(255,180,140,0.25)');
-  sunGrad.addColorStop(0.6, 'rgba(255,150,120,0.08)');
-  sunGrad.addColorStop(1, 'rgba(255,130,100,0)');
+  sunGrad.addColorStop(0, 'rgba(255,250,220,0.95)');
+  sunGrad.addColorStop(0.08, 'rgba(255,240,180,0.8)');
+  sunGrad.addColorStop(0.2, 'rgba(255,220,140,0.4)');
+  sunGrad.addColorStop(0.4, 'rgba(255,200,100,0.12)');
+  sunGrad.addColorStop(0.7, 'rgba(200,180,160,0.04)');
+  sunGrad.addColorStop(1, 'rgba(150,170,200,0)');
   skyCtx.fillStyle = sunGrad;
   skyCtx.fillRect(0, 0, 1024, 512);
   // Sun disc
   skyCtx.beginPath();
-  skyCtx.arc(sunX, sunY, 30, 0, Math.PI * 2);
-  skyCtx.fillStyle = 'rgba(255,250,230,0.95)';
+  skyCtx.arc(sunX, sunY, 28, 0, Math.PI * 2);
+  skyCtx.fillStyle = 'rgba(255,252,240,0.98)';
+  skyCtx.fill();
+  // Sun corona
+  skyCtx.beginPath();
+  skyCtx.arc(sunX, sunY, 35, 0, Math.PI * 2);
+  skyCtx.fillStyle = 'rgba(255,245,200,0.25)';
   skyCtx.fill();
 
-  // Soft pink light streaks near horizon
-  for (let s = 0; s < 8; s++) {
-    const sx = Math.random() * 512;
-    const sy = 350 + Math.random() * 100;
-    skyCtx.globalAlpha = 0.08 + Math.random() * 0.06;
-    skyCtx.fillStyle = s % 2 === 0 ? '#FF9988' : '#FFBBAA';
-    skyCtx.fillRect(sx, sy, 200 + Math.random() * 300, 2 + Math.random() * 4);
+  // ── GIANT GLASS BREACH / HOLE IN THE SKY ──
+  // Cracked glass effect revealing a dark void/digital realm behind
+  const holeX = 620, holeY = 160, holeR = 90;
+  // Dark void behind the glass
+  const voidGrad = skyCtx.createRadialGradient(holeX, holeY, 0, holeX, holeY, holeR);
+  voidGrad.addColorStop(0, 'rgba(5,0,15,0.95)');
+  voidGrad.addColorStop(0.4, 'rgba(10,5,30,0.85)');
+  voidGrad.addColorStop(0.7, 'rgba(20,10,50,0.6)');
+  voidGrad.addColorStop(0.85, 'rgba(40,20,80,0.3)');
+  voidGrad.addColorStop(1, 'rgba(60,40,100,0)');
+  skyCtx.fillStyle = voidGrad;
+  skyCtx.beginPath();
+  skyCtx.arc(holeX, holeY, holeR, 0, Math.PI * 2);
+  skyCtx.fill();
+
+  // Digital pattern inside the void (matrix-like)
+  skyCtx.save();
+  skyCtx.beginPath();
+  skyCtx.arc(holeX, holeY, holeR * 0.75, 0, Math.PI * 2);
+  skyCtx.clip();
+  skyCtx.globalAlpha = 0.4;
+  for (let dy = -holeR; dy < holeR; dy += 6) {
+    for (let dx = -holeR; dx < holeR; dx += 8) {
+      if (Math.random() > 0.6) {
+        skyCtx.fillStyle = ['#00F0FF', '#FF0066', '#00FF88', '#9D00FF'][Math.floor(Math.random() * 4)];
+        skyCtx.font = `${4 + Math.random() * 4}px monospace`;
+        skyCtx.fillText(Math.random() > 0.5 ? '1' : '0', holeX + dx, holeY + dy);
+      }
+    }
+  }
+  skyCtx.globalAlpha = 1;
+  skyCtx.restore();
+
+  // Glass crack lines radiating from the hole
+  skyCtx.save();
+  skyCtx.strokeStyle = 'rgba(200,220,255,0.6)';
+  skyCtx.lineWidth = 1.5;
+  skyCtx.shadowColor = 'rgba(150,200,255,0.8)';
+  skyCtx.shadowBlur = 4;
+  const crackCount = 18;
+  for (let i = 0; i < crackCount; i++) {
+    const angle = (i / crackCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.3;
+    const len = holeR + 20 + Math.random() * 80;
+    skyCtx.beginPath();
+    skyCtx.moveTo(holeX + Math.cos(angle) * holeR * 0.7, holeY + Math.sin(angle) * holeR * 0.7);
+    // Jagged crack path
+    let cx = holeX + Math.cos(angle) * holeR * 0.7;
+    let cy = holeY + Math.sin(angle) * holeR * 0.7;
+    const steps = 4 + Math.floor(Math.random() * 4);
+    for (let s = 0; s < steps; s++) {
+      const progress = (s + 1) / steps;
+      const tx = holeX + Math.cos(angle) * len * progress;
+      const ty = holeY + Math.sin(angle) * len * progress;
+      const jx = (Math.random() - 0.5) * 20;
+      const jy = (Math.random() - 0.5) * 20;
+      skyCtx.lineTo(tx + jx, ty + jy);
+    }
+    skyCtx.stroke();
+    // Secondary branch cracks
+    if (Math.random() > 0.4) {
+      const branchAngle = angle + (Math.random() - 0.5) * 1.2;
+      const branchLen = 15 + Math.random() * 40;
+      const bx = holeX + Math.cos(angle) * len * 0.6;
+      const by = holeY + Math.sin(angle) * len * 0.6;
+      skyCtx.beginPath();
+      skyCtx.moveTo(bx, by);
+      skyCtx.lineTo(bx + Math.cos(branchAngle) * branchLen, by + Math.sin(branchAngle) * branchLen);
+      skyCtx.stroke();
+    }
+  }
+  skyCtx.shadowBlur = 0;
+  skyCtx.restore();
+
+  // Glass reflection highlights around crack
+  skyCtx.save();
+  const glassGlow = skyCtx.createRadialGradient(holeX, holeY, holeR * 0.8, holeX, holeY, holeR * 1.3);
+  glassGlow.addColorStop(0, 'rgba(180,210,255,0.15)');
+  glassGlow.addColorStop(0.5, 'rgba(150,200,255,0.08)');
+  glassGlow.addColorStop(1, 'rgba(120,180,255,0)');
+  skyCtx.fillStyle = glassGlow;
+  skyCtx.fillRect(holeX - holeR * 1.5, holeY - holeR * 1.5, holeR * 3, holeR * 3);
+  skyCtx.restore();
+
+  // Light streaks near horizon
+  for (let s = 0; s < 6; s++) {
+    const sx = Math.random() * 1024;
+    const sy = 380 + Math.random() * 80;
+    skyCtx.globalAlpha = 0.06 + Math.random() * 0.04;
+    skyCtx.fillStyle = s % 2 === 0 ? '#C8A888' : '#A8C8D8';
+    skyCtx.fillRect(sx, sy, 150 + Math.random() * 250, 1 + Math.random() * 3);
   }
   skyCtx.globalAlpha = 1;
 
-  // Distant geometric structures (futuristic horizon)
-  skyCtx.globalAlpha = 0.06;
-  for (let t = 0; t < 12; t++) {
-    const tx = 50 + t * 80;
-    const th = 30 + Math.random() * 80;
-    const tw = 8 + Math.random() * 20;
-    skyCtx.fillStyle = '#AA7766';
-    skyCtx.fillRect(tx, 425 - th, tw, th);
+  // Distant city structures on horizon
+  skyCtx.globalAlpha = 0.08;
+  for (let t = 0; t < 14; t++) {
+    const tx = 30 + t * 70;
+    const th = 20 + Math.random() * 60;
+    const tw = 6 + Math.random() * 16;
+    skyCtx.fillStyle = '#3A5A7A';
+    skyCtx.fillRect(tx, 435 - th, tw, th);
   }
   skyCtx.globalAlpha = 1;
 
