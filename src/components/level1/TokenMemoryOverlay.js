@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 import { GameStates } from '../../constants/gameConstants';
 import useGameStore from '../../lib/gameStore';
 
@@ -318,11 +318,60 @@ function EvaGrandpaSVG() {
 }
 
 // ═══════════════════════════════════════
-//  MAIN OVERLAY COMPONENT
+//  MAIN OVERLAY COMPONENT — with memory flashback effects
 // ═══════════════════════════════════════
 export default function TokenMemoryOverlay() {
   const currentTokenData = useGameStore((s) => s.currentTokenData);
   const setGameState = useGameStore((s) => s.setGameState);
+  const [phase, setPhase] = useState(0);
+  const [shakeX, setShakeX] = useState(0);
+  const [shakeY, setShakeY] = useState(0);
+  const [glitchBars, setGlitchBars] = useState([]);
+  const [staticOpacity, setStaticOpacity] = useState(1);
+  const intervalRef = useRef(null);
+
+  // Phase progression: glitch intro → memory reveal → character suffering → content
+  useEffect(() => {
+    if (!currentTokenData) { setPhase(0); return; }
+    // Phase 0: Screen failure / VHS static (0-1.5s)
+    // Phase 1: Flashback flash + character pain (1.5-3s)
+    // Phase 2: Memory image revealed through glitch (3-4.5s)
+    // Phase 3: Content visible, subtle effects (4.5+)
+    setPhase(0);
+    // Vibration
+    if (navigator.vibrate) {
+      navigator.vibrate([50, 30, 100, 50, 80, 30, 60]);
+    }
+    const t1 = setTimeout(() => setPhase(1), 1500);
+    const t2 = setTimeout(() => setPhase(2), 3000);
+    const t3 = setTimeout(() => setPhase(3), 4500);
+    return () => [t1, t2, t3].forEach(clearTimeout);
+  }, [currentTokenData]);
+
+  // Screen failure effects
+  useEffect(() => {
+    if (!currentTokenData) return;
+    intervalRef.current = setInterval(() => {
+      const intensity = phase === 0 ? 20 : phase === 1 ? 12 : phase === 2 ? 5 : 1;
+      setShakeX((Math.random() - 0.5) * intensity);
+      setShakeY((Math.random() - 0.5) * intensity);
+      setStaticOpacity(phase === 0 ? 0.3 + Math.random() * 0.4 : phase === 1 ? 0.1 + Math.random() * 0.15 : 0);
+
+      // Glitch bars
+      const bars = [];
+      const count = phase === 0 ? 15 : phase === 1 ? 8 : phase === 2 ? 3 : 0;
+      for (let i = 0; i < count; i++) {
+        bars.push({
+          top: Math.random() * 100,
+          height: 0.5 + Math.random() * (phase === 0 ? 4 : 2),
+          offset: (Math.random() - 0.5) * 50,
+          color: ['rgba(0,240,255,0.3)', 'rgba(255,0,102,0.3)', 'rgba(157,0,255,0.3)'][Math.floor(Math.random() * 3)],
+        });
+      }
+      setGlitchBars(bars);
+    }, 50);
+    return () => clearInterval(intervalRef.current);
+  }, [currentTokenData, phase]);
 
   const handleClose = useCallback(() => {
     useGameStore.setState({ currentTokenData: null });
@@ -339,25 +388,164 @@ export default function TokenMemoryOverlay() {
   const Illustration = IllustrationMap[currentTokenData.image];
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center" style={{ background: 'rgba(255,240,235,0.95)', backdropFilter: 'blur(16px)' }}>
-      <div className="max-w-md mx-4 text-center animate-scale-in">
-        <div className="mb-4">
-          <span className="font-orbitron text-lg tracking-widest" style={{ color: '#FFBB33', textShadow: '0 0 12px rgba(255,187,51,0.4)' }}>
-            🔮 {currentTokenData.title}
-          </span>
+    <div className="fixed inset-0 z-40 overflow-hidden" style={{
+      transform: `translate(${shakeX}px, ${shakeY}px)`,
+    }}>
+      {/* Phase 0: VHS Static / Screen failure */}
+      {phase === 0 && (
+        <div className="absolute inset-0" style={{ zIndex: 5 }}>
+          {/* VHS static noise */}
+          <div className="absolute inset-0" style={{
+            opacity: staticOpacity,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            animation: 'static-noise 0.1s steps(5) infinite',
+            mixBlendMode: 'overlay',
+          }} />
+          {/* Screen failure text */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center" style={{ animation: 'vhs-tracking 0.3s infinite' }}>
+              <div className="font-sharetm text-xl tracking-widest mb-2" style={{
+                color: '#00F0FF',
+                textShadow: '0 0 10px #00F0FF',
+                animation: 'chromatic-split 0.2s infinite',
+              }}>
+                {'> CARGANDO FRAGMENTO DE MEMORIA...'}
+              </div>
+              <div className="font-sharetm text-sm" style={{ color: '#FF0066', opacity: 0.6 }}>
+                {'> ADVERTENCIA: datos corruptos detectados'}
+              </div>
+              {/* Loading bar with glitch */}
+              <div className="mt-4 mx-auto w-64 h-2 rounded" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(0,240,255,0.3)' }}>
+                <div className="h-full rounded" style={{
+                  width: `${Math.min(100, phase === 0 ? 40 + Math.random() * 20 : 100)}%`,
+                  background: 'linear-gradient(90deg, #00F0FF, #FF0066)',
+                  transition: 'width 0.1s',
+                }} />
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="mb-6 flex justify-center">
-          {Illustration && <Illustration />}
+      )}
+
+      {/* Phase 1: Flashback flash + character suffering */}
+      {phase === 1 && (
+        <div className="absolute inset-0" style={{ zIndex: 5 }}>
+          {/* White flash that fades */}
+          <div className="absolute inset-0" style={{
+            background: 'white',
+            animation: 'memory-flashback 1.5s ease-out forwards',
+          }} />
+          {/* Character suffering from remembering */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <svg width="200" height="280" viewBox="0 0 200 280" style={{
+              animation: 'screen-shake-heavy 0.15s infinite',
+              filter: 'drop-shadow(0 0 20px rgba(157,0,255,0.5))',
+              opacity: 0.3,
+            }}>
+              <g transform="translate(100, 60)">
+                {/* Head clutched */}
+                <ellipse cx="0" cy="0" rx="25" ry="28" fill="none" stroke="#9D00FF" strokeWidth="2" />
+                {/* Teary eyes */}
+                <ellipse cx="-10" cy="-5" rx="5" ry="6" fill="none" stroke="#00F0FF" strokeWidth="1.5" />
+                <ellipse cx="10" cy="-5" rx="5" ry="6" fill="none" stroke="#00F0FF" strokeWidth="1.5" />
+                {/* Tears */}
+                <line x1="-10" y1="2" x2="-12" y2="15" stroke="#00F0FF" strokeWidth="1.5" opacity="0.6">
+                  <animate attributeName="y2" values="15;25;15" dur="0.8s" repeatCount="indefinite" />
+                </line>
+                <line x1="10" y1="2" x2="12" y2="15" stroke="#00F0FF" strokeWidth="1.5" opacity="0.6">
+                  <animate attributeName="y2" values="15;25;15" dur="0.8s" repeatCount="indefinite" begin="0.3s" />
+                </line>
+                {/* Pained mouth */}
+                <path d="M-6,12 Q0,8 6,12" fill="none" stroke="#FF0066" strokeWidth="1.5" />
+                {/* Memory fragments radiating */}
+                {Array.from({ length: 8 }).map((_, i) => {
+                  const a = (i / 8) * Math.PI * 2;
+                  return (
+                    <rect key={i} x={Math.cos(a) * 40 - 3} y={Math.sin(a) * 40 - 3} width="6" height="6"
+                      fill="none" stroke="#FFBB33" strokeWidth="0.8" opacity="0.4"
+                      transform={`rotate(${i * 45} ${Math.cos(a) * 40} ${Math.sin(a) * 40})`}>
+                      <animate attributeName="opacity" values="0.1;0.6;0.1" dur={`${0.5 + i * 0.1}s`} repeatCount="indefinite" />
+                    </rect>
+                  );
+                })}
+                {/* Body hunched */}
+                <path d="M-18,35 Q-22,80 -12,130 Q0,140 12,130 Q22,80 18,35" fill="none" stroke="#9D00FF" strokeWidth="1.5" opacity="0.5" />
+                {/* Arms clutching head */}
+                <path d="M-18,40 Q-35,15 -20,-10" fill="none" stroke="#9D00FF" strokeWidth="2" strokeLinecap="round" />
+                <path d="M18,40 Q35,15 20,-10" fill="none" stroke="#9D00FF" strokeWidth="2" strokeLinecap="round" />
+              </g>
+            </svg>
+          </div>
+          {/* Memory echo text */}
+          <div className="absolute bottom-20 left-0 right-0 text-center">
+            <div className="font-sharetm text-lg tracking-widest" style={{
+              color: '#9D00FF',
+              textShadow: '0 0 15px rgba(157,0,255,0.6)',
+              animation: 'chromatic-split 0.3s infinite',
+            }}>
+              {'> RECUERDO EMERGIENDO... DOLOR DETECTADO'}
+            </div>
+          </div>
         </div>
-        <p className="font-rajdhani text-base mb-6 leading-relaxed" style={{ color: 'var(--dark)', opacity: 0.8 }}>
-          {currentTokenData.text}
-        </p>
-        <button onClick={handleClose} className="px-8 py-3 rounded font-orbitron text-xs tracking-widest cursor-pointer transition-all hover:shadow-lg"
-          style={{ background: 'rgba(255,0,102,0.04)', border: '1px solid rgba(255,0,102,0.3)', color: 'var(--neon-magenta)' }}>
-          CONTINUAR
-        </button>
-        <div className="mt-3 font-sharetm text-sm" style={{ color: '#FFBB33', opacity: 0.6 }}>+150 monedas</div>
+      )}
+
+      {/* Glitch bars overlay (all phases) */}
+      {glitchBars.map((bar, i) => (
+        <div key={i} className="absolute left-0 right-0" style={{
+          top: `${bar.top}%`,
+          height: `${bar.height}%`,
+          background: bar.color,
+          transform: `translateX(${bar.offset}px)`,
+          zIndex: 4,
+        }} />
+      ))}
+
+      {/* Scanlines */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px)',
+        zIndex: 6,
+      }} />
+
+      {/* Main content — visible from phase 2+ */}
+      <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-1000"
+        style={{
+          background: phase >= 2 ? 'rgba(255,240,235,0.95)' : 'rgba(10,5,20,0.95)',
+          backdropFilter: 'blur(16px)',
+          opacity: phase >= 2 ? 1 : 0,
+        }}>
+        <div className={`max-w-md mx-4 text-center ${phase >= 3 ? 'animate-scale-in' : ''}`}
+          style={{ opacity: phase >= 3 ? 1 : 0, transition: 'opacity 0.5s ease' }}>
+          <div className="mb-4">
+            <span className="font-orbitron text-lg tracking-widest" style={{
+              color: '#FFBB33',
+              textShadow: '0 0 12px rgba(255,187,51,0.4)',
+            }}>
+              🔮 {currentTokenData.title}
+            </span>
+          </div>
+          <div className="mb-6 flex justify-center" style={{
+            animation: phase === 2 ? 'memory-flashback 1.5s ease-out' : 'none',
+          }}>
+            {Illustration && <Illustration />}
+          </div>
+          <p className="font-rajdhani text-base mb-6 leading-relaxed" style={{ color: 'var(--dark)', opacity: 0.8 }}>
+            {currentTokenData.text}
+          </p>
+          <button onClick={handleClose} className="px-8 py-3 rounded font-orbitron text-xs tracking-widest cursor-pointer transition-all hover:shadow-lg"
+            style={{ background: 'rgba(255,0,102,0.04)', border: '1px solid rgba(255,0,102,0.3)', color: 'var(--neon-magenta)' }}>
+            CONTINUAR
+          </button>
+          <div className="mt-3 font-sharetm text-sm" style={{ color: '#FFBB33', opacity: 0.6 }}>+150 monedas</div>
+        </div>
       </div>
+
+      {/* Purple memory vignette */}
+      {phase <= 2 && (
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(ellipse at center, transparent 20%, rgba(50,0,80,0.5) 100%)',
+          zIndex: 3,
+        }} />
+      )}
     </div>
   );
 }
