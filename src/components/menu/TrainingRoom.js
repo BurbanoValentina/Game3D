@@ -108,7 +108,7 @@ export default function TrainingRoom() {
     resetGame();
     await audioManager.init();
     await audioManager.resume();
-    setGameState(GameStates.BOOT);
+    setGameState(GameStates.CINEMATIC);
   };
 
   const handleCredits = () => {
