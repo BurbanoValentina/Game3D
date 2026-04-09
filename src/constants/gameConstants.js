@@ -84,8 +84,8 @@ export const LEVEL1_TOKENS = [
   { id: 'mem1', type: 'memory', position: { x: 35, z: 35 }, image: 'girls_together', title: 'RECUERDO: Juntas', text: 'Las tres amigas, inseparables. Antes de que todo cambiara.' },
   { id: 'mem2', type: 'memory', position: { x: -50, z: -35 }, image: 'girls_fighting', title: 'RECUERDO: La Pelea', text: 'El día que discutieron. Las palabras que nunca pudieron retirar.' },
   { id: 'mem3', type: 'memory', position: { x: 75, z: -65 }, image: 'eva_grandpa', title: 'RECUERDO: El Abuelo', text: 'Eva y su abuelo, el día que le enseñó a programar por primera vez.' },
-  { id: 'scare1', type: 'screamer', position: { x: -25, z: 85 }, color: 'red', title: '⚠ VIRUS DETECTADO' },
-  { id: 'scare2', type: 'screamer', position: { x: 60, z: -25 }, color: 'green', title: '⚠ MALWARE INFILTRADO' },
+  { id: 'scare1', type: 'screamer', position: { x: -25, z: 85 }, color: 'red', title: 'VIRUS DETECTADO' },
+  { id: 'scare2', type: 'screamer', position: { x: 60, z: -25 }, color: 'green', title: 'MALWARE INFILTRADO' },
 ];
 
 // ─── PARKOUR PLATFORMS (Ascending — puzzle terminal at TOP) ───
