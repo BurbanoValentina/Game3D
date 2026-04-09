@@ -28,6 +28,8 @@ import GameOverScreen from '../level1/GameOverScreen';
 import PauseMenu from '../level1/PauseMenu';
 import ScreamerOverlay from '../level1/ScreamerOverlay';
 import TokenMemoryOverlay from '../level1/TokenMemoryOverlay';
+import AwakeningOverlay from '../level1/AwakeningOverlay';
+import WrongAnswerOverlay from '../level1/WrongAnswerOverlay';
 import StatusBar from '../level1/StatusBar';
 import HolographicOverlay from '../effects/HolographicOverlay';
 
@@ -66,12 +68,13 @@ export default function GameApp() {
   const viewportStates = [
     GameStates.PLAYING, GameStates.PUZZLE, GameStates.MEMORY,
     GameStates.PAUSED, GameStates.SCREAMER, GameStates.TOKEN_MEMORY,
+    GameStates.AWAKENING, GameStates.WRONG_ANSWER,
   ];
 
   const showStatusBar = ![
     GameStates.LOADING, GameStates.LANDING, GameStates.REGISTER,
     GameStates.LOGIN, GameStates.TUTORIAL, GameStates.TUTORIAL_GAME,
-    GameStates.CREDITS, GameStates.TRAINING_ROOM,
+    GameStates.CREDITS, GameStates.TRAINING_ROOM, GameStates.AWAKENING,
   ].includes(gameState);
 
   return (
@@ -93,10 +96,12 @@ export default function GameApp() {
 
       {viewportStates.includes(gameState) && <GameViewport />}
 
+      {gameState === GameStates.AWAKENING && <AwakeningOverlay />}
       {gameState === GameStates.PUZZLE && <PuzzleModal />}
       {gameState === GameStates.PAUSED && <PauseMenu />}
       {gameState === GameStates.SCREAMER && <ScreamerOverlay />}
       {gameState === GameStates.TOKEN_MEMORY && <TokenMemoryOverlay />}
+      {gameState === GameStates.WRONG_ANSWER && <WrongAnswerOverlay />}
       {gameState === GameStates.KEY_OBTAINED && <KeyObtainedScreen />}
       {gameState === GameStates.VICTORY && <VictoryScreen />}
       {gameState === GameStates.GAME_OVER && <GameOverScreen />}
