@@ -8,7 +8,7 @@ export default function GameOverScreen() {
   const setGameState = useGameStore((s) => s.setGameState);
   const resetGame = useGameStore((s) => s.resetGame);
 
-  const handleRestart = () => { audioManager.stopAll(); resetGame(); setGameState(GameStates.BOOT); };
+  const handleRestart = () => { audioManager.stopAll(); resetGame(); setGameState(GameStates.CINEMATIC); };
   const handleMenu = () => { audioManager.stopAll(); resetGame(); setGameState(GameStates.TRAINING_ROOM); };
 
   return (
