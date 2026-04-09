@@ -146,13 +146,13 @@ export const LEVEL1_PARKOUR = [
 
 // ─── GRAFFITI TEXTS ───
 export const GRAFFITI_TEXTS = [
-  { text: 'SUYIN_WAVE estuvo aquí', color: '#00f0ff' },
-  { text: 'ZURI_APEX // SIEMPRE', color: '#ff0066' },
-  { text: '< No las olvides >', color: '#9d00ff' },
-  { text: 'echo $SUYIN $ZURI', color: '#00ff88' },
+  { text: 'ECHO_NODE estuvo aquí', color: '#00f0ff' },
+  { text: 'APEX_TRACE // SIEMPRE', color: '#ff0066' },
+  { text: '< No mires atrás >', color: '#9d00ff' },
+  { text: 'echo $EVA $MEMORY', color: '#00ff88' },
   { text: '// TODO: volver juntas', color: '#ff6600' },
-  { text: 'SUYIN.exists() → false', color: '#00f0ff' },
-  { text: 'ZURI.rebuild() → DENIED', color: '#ff0066' },
+  { text: 'MEMORY.exists() → unstable', color: '#00f0ff' },
+  { text: 'ECHO.rebuild() → DENIED', color: '#ff0066' },
 ];
 
 // ─── BOOT MESSAGES ───
@@ -176,11 +176,11 @@ export const BOOT_MESSAGES = [
 // ─── CINEMATIC LINES ───
 export const CINEMATIC_LINES = [
   'La Ciudad Neón ya no es lo que era.',
-  'Los NPCs que Suyin solía saludar están atrapados en bucles infinitos.',
-  'Los atajos que Zuri conocía de memoria... bloqueados.',
+  'Los NPCs están atrapados en bucles infinitos.',
+  'Los atajos del sistema... bloqueados.',
   'El mapa que las tres memorizaron juntas ahora solo lo recuerda Eva.',
   ' ',
-  'En las paredes, fragmentos de código de Suyin y Zuri.',
+  'En las paredes, fragmentos de código corrupto.',
   'Grafiti digital. Un recordatorio de que alguien más estuvo aquí.',
   ' ',
   'Eva avanza sola. No porque quiera. Porque es lo único que queda.',
@@ -236,7 +236,7 @@ export const TUTORIAL_STEPS = [
   { icon: 'camera', keys: 'MOUSE', title: 'CONTROL DE CÁMARA', desc: 'Mueve el ratón para girar la cámara y observar tu entorno en todas direcciones. Haz clic en la pantalla para activar el modo de juego y capturar el cursor. La cámara sigue tus movimientos del ratón en primera persona.' },
   { icon: 'jump', keys: 'ESPACIO', title: 'SALTAR Y PARKOUR', desc: 'Presiona la barra espaciadora para saltar. Puedes saltar sobre obstáculos, plataformas elevadas y bloques de parkour. Combina el salto con el movimiento WASD para alcanzar zonas altas donde hay tokens y puzzles escondidos.' },
   { icon: 'interact', keys: 'E', title: 'INTERACTUAR', desc: 'Cuando te acerques a un terminal de puzzle, un token flotante o cualquier objeto interactivo, verás un indicador en pantalla. Presiona E para activar la interacción. Esto abrirá puzzles, recogerá tokens o activará mecanismos del juego.' },
-  { icon: 'memory', keys: 'Q', title: 'INVOCAR MEMORIAS', desc: 'Presiona Q para invocar los ecos de Suyin y Zuri, las compañeras perdidas de Eva. Sus siluetas fantasmales aparecerán brevemente mostrándote pistas sobre la ubicación de objetos importantes. Tiene un tiempo de recarga entre usos.' },
+  { icon: 'memory', keys: 'Q', title: 'INVOCAR MEMORIAS', desc: 'Presiona Q para invocar ecos de memoria del OASIS. Una silueta fantasmal aparecerá brevemente mostrándote pistas sobre la ubicación de objetos importantes. Tiene un tiempo de recarga entre usos.' },
   { icon: 'puzzle', keys: 'TECLADO', title: 'RESOLVER PUZZLES', desc: 'Los puzzles son terminales naranjas flotantes distribuidos por la ciudad. Al interactuar con uno, aparecerá una pregunta de programación. Escribe la respuesta correcta y confirma. Cada puzzle resuelto te acerca a la llave del nivel y te recompensa con monedas.' },
   { icon: 'map', keys: 'MINIMAP', title: 'EL MAPA', desc: 'En la esquina superior derecha tienes un minimapa que muestra tu posición, los puzzles (círculos), los tokens (diamantes amarillos) y la llave. Los elementos amarillos están pendientes de recoger. Cuando los completes, se volverán verdes. Úsalo para orientarte.' },
   { icon: 'key', keys: 'PUZZLES', title: 'LAS LLAVES DE HALLIDAY', desc: 'Para completar cada nivel necesitas encontrar una Llave de Halliday. La llave aparece solo después de resolver suficientes puzzles. Busca el brillo dorado en el mapa y acércate para recogerla. Cada llave desbloquea el siguiente nivel del OASIS.' },
