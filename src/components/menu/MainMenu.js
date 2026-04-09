@@ -75,7 +75,7 @@ export default function MainMenu() {
   };
 
   const menuItems = [
-    { idx: '01', icon: 'play', label: 'SALA DE ENTRENAMIENTO', sub: 'Tutorial • Niveles • Créditos', action: handleStart, color: 'var(--neon-magenta)' },
+    { idx: '01', icon: 'play', label: 'COMENZAR', sub: 'Tutorial • Niveles • Créditos', action: handleStart, color: 'var(--neon-magenta)' },
   ];
 
   return (
@@ -121,7 +121,7 @@ export default function MainMenu() {
       </div>
 
       {/* ── Menu Buttons ── */}
-      <nav className="flex flex-col gap-3 w-full max-w-sm relative z-10">
+      <nav className="relative z-10 flex flex-col w-full max-w-sm gap-3">
         {menuItems.map((item, i) => (
           <button
             key={item.idx}
@@ -139,7 +139,7 @@ export default function MainMenu() {
             <span className="font-sharetm text-[10px]" style={{ color: 'var(--bronze)' }}>{item.idx}</span>
             <div style={{ color: item.color }}><MenuIcon type={item.icon} /></div>
             <div className="flex-1">
-              <span className="font-orbitron text-xs tracking-widest block" style={{ color: hoveredItem === item.idx ? item.color : 'var(--dark)' }}>{item.label}</span>
+              <span className="block text-xs tracking-widest font-orbitron" style={{ color: hoveredItem === item.idx ? item.color : 'var(--dark)' }}>{item.label}</span>
               <span className="font-sharetm text-[9px] tracking-wide" style={{ color: 'var(--bronze)' }}>{item.sub}</span>
             </div>
             <svg width="8" height="14" viewBox="0 0 8 14" style={{ color: item.color, opacity: hoveredItem === item.idx ? 0.8 : 0.2, transition: 'opacity 0.3s' }}>
@@ -159,7 +159,7 @@ export default function MainMenu() {
       </div>
 
       {/* ── Bottom Status ── */}
-      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-8">
+      <div className="absolute left-0 right-0 flex justify-center gap-8 bottom-6">
         {['NEXT.JS + THREE.JS', 'USUARIOS: 4.200M', 'SECTOR_7G'].map((text, i) => (
           <span key={i} className="font-sharetm text-[8px] tracking-widest" style={{ color: 'var(--bronze)', opacity: 0.5 }}>
             {text}
@@ -168,7 +168,7 @@ export default function MainMenu() {
       </div>
 
       {/* Scanlines */}
-      <div className="fixed inset-0 pointer-events-none z-20" style={{
+      <div className="fixed inset-0 z-20 pointer-events-none" style={{
         backgroundImage: 'repeating-linear-gradient(0deg, rgba(255,0,102,0.006) 0px, rgba(255,0,102,0.006) 1px, transparent 1px, transparent 4px)',
       }} />
     </div>
