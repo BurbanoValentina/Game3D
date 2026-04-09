@@ -9,7 +9,7 @@ export default function GameOverScreen() {
   const resetGame = useGameStore((s) => s.resetGame);
 
   const handleRestart = () => { audioManager.stopAll(); resetGame(); setGameState(GameStates.BOOT); };
-  const handleMenu = () => { audioManager.stopAll(); resetGame(); setGameState(GameStates.MAIN_MENU); };
+  const handleMenu = () => { audioManager.stopAll(); resetGame(); setGameState(GameStates.TRAINING_ROOM); };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(255,245,240,0.97)' }}>
