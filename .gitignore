@@ -5,5 +5,3 @@ out/
 .env.local
 *.log
 .DS_Store
-oasis-users.db-shm
-oasis-users.db-wal
