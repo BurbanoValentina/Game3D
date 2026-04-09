@@ -223,7 +223,7 @@ export default function HudOverlay() {
               MEMORIA DE EQUIPO ACTIVA — {memoryTimer}s
             </span>
             <div className="font-sharetm text-[9px] mt-1" style={{ color: 'var(--darker)' }}>
-              Ecos de Suyin y Zuri presentes
+              Ecos de memoria presentes
             </div>
           </div>
         </div>
