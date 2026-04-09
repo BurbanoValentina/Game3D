@@ -2,7 +2,7 @@
 
 // ══════════════════════════════════════════════════════
 //  CHARACTERS SCREEN — Selección de personajes
-//  Eva (activa), Suyin y Zuri (eliminadas)
+//  Eva (activa)
 // ══════════════════════════════════════════════════════
 
 import { useState } from 'react';
