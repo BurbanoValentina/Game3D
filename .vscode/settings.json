@@ -1,0 +1,12 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^git commit -m \"first commit\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^git add \\.gitignore && git commit -m \"Add \\.gitignore\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
