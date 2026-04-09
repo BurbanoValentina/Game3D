@@ -25,13 +25,11 @@ export default function PuzzleModal() {
       setCurrentPuzzle(null); setPuzzleInput(''); setShowHint(false);
       setGameState(GameStates.PLAYING);
     } else {
-      // Wrong! Lose 1 life
+      // Wrong! Lose 1 life — trigger dramatic overlay
       EventBus.emit('puzzleFailed');
       setPuzzleInput('');
-      // Check if game over
-      if (lives <= 1) {
-        setCurrentPuzzle(null); setPuzzleInput(''); setShowHint(false);
-      }
+      setCurrentPuzzle(null); setPuzzleInput(''); setShowHint(false);
+      setGameState(GameStates.WRONG_ANSWER);
     }
   }, [currentPuzzle, puzzleInput, lives, setGameState, setCurrentPuzzle, setPuzzleInput, setShowHint]);
 
