@@ -37,7 +37,7 @@ export default function VictoryScreen() {
 
         <div className="space-y-4 mb-10">
           <p className="font-rajdhani text-sm leading-relaxed" style={{ color: 'var(--darker)' }}>
-            La Ciudad Neón queda atrás. Los ecos de Suyin y Zuri aún resuenan en sus calles vacías.
+            La Ciudad Neón queda atrás. Los ecos del pasado aún resuenan en sus calles vacías.
           </p>
           <p className="font-rajdhani text-sm leading-relaxed" style={{ color: 'var(--bronze)' }}>
             El OASIS registra: Eva ha demostrado que puede avanzar sola.
