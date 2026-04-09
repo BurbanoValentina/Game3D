@@ -21,7 +21,7 @@ export default function CreditsScreen() {
   return (
     <div className="fixed inset-0 z-50" style={{ background: 'var(--cream)' }}>
       {/* Fixed controls */}
-      <button onClick={() => setGameState(GameStates.MAIN_MENU)}
+      <button onClick={() => setGameState(GameStates.TRAINING_ROOM)}
         className="fixed z-50 px-4 py-2 text-xs top-6 left-6 oasis-btn cursor-pointer" style={{ color: 'var(--dark)' }}>← VOLVER</button>
       <button onClick={() => setAutoScroll(!autoScroll)}
         className="fixed top-6 right-6 z-50 font-sharetm text-[9px] tracking-widest hover:underline cursor-pointer" style={{ color: 'var(--bronze)' }}>
@@ -106,7 +106,7 @@ export default function CreditsScreen() {
         <div className="pb-8 text-center">
           <p className="font-orbitron text-lg tracking-[0.3em] mb-4" style={{ color: 'var(--dark)' }}>INGENIERÍA DE SOFTWARE</p>
           <p className="font-sharetm text-[9px] tracking-widest mb-8" style={{ color: 'var(--bronze)' }}>UNIVERSIDAD // DISEÑO DE INTERFACES // 2025</p>
-          <button onClick={() => setGameState(GameStates.MAIN_MENU)} className="px-8 py-3 oasis-btn-premium cursor-pointer">VOLVER AL MENÚ</button>
+          <button onClick={() => setGameState(GameStates.TRAINING_ROOM)} className="px-8 py-3 oasis-btn-premium cursor-pointer">VOLVER A SALA</button>
         </div>
 
         <div className="h-[40vh]" />
