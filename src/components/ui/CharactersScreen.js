@@ -32,21 +32,21 @@ function CharacterCard({ charKey, data, selected, onSelect }) {
       )}
 
       {/* Avatar placeholder */}
-      <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
+      <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 rounded-full"
         style={{
           background: `linear-gradient(135deg, ${data.color}15, ${data.color}30)`,
           border: `2px solid ${data.color}44`,
           boxShadow: `0 0 20px ${data.color}15`,
         }}>
-        <span className="font-orbitron text-xl font-bold" style={{ color: data.color }}>
+        <span className="text-xl font-bold font-orbitron" style={{ color: data.color }}>
           {data.name[0]}
         </span>
       </div>
 
       {/* Name & Role */}
-      <div className="text-center mb-4">
-        <h3 className="font-orbitron text-lg tracking-widest text-oasis-dark">{data.name}</h3>
-        <p className="font-rajdhani text-sm text-oasis-taupe">{data.role}</p>
+      <div className="mb-4 text-center">
+        <h3 className="text-lg tracking-widest font-orbitron text-oasis-dark">{data.name}</h3>
+        <p className="text-sm font-rajdhani text-oasis-taupe">{data.role}</p>
       </div>
 
       {/* Skills */}
@@ -85,7 +85,7 @@ export default function CharactersScreen() {
   const setSelectedCharacter = useGameStore((s) => s.setSelectedCharacter);
 
   return (
-    <div className="fixed inset-0 z-30 flex flex-col items-center pt-16 pb-8 px-6 overflow-y-auto">
+    <div className="fixed inset-0 z-30 flex flex-col items-center px-6 pt-16 pb-8 overflow-y-auto">
       <h2 className="font-orbitron text-2xl tracking-[0.3em] text-oasis-dark mb-1">
         Personajes
       </h2>
@@ -93,7 +93,7 @@ export default function CharactersScreen() {
         SELECCIONA TU OPERARIA — OASIS SQUAD ALPHA
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+      <div className="grid w-full max-w-4xl grid-cols-1 gap-6 md:grid-cols-3">
         {Object.entries(CHARACTERS).map(([key, data]) => (
           <CharacterCard
             key={key}
@@ -105,17 +105,9 @@ export default function CharactersScreen() {
         ))}
       </div>
 
-      {/* Lore text */}
-      <div className="mt-8 max-w-lg text-center">
-        <p className="font-rajdhani text-xs text-oasis-warm italic leading-relaxed">
-          Suyin y Zuri fueron eliminadas por el Protocolo Veneno_Zagar.
-          Sus avatares no pueden regenerarse. Solo Eva continúa.
-        </p>
-      </div>
-
       <button
         onClick={() => setGameState(GameStates.MAIN_MENU)}
-        className="oasis-btn mt-8"
+        className="mt-8 oasis-btn"
       >
         ← VOLVER AL MENÚ
       </button>
