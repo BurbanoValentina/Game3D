@@ -1,8 +1,8 @@
 'use client';
 
 // ══════════════════════════════════════════════════════
-//  TUTORIAL GAME 3D — Dark Cyberpunk Training Room
-//  Neon-lit environment with holographic elements
+//  TUTORIAL GAME 3D — Rose/Cream Training Room
+//  Light environment with neon accents
 // ══════════════════════════════════════════════════════
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -11,12 +11,12 @@ import useGameStore from '../../lib/gameStore';
 
 // ─── TUTORIAL STEPS ───
 const TUTORIAL_STEPS = [
-  { id: 0, icon: '🎮', title: 'BIENVENIDA AL OASIS', instruction: 'Estás en la Sala de Entrenamiento. Aquí aprenderás a sobrevivir.', subtext: 'Haz clic en la pantalla para activar los controles del mouse.', type: 'click' },
-  { id: 1, icon: '🖱️', title: 'MIRAR ALREDEDOR', instruction: 'Mueve el mouse para mirar alrededor. Observa la sala de entrenamiento.', subtext: 'Mueve el mouse para continuar', type: 'mouse', requiredMouseMove: 300 },
-  { id: 2, icon: '⬆️', title: 'MOVIMIENTO', instruction: 'Usa W A S D para moverte. W=adelante, S=atrás, A=izquierda, D=derecha.', subtext: 'Camina por la sala usando WASD', type: 'move', requiredKeys: ['KeyW', 'KeyA', 'KeyS', 'KeyD'], requiredUnique: 3 },
-  { id: 3, icon: '🏃', title: 'CORRER', instruction: 'Mantén SHIFT mientras caminas para correr más rápido. ¡Siéntelo!', subtext: 'Mantén SHIFT + W para correr', type: 'sprint', holdDuration: 1500 },
-  { id: 4, icon: '🔼', title: 'SALTAR', instruction: 'Presiona ESPACIO para saltar. Útil para esquivar obstáculos.', subtext: 'Salta 2 veces', type: 'jump', requiredCount: 2 },
-  { id: 5, icon: '✅', title: '¡ENTRENAMIENTO COMPLETO!', instruction: 'Dominas los controles básicos. Eva está lista para entrar al OASIS.', subtext: 'Presiona ENTER o haz clic para continuar', type: 'final' },
+  { id: 0, icon: 'INIT', title: 'SALA DE ENTRENAMIENTO', instruction: 'Protocolo de calibración iniciado. Captura el cursor para activar los controles.', subtext: 'Haz clic en la pantalla para continuar.', type: 'click' },
+  { id: 1, icon: 'CAM', title: 'CONTROL VISUAL', instruction: 'Mueve el mouse para ajustar el campo de visión. Reconoce el entorno antes de avanzar.', subtext: 'Mueve el mouse para continuar', type: 'mouse', requiredMouseMove: 300 },
+  { id: 2, icon: 'MOV', title: 'DESPLAZAMIENTO', instruction: 'Usa W, A, S y D para desplazarte. W avanza, S retrocede, A y D controlan el movimiento lateral.', subtext: 'Desplázate usando WASD', type: 'move', requiredKeys: ['KeyW', 'KeyA', 'KeyS', 'KeyD'], requiredUnique: 3 },
+  { id: 3, icon: 'RUN', title: 'VELOCIDAD', instruction: 'Mantén SHIFT mientras te desplazas para aumentar la velocidad. Necesario para cubrir distancias largas.', subtext: 'Mantén SHIFT + W para correr', type: 'sprint', holdDuration: 1500 },
+  { id: 4, icon: 'JMP', title: 'SALTO', instruction: 'Presiona ESPACIO para saltar. Indispensable para superar obstáculos y alcanzar plataformas elevadas.', subtext: 'Ejecuta 2 saltos', type: 'jump', requiredCount: 2 },
+  { id: 5, icon: 'END', title: 'CALIBRACIÓN COMPLETA', instruction: 'Los controles básicos han sido registrados. Eva está lista para ingresar al OASIS.', subtext: 'Presiona ENTER o haz clic para continuar', type: 'final' },
 ];
 
 // ─── NOTIFICATION COMPONENT ───
@@ -26,24 +26,26 @@ function TutorialNotification({ step, progress, totalSteps, onSkip }) {
     <div className="fixed inset-x-0 bottom-0 z-[60] flex flex-col items-center pointer-events-none pb-8 px-4">
       <div className="w-full max-w-lg mb-4 pointer-events-auto">
         <div className="flex items-center justify-between mb-1">
-          <span className="font-sharetm text-[9px] tracking-[0.4em]" style={{ color: 'var(--bronze)' }}>ENTRENAMIENTO — {step.id + 1}/{totalSteps}</span>
+          <span className="font-sharetm text-[9px] tracking-[0.4em]" style={{ color: 'var(--bronze)' }}>CALIBRACIÓN — {step.id + 1}/{totalSteps}</span>
           <button onClick={onSkip} className="font-orbitron text-[10px] tracking-widest px-3 py-1 rounded transition-all hover:scale-105 cursor-pointer"
-            style={{ color: 'var(--neon-magenta)', background: 'rgba(255,240,235,0.85)', border: '1px solid rgba(255,0,102,0.2)', backdropFilter: 'blur(10px)' }}>SKIP →</button>
+            style={{ color: 'var(--neon-magenta)', background: 'rgba(255,240,235,0.85)', border: '1px solid rgba(255,0,102,0.2)', backdropFilter: 'blur(10px)' }}>SALTAR</button>
         </div>
         <div className="w-full h-[2px] rounded-full overflow-hidden" style={{ background: 'rgba(255,0,102,0.08)' }}>
           <div className="h-full rounded-full transition-all duration-500" style={{
             width: `${((step.id + 1) / totalSteps) * 100}%`,
-            background: 'linear-gradient(90deg, var(--neon-cyan), var(--holo-mint), var(--neon-green))',
+            background: 'linear-gradient(90deg, var(--neon-magenta), var(--neon-violet))',
             boxShadow: '0 0 8px rgba(255,0,102,0.3)',
           }} />
         </div>
       </div>
 
       <div className="w-full max-w-lg rounded-lg p-5 pointer-events-auto animate-fade-in-up" key={step.id}
-        style={{ background: 'rgba(255,245,240,0.92)', border: '1px solid rgba(255,0,102,0.15)', boxShadow: '0 0 30px rgba(255,0,102,0.04)', backdropFilter: 'blur(15px)' }}>
+        style={{ background: 'rgba(255,245,240,0.95)', border: '1px solid rgba(255,0,102,0.12)', boxShadow: '0 0 30px rgba(255,0,102,0.05)', backdropFilter: 'blur(15px)' }}>
         <div className="flex items-start gap-4">
-          <div className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center text-2xl"
-            style={{ background: 'rgba(255,0,102,0.04)', border: '1px solid rgba(255,0,102,0.15)' }}>{step.icon}</div>
+          <div className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
+            style={{ background: 'rgba(255,0,102,0.06)', border: '1px solid rgba(255,0,102,0.18)' }}>
+            <span className="font-orbitron text-[9px] tracking-wider font-bold" style={{ color: 'var(--neon-magenta)' }}>{step.icon}</span>
+          </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-orbitron text-sm tracking-widest mb-1" style={{ color: 'var(--neon-magenta)', textShadow: '0 0 8px rgba(255,0,102,0.3)' }}>{step.title}</h3>
             <p className="font-rajdhani text-sm leading-relaxed" style={{ color: 'var(--dark)' }}>{step.instruction}</p>
@@ -51,7 +53,7 @@ function TutorialNotification({ step, progress, totalSteps, onSkip }) {
               <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
                 <div className="h-full rounded-full transition-all duration-300" style={{
                   width: `${Math.min(progress, 100)}%`,
-                  background: progress >= 100 ? 'var(--neon-green)' : 'linear-gradient(90deg, var(--neon-cyan), var(--holo-mint))',
+                  background: progress >= 100 ? 'var(--neon-green)' : 'linear-gradient(90deg, var(--neon-magenta), var(--neon-violet))',
                   boxShadow: progress >= 100 ? '0 0 8px var(--neon-green)' : '0 0 5px rgba(255,0,102,0.3)',
                 }} />
               </div>
@@ -62,7 +64,7 @@ function TutorialNotification({ step, progress, totalSteps, onSkip }) {
       </div>
 
       {step.type === 'click' && (
-        <p className="font-sharetm text-[10px] tracking-widest mt-3 animate-pulse" style={{ color: 'rgba(255,0,102,0.5)' }}>▶ HAZ CLIC EN LA PANTALLA PARA COMENZAR</p>
+        <p className="font-sharetm text-[10px] tracking-widest mt-3 animate-pulse" style={{ color: 'rgba(255,0,102,0.5)' }}>HAZ CLIC EN LA PANTALLA PARA COMENZAR</p>
       )}
     </div>
   );
@@ -73,7 +75,7 @@ function SuccessFlash({ show }) {
   return (
     <div className="fixed inset-0 z-[55] flex items-center justify-center pointer-events-none animate-fade-in-up">
       <div className="px-8 py-4 rounded-lg" style={{ background: 'rgba(0,255,136,0.1)', border: '1px solid rgba(0,255,136,0.3)', boxShadow: '0 0 40px rgba(0,255,136,0.15)' }}>
-        <span className="font-orbitron text-xl tracking-[0.3em]" style={{ color: 'var(--neon-green)', textShadow: '0 0 15px rgba(0,255,136,0.5)' }}>✓ ¡COMPLETADO!</span>
+        <span className="font-orbitron text-xl tracking-[0.3em]" style={{ color: 'var(--neon-green)', textShadow: '0 0 15px rgba(0,255,136,0.5)' }}>COMPLETADO</span>
       </div>
     </div>
   );
@@ -162,8 +164,8 @@ export default function TutorialGame() {
       const THREE = await import('three');
 
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x0A0908);
-      scene.fog = new THREE.FogExp2(0x0A0908, 0.015);
+      scene.background = new THREE.Color(0xFFF5F0);
+      scene.fog = new THREE.FogExp2(0xFFF5F0, 0.012);
 
       const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 200);
       camera.position.set(0, 3, 0);
@@ -173,14 +175,14 @@ export default function TutorialGame() {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 0.8;
+      renderer.toneMappingExposure = 1.2;
       container.appendChild(renderer.domElement);
 
       // Lighting
-      const ambient = new THREE.AmbientLight(0x111122, 0.3);
+      const ambient = new THREE.AmbientLight(0xFFF5F0, 0.8);
       scene.add(ambient);
 
-      const mainLight = new THREE.PointLight(0x00f0ff, 2.5, 50);
+      const mainLight = new THREE.PointLight(0xFF0066, 1.8, 50);
       mainLight.position.set(0, 12, 0);
       mainLight.castShadow = true;
       scene.add(mainLight);
@@ -189,7 +191,7 @@ export default function TutorialGame() {
       const accentLights = [];
       accentColors.forEach((color, i) => {
         const angle = (i / accentColors.length) * Math.PI * 2;
-        const light = new THREE.PointLight(color, 1.5, 30);
+        const light = new THREE.PointLight(color, 0.8, 30);
         light.position.set(Math.cos(angle) * 18, 5, Math.sin(angle) * 18);
         scene.add(light);
         accentLights.push({ light, phase: i * 1.1 });
@@ -198,22 +200,22 @@ export default function TutorialGame() {
       // Floor
       const floorSize = 40;
       const floorGeo = new THREE.PlaneGeometry(floorSize, floorSize);
-      const floorMat = new THREE.MeshPhongMaterial({ color: 0x0A0908, emissive: 0x050404, shininess: 60, specular: 0x111111 });
+      const floorMat = new THREE.MeshPhongMaterial({ color: 0xF5E1DA, emissive: 0xEDCFC5, emissiveIntensity: 0.15, shininess: 40, specular: 0xFFFFFF });
       const floor = new THREE.Mesh(floorGeo, floorMat);
       floor.rotation.x = -Math.PI / 2;
       floor.receiveShadow = true;
       scene.add(floor);
 
-      const gridHelper = new THREE.GridHelper(floorSize, 40, 0x00f0ff, 0x00f0ff);
+      const gridHelper = new THREE.GridHelper(floorSize, 40, 0xFF0066, 0xFF0066);
       gridHelper.material.transparent = true;
-      gridHelper.material.opacity = 0.04;
+      gridHelper.material.opacity = 0.06;
       gridHelper.position.y = 0.02;
       scene.add(gridHelper);
 
       // Walls
       const wallHeight = 15;
       const halfSize = floorSize / 2;
-      const wallMat = new THREE.MeshPhongMaterial({ color: 0x1A1614, emissive: 0x050404, shininess: 20, transparent: true, opacity: 0.95 });
+      const wallMat = new THREE.MeshPhongMaterial({ color: 0xEDCFC5, emissive: 0xD4A99A, emissiveIntensity: 0.1, shininess: 15, transparent: true, opacity: 0.92 });
 
       [
         { pos: [0, wallHeight / 2, -halfSize], rot: [0, 0, 0] },
@@ -228,13 +230,13 @@ export default function TutorialGame() {
         wall.receiveShadow = true;
         scene.add(wall);
         const edgeGeo = new THREE.EdgesGeometry(geo);
-        const edgeMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.08 });
+        const edgeMat = new THREE.LineBasicMaterial({ color: 0xFF0066, transparent: true, opacity: 0.08 });
         wall.add(new THREE.LineSegments(edgeGeo, edgeMat));
       });
 
       // Ceiling
       const ceilGeo = new THREE.PlaneGeometry(floorSize, floorSize);
-      const ceilMat = new THREE.MeshPhongMaterial({ color: 0x0A0908, emissive: 0x030302, side: THREE.DoubleSide });
+      const ceilMat = new THREE.MeshPhongMaterial({ color: 0xFFF5F0, emissive: 0xF5E1DA, emissiveIntensity: 0.1, side: THREE.DoubleSide });
       const ceiling = new THREE.Mesh(ceilGeo, ceilMat);
       ceiling.rotation.x = Math.PI / 2;
       ceiling.position.y = wallHeight;
@@ -260,15 +262,15 @@ export default function TutorialGame() {
         scene.add(mesh);
       }
 
-      createWallText('SALA DE ENTRENAMIENTO', 0, 10, -halfSize + 0.2, 0, '#00f0ff');
-      createWallText('OASIS // TRAINING', halfSize - 0.2, 10, 0, -Math.PI / 2, '#FF61D8');
-      createWallText('EVA_STRIDER_∞', -halfSize + 0.2, 10, 0, Math.PI / 2, '#61FFD8');
-      createWallText('PREPARACIÓN', 0, 10, halfSize - 0.2, Math.PI, '#FFBB33');
+      createWallText('SALA DE ENTRENAMIENTO', 0, 10, -halfSize + 0.2, 0, '#FF0066');
+      createWallText('OASIS // TRAINING', halfSize - 0.2, 10, 0, -Math.PI / 2, '#9D00FF');
+      createWallText('EVA_STRIDER_∞', -halfSize + 0.2, 10, 0, Math.PI / 2, '#FF0066');
+      createWallText('PREPARACIÓN', 0, 10, halfSize - 0.2, Math.PI, '#8B5E55');
 
       // Holographic pillars
       [[-14, -14], [14, -14], [-14, 14], [14, 14], [-14, 0], [14, 0], [0, -14], [0, 14]].forEach(([px, pz]) => {
         const pillarGeo = new THREE.CylinderGeometry(0.4, 0.4, wallHeight, 6);
-        const pillarMat = new THREE.MeshPhongMaterial({ color: 0x00f0ff, emissive: 0x003344, transparent: true, opacity: 0.08, wireframe: true });
+        const pillarMat = new THREE.MeshPhongMaterial({ color: 0xFF0066, emissive: 0xD4A99A, transparent: true, opacity: 0.08, wireframe: true });
         const pillar = new THREE.Mesh(pillarGeo, pillarMat);
         pillar.position.set(px, wallHeight / 2, pz);
         scene.add(pillar);
@@ -283,7 +285,7 @@ export default function TutorialGame() {
         pPos[i * 3] = (Math.random() - 0.5) * floorSize;
         pPos[i * 3 + 1] = Math.random() * wallHeight;
         pPos[i * 3 + 2] = (Math.random() - 0.5) * floorSize;
-        const c = [[0, 0.94, 1], [1, 0.38, 0.85], [0.38, 1, 0.85], [0.85, 0.38, 1]][Math.floor(Math.random() * 4)];
+        const c = [[1, 0, 0.4], [0.62, 0, 1], [1, 0.38, 0.85], [0.55, 0.37, 0.34]][Math.floor(Math.random() * 4)];
         pCol[i * 3] = c[0]; pCol[i * 3 + 1] = c[1]; pCol[i * 3 + 2] = c[2];
       }
       pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
@@ -296,7 +298,7 @@ export default function TutorialGame() {
       cratePositions.forEach(([cx, cz], i) => {
         const size = 1.2 + Math.random() * 1;
         const crateGeo = new THREE.BoxGeometry(size, size, size);
-        const crateMat = new THREE.MeshPhongMaterial({ color: 0x1A1614, emissive: 0x050404, shininess: 30, transparent: true, opacity: 0.8 });
+        const crateMat = new THREE.MeshPhongMaterial({ color: 0xEDCFC5, emissive: 0xD4A99A, emissiveIntensity: 0.1, shininess: 20, transparent: true, opacity: 0.85 });
         const crate = new THREE.Mesh(crateGeo, crateMat);
         crate.position.set(cx, size / 2, cz);
         crate.castShadow = true;
@@ -308,7 +310,7 @@ export default function TutorialGame() {
 
       // Ceiling ring
       const ringGeo = new THREE.TorusGeometry(3, 0.12, 16, 48);
-      const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.15 });
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0xFF0066, transparent: true, opacity: 0.12 });
       const ring = new THREE.Mesh(ringGeo, ringMat);
       ring.position.set(0, wallHeight - 2, 0);
       ring.rotation.x = Math.PI / 2;
@@ -432,8 +434,8 @@ export default function TutorialGame() {
         player.position.y += player.velocity.y;
         if (player.position.y <= 3) { player.position.y = 3; player.velocity.y = 0; player.grounded = true; }
 
-        accentLights.forEach((al) => { al.light.intensity = 1.2 + 0.5 * Math.sin(time * 1.5 + al.phase); });
-        mainLight.intensity = 2.2 + 0.5 * Math.sin(time * 0.8);
+        accentLights.forEach((al) => { al.light.intensity = 0.6 + 0.3 * Math.sin(time * 1.5 + al.phase); });
+        mainLight.intensity = 1.5 + 0.3 * Math.sin(time * 0.8);
 
         const pArr = particles.geometry.attributes.position.array;
         for (let i = 0; i < pArr.length / 3; i++) {
@@ -474,7 +476,7 @@ export default function TutorialGame() {
       <TutorialNotification step={step} progress={progress} totalSteps={totalSteps} onSkip={handleSkip} />
       <SuccessFlash show={showSuccess} />
       <div className="fixed inset-0 pointer-events-none z-[45]" style={{
-        backgroundImage: 'repeating-linear-gradient(0deg, rgba(255,0,102,0.008) 0px, rgba(255,0,102,0.008) 1px, transparent 1px, transparent 4px)',
+        backgroundImage: 'repeating-linear-gradient(0deg, rgba(255,0,102,0.015) 0px, rgba(255,0,102,0.015) 1px, transparent 1px, transparent 4px)',
       }} />
     </div>
   );
