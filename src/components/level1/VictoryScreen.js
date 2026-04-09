@@ -6,8 +6,9 @@ import audioManager from '../../lib/audioManager';
 
 export default function VictoryScreen() {
   const setGameState = useGameStore((s) => s.setGameState);
+  const setLevel1Completed = useGameStore((s) => s.setLevel1Completed);
 
-  const handleContinue = () => { audioManager.stopAll(); setGameState(GameStates.CREDITS); };
+  const handleContinue = () => { audioManager.stopAll(); setLevel1Completed(true); setGameState(GameStates.CREDITS); };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(255,245,240,0.97)' }}>
