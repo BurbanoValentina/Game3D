@@ -19,7 +19,7 @@ function GirlsTogetherSVG() {
         <filter id="gt_soft"><feGaussianBlur stdDeviation="1.5" /><feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge></filter>
         <linearGradient id="gt_hair_eva" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#00D4E0" /><stop offset="100%" stopColor="#006677" /></linearGradient>
         <linearGradient id="gt_hair_suy" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#00DD88" /><stop offset="100%" stopColor="#005533" /></linearGradient>
-        <linearGradient id="gt_hair_zuri" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FF3388" /><stop offset="100%" stopColor="#880033" /></linearGradient>
+        <linearGradient id="gt_hair_ally_b" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FF3388" /><stop offset="100%" stopColor="#880033" /></linearGradient>
       </defs>
       <rect width="500" height="400" fill="url(#gt_bg)" rx="12" />
       {/* Stars */}
@@ -68,7 +68,7 @@ function GirlsTogetherSVG() {
         <text x="0" y="200" textAnchor="middle" fill="#1A0E0E" fontSize="10" fontFamily="monospace" fontWeight="bold" opacity="0.8">EVA</text>
       </g>
 
-      {/* ── SUYIN (Center) ── */}
+      {/* ── ALIADA A (Center) ── */}
       <g transform="translate(250, 90)">
         <path d="M-5,-38 C-30,-25 -28,20 -22,80" fill="none" stroke="url(#gt_hair_suy)" strokeWidth="7" strokeLinecap="round" opacity="0.8" />
         <path d="M5,-38 C30,-25 28,20 22,80" fill="none" stroke="url(#gt_hair_suy)" strokeWidth="7" strokeLinecap="round" opacity="0.8" />
@@ -90,13 +90,13 @@ function GirlsTogetherSVG() {
         <path d="M16,30 Q30,70 20,95" fill="none" stroke="#00DD88" strokeWidth="3" strokeLinecap="round" />
         <line x1="-8" y1="125" x2="-12" y2="190" stroke="#00AA66" strokeWidth="3" strokeLinecap="round" />
         <line x1="8" y1="125" x2="12" y2="190" stroke="#00AA66" strokeWidth="3" strokeLinecap="round" />
-        <text x="0" y="210" textAnchor="middle" fill="#00FF88" fontSize="10" fontFamily="monospace" fontWeight="bold" opacity="0.8">SUYIN</text>
+        <text x="0" y="210" textAnchor="middle" fill="#00FF88" fontSize="10" fontFamily="monospace" fontWeight="bold" opacity="0.8">ALIADA A</text>
       </g>
 
-      {/* ── ZURI (Center-Right) ── */}
+      {/* ── ALIADA B (Center-Right) ── */}
       <g transform="translate(350, 100)">
-        <path d="M-5,-35 C-22,-28 -32,15 -28,75" fill="none" stroke="url(#gt_hair_zuri)" strokeWidth="8" strokeLinecap="round" opacity="0.8" />
-        <path d="M5,-35 C22,-28 32,15 28,75" fill="none" stroke="url(#gt_hair_zuri)" strokeWidth="8" strokeLinecap="round" opacity="0.8" />
+        <path d="M-5,-35 C-22,-28 -32,15 -28,75" fill="none" stroke="url(#gt_hair_ally_b)" strokeWidth="8" strokeLinecap="round" opacity="0.8" />
+        <path d="M5,-35 C22,-28 32,15 28,75" fill="none" stroke="url(#gt_hair_ally_b)" strokeWidth="8" strokeLinecap="round" opacity="0.8" />
         <ellipse cx="0" cy="-5" rx="22" ry="26" fill="#251520" stroke="#FF3388" strokeWidth="1.5" />
         <ellipse cx="-8" cy="-8" rx="6" ry="7" fill="#150510" />
         <ellipse cx="-8" cy="-8" rx="5" ry="6" fill="#FF2277" opacity="0.7" />
@@ -115,7 +115,7 @@ function GirlsTogetherSVG() {
         <path d="M16,30 Q28,65 22,90" fill="none" stroke="#FF3388" strokeWidth="3" strokeLinecap="round" />
         <line x1="-8" y1="120" x2="-12" y2="180" stroke="#CC2266" strokeWidth="3" strokeLinecap="round" />
         <line x1="8" y1="120" x2="12" y2="180" stroke="#CC2266" strokeWidth="3" strokeLinecap="round" />
-        <text x="0" y="200" textAnchor="middle" fill="#FF0066" fontSize="10" fontFamily="monospace" fontWeight="bold" opacity="0.8">ZURI</text>
+        <text x="0" y="200" textAnchor="middle" fill="#FF0066" fontSize="10" fontFamily="monospace" fontWeight="bold" opacity="0.8">ALIADA B</text>
       </g>
 
       {/* Connection particles between them */}
@@ -176,7 +176,7 @@ function GirlsFightingSVG() {
         <path d="M-14,-2 Q-15,3 -13,6" fill="none" stroke="#1A0E0E" strokeWidth="1" opacity="0.5" />
       </g>
 
-      {/* ── ZURI (Right, aggressive pose) ── */}
+      {/* ── ALIADA B (Right, aggressive pose) ── */}
       <g transform="translate(370, 100)">
         <path d="M5,-35 C25,-28 38,15 30,70" fill="none" stroke="#FF3388" strokeWidth="7" strokeLinecap="round" opacity="0.8" />
         <path d="M-5,-35 C-20,-25 -25,5 -20,50" fill="none" stroke="#FF3388" strokeWidth="7" strokeLinecap="round" opacity="0.8" />
