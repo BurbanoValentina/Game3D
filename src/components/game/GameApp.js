@@ -14,6 +14,7 @@ import LandingPage from '../menu/LandingPage';
 import RegisterScreen from '../registro/RegisterScreen';
 import LoginScreen from '../registro/LoginScreen';
 import MainMenu from '../menu/MainMenu';
+import TrainingRoom from '../menu/TrainingRoom';
 import SettingsScreen from '../ajustes/SettingsScreen';
 import TutorialScreen from '../tutorial/TutorialScreen';
 import TutorialGame from '../tutorial/TutorialGame';
@@ -71,7 +72,7 @@ export default function GameApp() {
   const showStatusBar = ![
     GameStates.LOADING, GameStates.LANDING, GameStates.REGISTER,
     GameStates.LOGIN, GameStates.TUTORIAL, GameStates.TUTORIAL_GAME,
-    GameStates.CREDITS,
+    GameStates.CREDITS, GameStates.TRAINING_ROOM,
   ].includes(gameState);
 
   return (
@@ -84,6 +85,7 @@ export default function GameApp() {
       {gameState === GameStates.REGISTER && <RegisterScreen />}
       {gameState === GameStates.LOGIN && <LoginScreen />}
       {gameState === GameStates.MAIN_MENU && <MainMenu />}
+      {gameState === GameStates.TRAINING_ROOM && <TrainingRoom />}
       {gameState === GameStates.SETTINGS && <SettingsScreen />}
       {gameState === GameStates.TUTORIAL && <TutorialScreen />}
       {gameState === GameStates.TUTORIAL_GAME && <TutorialGame />}
