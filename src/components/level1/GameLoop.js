@@ -145,10 +145,6 @@ export function createGameLoop({
   // ─── PUZZLE FAILED ───
   unsubs.push(EventBus.on('puzzleFailed', () => {
     store().removeLife();
-    if (store().lives <= 0) {
-      useGameStore.getState().setGameState(GameStates.GAME_OVER);
-      document.exitPointerLock();
-    }
     addLog('RESPUESTA INCORRECTA — VIDA -1');
     audioManager.playGlitch();
   }));
