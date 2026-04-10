@@ -20,14 +20,7 @@ export function buildStreets(scene, THREE) {
   ewStreet.position.set(0, 0.08, 0);
   scene.add(ewStreet);
 
-  // Secondary diagonal streets
-  for (let s = 0; s < 4; s++) {
-    const angle = (Math.PI / 4) + (Math.PI / 2) * s;
-    const secStreet = new THREE.Mesh(new THREE.BoxGeometry(5, 0.12, 160), streetMat);
-    secStreet.position.set(Math.cos(angle) * 25, 0.06, Math.sin(angle) * 25);
-    secStreet.rotation.y = angle;
-    scene.add(secStreet);
-  }
+  // (Diagonal secondary streets removed — only N/S/E/W roads remain)
 
   // Lane markings
   for (let axis = 0; axis < 2; axis++) {
