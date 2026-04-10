@@ -48,58 +48,58 @@ export const WORLD_SIZE = 250;
 export const WORLD_HALF = 125;
 
 export const LEVEL1_PUZZLES = [
-  { id: 1, position: { x: 55, z: -45, y: 18 }, question: '¿Qué significa HTML? (siglas en inglés)', answer: 'hypertext markup language', hint: 'HyperText Markup Language', title: 'LENGUAJE WEB', reward: 300 },
-  { id: 2, position: { x: -70, z: 60, y: 18 }, question: '¿Qué símbolo se usa en CSS para seleccionar un ID?', answer: '#', hint: 'No es el punto (.)', title: 'SELECTOR CSS', reward: 300 },
-  { id: 3, position: { x: 90, z: 85, y: 18 }, question: 'En JS, ¿qué palabra declara una variable que NO cambia?', answer: 'const', hint: 'No es "let" ni "var"', title: 'VARIABLE JS', reward: 350 },
-  { id: 4, position: { x: -100, z: -90, y: 18 }, question: '¿Cuántos bits tiene 1 byte?', answer: '8', hint: '8 unidades mínimas', title: 'BITS Y BYTES', reward: 250 },
-  { id: 5, position: { x: 0, z: 110, y: 18 }, question: '¿Qué etiqueta HTML crea un enlace? (sin < >)', answer: 'a', hint: 'Primera letra, de "anchor"', title: 'ENLACES HTML', reward: 350 },
+  { id: 1, position: { x: 45, z: -40, y: 18 }, question: '¿Qué significa HTML? (siglas en inglés)', answer: 'hypertext markup language', hint: 'HyperText Markup Language', title: 'LENGUAJE WEB', reward: 300 },
+  { id: 2, position: { x: -55, z: 50, y: 18 }, question: '¿Qué símbolo se usa en CSS para seleccionar un ID?', answer: '#', hint: 'No es el punto (.)', title: 'SELECTOR CSS', reward: 300 },
+  { id: 3, position: { x: 70, z: 70, y: 18 }, question: 'En JS, ¿qué palabra declara una variable que NO cambia?', answer: 'const', hint: 'No es "let" ni "var"', title: 'VARIABLE JS', reward: 350 },
+  { id: 4, position: { x: -75, z: -70, y: 18 }, question: '¿Cuántos bits tiene 1 byte?', answer: '8', hint: '8 unidades mínimas', title: 'BITS Y BYTES', reward: 250 },
+  { id: 5, position: { x: 0, z: 80, y: 18 }, question: '¿Qué etiqueta HTML crea un enlace? (sin < >)', answer: 'a', hint: 'Primera letra, de "anchor"', title: 'ENLACES HTML', reward: 350 },
 ];
 
 export const LEVEL1_CHECKPOINTS = [
-  { x: 0, z: 0, label: 'INICIO' }, { x: 55, z: -45, label: 'SECTOR_A' },
-  { x: -70, z: 60, label: 'SECTOR_B' }, { x: 90, z: 85, label: 'SECTOR_C' },
-  { x: -100, z: -90, label: 'SECTOR_D' }, { x: 0, z: 110, label: 'SECTOR_E' },
-  { x: 0, z: -95, label: 'LLAVE_ÁMBAR' },
+  { x: 0, z: 0, label: 'INICIO' }, { x: 45, z: -40, label: 'SECTOR_A' },
+  { x: -55, z: 50, label: 'SECTOR_B' }, { x: 70, z: 70, label: 'SECTOR_C' },
+  { x: -75, z: -70, label: 'SECTOR_D' }, { x: 0, z: 80, label: 'SECTOR_E' },
+  { x: 0, z: -75, label: 'LLAVE_ÁMBAR' },
 ];
 
 export const LEVEL1_TOKENS = [
-  { id: 'mem1', type: 'memory', position: { x: 35, z: 35 }, image: 'girls_together', title: 'RECUERDO: Juntas', text: 'Las tres amigas, inseparables. Antes de que todo cambiara.' },
-  { id: 'mem2', type: 'memory', position: { x: -50, z: -35 }, image: 'girls_fighting', title: 'RECUERDO: La Pelea', text: 'El día que discutieron. Las palabras que nunca pudieron retirar.' },
-  { id: 'mem3', type: 'memory', position: { x: 75, z: -65 }, image: 'eva_grandpa', title: 'RECUERDO: El Abuelo', text: 'Eva y su abuelo, el día que le enseñó a programar.' },
-  { id: 'scare1', type: 'screamer', position: { x: -25, z: 85 }, color: 'red', title: 'VIRUS DETECTADO' },
-  { id: 'scare2', type: 'screamer', position: { x: 60, z: -25 }, color: 'green', title: 'MALWARE INFILTRADO' },
+  { id: 'mem1', type: 'memory', position: { x: 25, z: 25 }, image: 'girls_together', title: 'RECUERDO: Juntas', text: 'Las tres amigas, inseparables. Antes de que todo cambiara.' },
+  { id: 'mem2', type: 'memory', position: { x: -35, z: -25 }, image: 'girls_fighting', title: 'RECUERDO: La Pelea', text: 'El día que discutieron. Las palabras que nunca pudieron retirar.' },
+  { id: 'mem3', type: 'memory', position: { x: 55, z: -50, }, image: 'eva_grandpa', title: 'RECUERDO: El Abuelo', text: 'Eva y su abuelo, el día que le enseñó a programar.' },
+  { id: 'scare1', type: 'screamer', position: { x: -20, z: 65 }, color: 'red', title: 'VIRUS DETECTADO' },
+  { id: 'scare2', type: 'screamer', position: { x: 45, z: -20 }, color: 'green', title: 'MALWARE INFILTRADO' },
 ];
 
 export const LEVEL1_PARKOUR = [
   { puzzleId: 1, blocks: [
-    { x: 35, y: 2, z: -25, w: 4.5, h: 1, d: 4.5 }, { x: 40, y: 5, z: -28, w: 3.5, h: 1, d: 3.5 },
-    { x: 44, y: 8, z: -32, w: 3, h: 1, d: 3 }, { x: 47, y: 11, z: -36, w: 3, h: 1, d: 3 },
-    { x: 50, y: 14, z: -39, w: 3.5, h: 1, d: 3.5 }, { x: 52, y: 16, z: -42, w: 3, h: 1, d: 3 },
-    { x: 55, y: 18, z: -45, w: 5, h: 1.2, d: 5 },
+    { x: 25, y: 2, z: -22, w: 4.5, h: 1, d: 4.5 }, { x: 30, y: 5, z: -26, w: 3.5, h: 1, d: 3.5 },
+    { x: 34, y: 8, z: -29, w: 3, h: 1, d: 3 }, { x: 38, y: 11, z: -33, w: 3, h: 1, d: 3 },
+    { x: 41, y: 14, z: -36, w: 3.5, h: 1, d: 3.5 }, { x: 43, y: 16, z: -38, w: 3, h: 1, d: 3 },
+    { x: 45, y: 18, z: -40, w: 5, h: 1.2, d: 5 },
   ]},
   { puzzleId: 2, blocks: [
-    { x: -50, y: 2, z: 45, w: 4.5, h: 1, d: 4.5 }, { x: -55, y: 5, z: 48, w: 3.5, h: 1, d: 3.5 },
-    { x: -58, y: 8, z: 52, w: 3, h: 1, d: 3 }, { x: -62, y: 11, z: 55, w: 3, h: 1, d: 3 },
-    { x: -65, y: 14, z: 57, w: 3.5, h: 1, d: 3.5 }, { x: -68, y: 16, z: 59, w: 3, h: 1, d: 3 },
-    { x: -70, y: 18, z: 60, w: 5, h: 1.2, d: 5 },
+    { x: -35, y: 2, z: 30, w: 4.5, h: 1, d: 4.5 }, { x: -40, y: 5, z: 34, w: 3.5, h: 1, d: 3.5 },
+    { x: -44, y: 8, z: 38, w: 3, h: 1, d: 3 }, { x: -48, y: 11, z: 42, w: 3, h: 1, d: 3 },
+    { x: -51, y: 14, z: 45, w: 3.5, h: 1, d: 3.5 }, { x: -53, y: 16, z: 48, w: 3, h: 1, d: 3 },
+    { x: -55, y: 18, z: 50, w: 5, h: 1.2, d: 5 },
   ]},
   { puzzleId: 3, blocks: [
-    { x: 72, y: 2, z: 68, w: 4.5, h: 1, d: 4.5 }, { x: 76, y: 5, z: 72, w: 3.5, h: 1, d: 3.5 },
-    { x: 80, y: 8, z: 75, w: 3, h: 1, d: 3 }, { x: 83, y: 11, z: 78, w: 3, h: 1, d: 3 },
-    { x: 86, y: 14, z: 81, w: 3.5, h: 1, d: 3.5 }, { x: 88, y: 16, z: 83, w: 3, h: 1, d: 3 },
-    { x: 90, y: 18, z: 85, w: 5, h: 1.2, d: 5 },
+    { x: 50, y: 2, z: 50, w: 4.5, h: 1, d: 4.5 }, { x: 55, y: 5, z: 55, w: 3.5, h: 1, d: 3.5 },
+    { x: 59, y: 8, z: 59, w: 3, h: 1, d: 3 }, { x: 63, y: 11, z: 62, w: 3, h: 1, d: 3 },
+    { x: 66, y: 14, z: 65, w: 3.5, h: 1, d: 3.5 }, { x: 68, y: 16, z: 68, w: 3, h: 1, d: 3 },
+    { x: 70, y: 18, z: 70, w: 5, h: 1.2, d: 5 },
   ]},
   { puzzleId: 4, blocks: [
-    { x: -80, y: 2, z: -72, w: 4.5, h: 1, d: 4.5 }, { x: -84, y: 5, z: -76, w: 3.5, h: 1, d: 3.5 },
-    { x: -88, y: 8, z: -79, w: 3, h: 1, d: 3 }, { x: -92, y: 11, z: -82, w: 3, h: 1, d: 3 },
-    { x: -95, y: 14, z: -85, w: 3.5, h: 1, d: 3.5 }, { x: -98, y: 16, z: -88, w: 3, h: 1, d: 3 },
-    { x: -100, y: 18, z: -90, w: 5, h: 1.2, d: 5 },
+    { x: -55, y: 2, z: -52, w: 4.5, h: 1, d: 4.5 }, { x: -60, y: 5, z: -56, w: 3.5, h: 1, d: 3.5 },
+    { x: -64, y: 8, z: -60, w: 3, h: 1, d: 3 }, { x: -68, y: 11, z: -63, w: 3, h: 1, d: 3 },
+    { x: -71, y: 14, z: -66, w: 3.5, h: 1, d: 3.5 }, { x: -73, y: 16, z: -68, w: 3, h: 1, d: 3 },
+    { x: -75, y: 18, z: -70, w: 5, h: 1.2, d: 5 },
   ]},
   { puzzleId: 5, blocks: [
-    { x: -18, y: 2, z: 90, w: 4.5, h: 1, d: 4.5 }, { x: -14, y: 5, z: 94, w: 3.5, h: 1, d: 3.5 },
-    { x: -10, y: 8, z: 98, w: 3, h: 1, d: 3 }, { x: -6, y: 11, z: 102, w: 3, h: 1, d: 3 },
-    { x: -3, y: 14, z: 105, w: 3.5, h: 1, d: 3.5 }, { x: -1, y: 16, z: 108, w: 3, h: 1, d: 3 },
-    { x: 0, y: 18, z: 110, w: 5, h: 1.2, d: 5 },
+    { x: -16, y: 2, z: 60, w: 4.5, h: 1, d: 4.5 }, { x: -12, y: 5, z: 64, w: 3.5, h: 1, d: 3.5 },
+    { x: -8, y: 8, z: 68, w: 3, h: 1, d: 3 }, { x: -5, y: 11, z: 72, w: 3, h: 1, d: 3 },
+    { x: -3, y: 14, z: 75, w: 3.5, h: 1, d: 3.5 }, { x: -1, y: 16, z: 78, w: 3, h: 1, d: 3 },
+    { x: 0, y: 18, z: 80, w: 5, h: 1.2, d: 5 },
   ]},
 ];
 
