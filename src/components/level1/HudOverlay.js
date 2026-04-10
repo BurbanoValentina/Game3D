@@ -43,7 +43,7 @@ function PuzzleTracker({ solved, total }) {
 // ── Minimap ──
 function Minimap({ playerX, playerZ, puzzlesSolved, memoriesFound, collectedTokens }) {
   const mapSize = 160;
-  const mapScale = mapSize / 400; // ±200 = 400 map range
+  const mapScale = mapSize / 250; // ±125 = 250 map range
   const cx = mapSize / 2 + playerX * mapScale;
   const cz = mapSize / 2 + playerZ * mapScale;
 
@@ -99,7 +99,7 @@ function Minimap({ playerX, playerZ, puzzlesSolved, memoriesFound, collectedToke
         })}
 
         {/* Key position */}
-        <circle cx={mapSize / 2} cy={mapSize / 2 + (-140) * mapScale} r="3" fill="rgba(255,187,51,0.4)" stroke="rgba(255,187,51,0.6)" strokeWidth="0.5" />
+        <circle cx={mapSize / 2} cy={mapSize / 2 + (-95) * mapScale} r="3" fill="rgba(255,187,51,0.4)" stroke="rgba(255,187,51,0.6)" strokeWidth="0.5" />
 
         {/* Player */}
         <circle cx={cx} cy={cz} r="3.5" fill="#FF0066" style={{ filter: 'drop-shadow(0 0 3px #FF0066)' }}>
