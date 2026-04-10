@@ -11,28 +11,13 @@ export function addNeonEdges(mesh, geo, neonColor, THREE, opacity = 0.3) {
 }
 
 /**
- * Creates a flag pole with name sign on top of a building
+ * Creates a flat ground plaque (flag + name sign) at the base of a building
  */
 export function createBuildingFlag(buildingData, buildingHeight, THREE, scene) {
   const { x, z, name, location, flagColors } = buildingData;
   const group = new THREE.Group();
 
-  // Flag pole
-  const poleH = 8;
-  const poleMat = new THREE.MeshPhongMaterial({ color: 0x888888, shininess: 60 });
-  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, poleH, 6), poleMat);
-  pole.position.y = poleH / 2;
-  group.add(pole);
-
-  // Pole top ball
-  const ball = new THREE.Mesh(
-    new THREE.SphereGeometry(0.2, 8, 8),
-    new THREE.MeshPhongMaterial({ color: 0xffbb33, emissive: 0xaa7700, shininess: 100 })
-  );
-  ball.position.y = poleH;
-  group.add(ball);
-
-  // Flag (3 color stripes)
+  // Flat flag decal on the ground
   const flagCanvas = document.createElement('canvas');
   flagCanvas.width = 128; flagCanvas.height = 80;
   const fCtx = flagCanvas.getContext('2d');
@@ -41,65 +26,58 @@ export function createBuildingFlag(buildingData, buildingHeight, THREE, scene) {
     fCtx.fillStyle = c;
     fCtx.fillRect(i * stripeW, 0, stripeW, 80);
   });
-  // Add slight transparency
   fCtx.fillStyle = 'rgba(255,255,255,0.1)';
   fCtx.fillRect(0, 0, 128, 80);
 
   const flagTex = new THREE.CanvasTexture(flagCanvas);
   const flagMat = new THREE.MeshBasicMaterial({
-    map: flagTex, transparent: true, opacity: 0.9,
-    side: THREE.DoubleSide,
+    map: flagTex, transparent: true, opacity: 0.95, side: THREE.DoubleSide,
   });
-  const flagGeo = new THREE.PlaneGeometry(3, 1.8);
+  const flagGeo = new THREE.PlaneGeometry(5, 3);
   const flag = new THREE.Mesh(flagGeo, flagMat);
-  flag.position.set(1.6, poleH - 1, 0);
+  flag.rotation.x = -Math.PI / 2; // lay flat on ground
+  flag.position.set(0, 0.16, -2.5);
   group.add(flag);
 
-  // Name sign below flag
+  // Flat name sign on the ground next to the flag
   const signCanvas = document.createElement('canvas');
   signCanvas.width = 512; signCanvas.height = 128;
   const sCtx = signCanvas.getContext('2d');
-  // Background
-  sCtx.fillStyle = 'rgba(10,10,20,0.85)';
+  sCtx.fillStyle = 'rgba(10,10,20,0.9)';
   sCtx.fillRect(0, 0, 512, 128);
-  // Border
   sCtx.strokeStyle = '#00f0ff';
-  sCtx.lineWidth = 2;
+  sCtx.lineWidth = 3;
   sCtx.strokeRect(2, 2, 508, 124);
-  // Name
-  sCtx.font = 'bold 28px monospace';
+  sCtx.font = 'bold 36px monospace';
   sCtx.fillStyle = '#ffffff';
   sCtx.shadowColor = '#00f0ff';
-  sCtx.shadowBlur = 10;
+  sCtx.shadowBlur = 12;
   sCtx.textAlign = 'center';
-  sCtx.fillText(name, 256, 50);
-  // Location
-  sCtx.font = '18px monospace';
+  sCtx.fillText(name, 256, 55);
+  sCtx.font = '22px monospace';
   sCtx.fillStyle = '#00f0ff';
-  sCtx.shadowBlur = 5;
-  sCtx.fillText(location, 256, 90);
+  sCtx.shadowBlur = 6;
+  sCtx.fillText(location, 256, 95);
   sCtx.shadowBlur = 0;
-  // Corner decorations
   sCtx.fillStyle = '#ffbb33';
-  sCtx.fillRect(4, 4, 8, 2); sCtx.fillRect(4, 4, 2, 8);
-  sCtx.fillRect(500, 4, 8, 2); sCtx.fillRect(506, 4, 2, 8);
-  sCtx.fillRect(4, 122, 8, 2); sCtx.fillRect(4, 116, 2, 8);
-  sCtx.fillRect(500, 122, 8, 2); sCtx.fillRect(506, 116, 2, 8);
+  sCtx.fillRect(4, 4, 10, 3); sCtx.fillRect(4, 4, 3, 10);
+  sCtx.fillRect(498, 4, 10, 3); sCtx.fillRect(505, 4, 3, 10);
+  sCtx.fillRect(4, 121, 10, 3); sCtx.fillRect(4, 114, 3, 10);
+  sCtx.fillRect(498, 121, 10, 3); sCtx.fillRect(505, 114, 3, 10);
 
   const signTex = new THREE.CanvasTexture(signCanvas);
   const signMat = new THREE.MeshBasicMaterial({
     map: signTex, transparent: true, side: THREE.DoubleSide, opacity: 0.95,
   });
-  const signGeo = new THREE.PlaneGeometry(6, 1.5);
+  const signGeo = new THREE.PlaneGeometry(8, 2);
   const sign = new THREE.Mesh(signGeo, signMat);
-  sign.position.set(0, -1.5, 0);
+  sign.rotation.x = -Math.PI / 2;
+  sign.position.set(0, 0.17, 1.5);
   group.add(sign);
 
-  // Position the group on top of the building
-  group.position.set(x, buildingHeight + 1, z);
-
-  // Make sign always face camera by adding billboard behavior
-  group.userData.isBillboard = true;
+  // Position the group on the ground at the building's base (offset slightly outward)
+  group.position.set(x, 0, z);
+  group.userData.isBillboard = false;
 
   scene.add(group);
   return group;
