@@ -150,39 +150,118 @@ export default function RocketAnimation({ active, onImpact, onComplete }) {
 function drawRocket(ctx, x, y, frame) {
   ctx.save();
   ctx.translate(x, y);
-  // Body
-  ctx.fillStyle = '#ddd';
+
+  // ── Main body (cylindrical, with metallic gradient) ──
+  const bodyGrad = ctx.createLinearGradient(-14, 0, 14, 0);
+  bodyGrad.addColorStop(0, '#6a6a72');
+  bodyGrad.addColorStop(0.25, '#d8d8e0');
+  bodyGrad.addColorStop(0.5, '#ffffff');
+  bodyGrad.addColorStop(0.75, '#d8d8e0');
+  bodyGrad.addColorStop(1, '#5a5a62');
+  ctx.fillStyle = bodyGrad;
   ctx.beginPath();
-  ctx.moveTo(0, -40);
-  ctx.lineTo(-12, 20);
-  ctx.lineTo(12, 20);
+  ctx.moveTo(-12, -25);
+  ctx.lineTo(-12, 22);
+  ctx.lineTo(12, 22);
+  ctx.lineTo(12, -25);
   ctx.closePath();
   ctx.fill();
-  ctx.strokeStyle = '#ff4400';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#2a2a30';
+  ctx.lineWidth = 1;
   ctx.stroke();
-  // Nose cone
-  ctx.fillStyle = '#ff4400';
+
+  // Body panel lines (rivets / segments)
+  ctx.strokeStyle = 'rgba(40,40,50,0.5)';
+  ctx.lineWidth = 0.6;
+  [-12, 0, 12].forEach(py => {
+    ctx.beginPath(); ctx.moveTo(-12, py); ctx.lineTo(12, py); ctx.stroke();
+  });
+
+  // ── Nose cone (red, smooth curve) ──
+  const noseGrad = ctx.createLinearGradient(-12, -45, 12, -25);
+  noseGrad.addColorStop(0, '#992200');
+  noseGrad.addColorStop(0.5, '#ee3300');
+  noseGrad.addColorStop(1, '#661100');
+  ctx.fillStyle = noseGrad;
   ctx.beginPath();
-  ctx.moveTo(0, -40);
-  ctx.lineTo(-6, -25);
-  ctx.lineTo(6, -25);
+  ctx.moveTo(-12, -25);
+  ctx.quadraticCurveTo(-12, -50, 0, -52);
+  ctx.quadraticCurveTo(12, -50, 12, -25);
   ctx.closePath();
   ctx.fill();
-  // Fins
-  ctx.fillStyle = '#cc3300';
+  ctx.strokeStyle = '#2a0000';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Nose tip highlight
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
   ctx.beginPath();
-  ctx.moveTo(-12, 15); ctx.lineTo(-22, 25); ctx.lineTo(-12, 20); ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(12, 15); ctx.lineTo(22, 25); ctx.lineTo(12, 20); ctx.fill();
-  // Window
-  ctx.fillStyle = '#00f0ff';
-  ctx.shadowColor = '#00f0ff';
-  ctx.shadowBlur = 10;
-  ctx.beginPath();
-  ctx.arc(0, -10, 4, 0, Math.PI * 2);
+  ctx.ellipse(-3, -45, 2, 5, -0.3, 0, Math.PI * 2);
   ctx.fill();
-  ctx.shadowBlur = 0;
+
+  // ── Window (porthole with rim) ──
+  ctx.fillStyle = '#1a1a2a';
+  ctx.beginPath(); ctx.arc(0, -10, 5, 0, Math.PI * 2); ctx.fill();
+  const winGrad = ctx.createRadialGradient(-1, -11, 0, 0, -10, 5);
+  winGrad.addColorStop(0, '#aef6ff');
+  winGrad.addColorStop(0.6, '#00b8d4');
+  winGrad.addColorStop(1, '#003a4a');
+  ctx.fillStyle = winGrad;
+  ctx.beginPath(); ctx.arc(0, -10, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#888';
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.beginPath(); ctx.arc(-1.5, -11.5, 1.2, 0, Math.PI * 2); ctx.fill();
+
+  // ── Fins (red, triangular, with shading) ──
+  // Left fin
+  const finGradL = ctx.createLinearGradient(-22, 0, -12, 0);
+  finGradL.addColorStop(0, '#661100');
+  finGradL.addColorStop(1, '#cc2200');
+  ctx.fillStyle = finGradL;
+  ctx.beginPath();
+  ctx.moveTo(-12, 5);
+  ctx.lineTo(-24, 24);
+  ctx.lineTo(-12, 22);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#2a0000'; ctx.lineWidth = 0.8; ctx.stroke();
+  // Right fin
+  const finGradR = ctx.createLinearGradient(12, 0, 22, 0);
+  finGradR.addColorStop(0, '#cc2200');
+  finGradR.addColorStop(1, '#661100');
+  ctx.fillStyle = finGradR;
+  ctx.beginPath();
+  ctx.moveTo(12, 5);
+  ctx.lineTo(24, 24);
+  ctx.lineTo(12, 22);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  // Center fin (back)
+  ctx.fillStyle = '#882200';
+  ctx.beginPath();
+  ctx.moveTo(-3, 22); ctx.lineTo(0, 28); ctx.lineTo(3, 22); ctx.closePath();
+  ctx.fill();
+
+  // ── Engine nozzle ──
+  ctx.fillStyle = '#222';
+  ctx.beginPath();
+  ctx.moveTo(-7, 22);
+  ctx.lineTo(-9, 28);
+  ctx.lineTo(9, 28);
+  ctx.lineTo(7, 22);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#555'; ctx.lineWidth = 0.8; ctx.stroke();
+
+  // ── "USA" / mission stripe ──
+  ctx.fillStyle = '#cc0000';
+  ctx.fillRect(-12, -2, 24, 1.5);
+  ctx.fillStyle = '#003a8c';
+  ctx.fillRect(-12, 0, 24, 1.5);
+
   ctx.restore();
 }
 
