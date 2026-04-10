@@ -264,4 +264,4 @@ flowchart LR
 
 ## Licencia
 
-Videojuego Visual 2026.
+Proyecto educativo — Diseño de Interfaces 2025
