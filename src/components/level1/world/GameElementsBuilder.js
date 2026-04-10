@@ -116,10 +116,10 @@ export function buildKeyAndCheckpoints(scene, THREE, assets) {
   const keyGeo = new THREE.TorusKnotGeometry(1.2, 0.3, 80, 12);
   assets.keyMat = new THREE.MeshPhongMaterial({ color: 0xffbb33, emissive: 0xff8800, transparent: true, opacity: 0, shininess: 100 });
   assets.keyMesh = new THREE.Mesh(keyGeo, assets.keyMat);
-  assets.keyMesh.position.set(0, 4, -95);
+  assets.keyMesh.position.set(0, 4, -75);
   scene.add(assets.keyMesh);
   assets.keyLight = new THREE.PointLight(0xffbb33, 0, 35);
-  assets.keyLight.position.set(0, 4, -95);
+  assets.keyLight.position.set(0, 4, -75);
   scene.add(assets.keyLight);
 
   // Checkpoints
