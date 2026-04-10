@@ -1,551 +1,266 @@
-'use client';
+// ══════════════════════════════════════════════════════
+//  TOKEN MEMORY OVERLAY — Memory recall with suffering
+//  Screen glitches like VHS, character suffers the pain
+//  of remembering — then sees the memory image
+// ══════════════════════════════════════════════════════
 
-import { useCallback, useState, useEffect, useRef } from 'react';
+'use client';
+import { useState, useEffect, useCallback } from 'react';
 import { GameStates } from '../../constants/gameConstants';
 import useGameStore from '../../lib/gameStore';
+import MemoryGlitchEffect from './effects/MemoryGlitchEffect';
 
-// ═══════════════════════════════════════
-//  SVG ANIME ILLUSTRATION: Girls Together
-// ═══════════════════════════════════════
-function GirlsTogetherSVG() {
-  return (
-    <svg viewBox="0 0 500 400" className="w-full max-w-md rounded-lg" style={{ filter: 'drop-shadow(0 0 20px rgba(255,0,102,0.15))' }}>
-      <defs>
-        <radialGradient id="gt_bg" cx="50%" cy="40%" r="60%">
-          <stop offset="0%" stopColor="#0a1628" />
-          <stop offset="100%" stopColor="#050510" />
-        </radialGradient>
-        <filter id="gt_glow"><feGaussianBlur stdDeviation="3" /><feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-        <filter id="gt_soft"><feGaussianBlur stdDeviation="1.5" /><feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-        <linearGradient id="gt_hair_eva" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#00D4E0" /><stop offset="100%" stopColor="#006677" /></linearGradient>
-        <linearGradient id="gt_hair_suy" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#00DD88" /><stop offset="100%" stopColor="#005533" /></linearGradient>
-        <linearGradient id="gt_hair_ally_b" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FF3388" /><stop offset="100%" stopColor="#880033" /></linearGradient>
-      </defs>
-      <rect width="500" height="400" fill="url(#gt_bg)" rx="12" />
-      {/* Stars */}
-      {Array.from({length: 40}).map((_, i) => <circle key={i} cx={(i*67+30)%490} cy={(i*41+10)%200} r={0.5+i%3*0.4} fill="#fff" opacity={0.2+i%4*0.15} />)}
-      {/* Holographic ground line */}
-      <line x1="50" y1="340" x2="450" y2="340" stroke="#1A0E0E" strokeWidth="1" opacity="0.15" />
-      <line x1="80" y1="342" x2="420" y2="342" stroke="#FF61D8" strokeWidth="0.5" opacity="0.1" />
-
-      {/* ── EVA (Center-Left) ── */}
-      <g transform="translate(150, 100)">
-        {/* Hair flowing */}
-        <path d="M-5,-35 C-25,-30 -35,10 -30,70 C-28,85 -22,95 -18,100" fill="none" stroke="url(#gt_hair_eva)" strokeWidth="8" strokeLinecap="round" opacity="0.8" />
-        <path d="M5,-35 C25,-30 35,10 30,70 C28,85 22,95 18,100" fill="none" stroke="url(#gt_hair_eva)" strokeWidth="8" strokeLinecap="round" opacity="0.8" />
-        <path d="M-15,-30 C-18,-10 -20,20 -25,60" fill="none" stroke="#00B8CC" strokeWidth="4" opacity="0.5" />
-        {/* Head */}
-        <ellipse cx="0" cy="-5" rx="22" ry="26" fill="#2a2035" stroke="#00D4E0" strokeWidth="1.5" />
-        {/* Eyes — large anime style */}
-        <ellipse cx="-8" cy="-8" rx="6" ry="7" fill="#001520" />
-        <ellipse cx="-8" cy="-8" rx="5" ry="6" fill="#00CCDD" opacity="0.7" />
-        <circle cx="-6" cy="-10" r="2" fill="#fff" opacity="0.9" />
-        <circle cx="-10" cy="-7" r="1" fill="#fff" opacity="0.5" />
-        <ellipse cx="8" cy="-8" rx="6" ry="7" fill="#001520" />
-        <ellipse cx="8" cy="-8" rx="5" ry="6" fill="#00CCDD" opacity="0.7" />
-        <circle cx="10" cy="-10" r="2" fill="#fff" opacity="0.9" />
-        <circle cx="6" cy="-7" r="1" fill="#fff" opacity="0.5" />
-        {/* Eyebrows */}
-        <path d="M-14,-17 Q-8,-20 -2,-17" fill="none" stroke="#00D4E0" strokeWidth="1.2" />
-        <path d="M2,-17 Q8,-20 14,-17" fill="none" stroke="#00D4E0" strokeWidth="1.2" />
-        {/* Nose + Mouth */}
-        <path d="M0,-1 L-1,3" fill="none" stroke="#00AACC" strokeWidth="0.8" opacity="0.5" />
-        <path d="M-5,8 Q0,12 5,8" fill="none" stroke="#FF88AA" strokeWidth="1.2" />
-        {/* Body — futuristic suit */}
-        <path d="M-16,22 L-20,120 Q0,128 20,120 L16,22 Q0,18 -16,22Z" fill="#0a1a2a" stroke="#00D4E0" strokeWidth="1" opacity="0.9" />
-        <line x1="0" y1="25" x2="0" y2="115" stroke="#00D4E0" strokeWidth="0.5" opacity="0.3" />
-        {/* Suit glow lines */}
-        <path d="M-12,40 L-8,45" stroke="#1A0E0E" strokeWidth="1" opacity="0.6" />
-        <path d="M12,40 L8,45" stroke="#1A0E0E" strokeWidth="1" opacity="0.6" />
-        <circle cx="0" cy="50" r="3" fill="#1A0E0E" opacity="0.15" filter="url(#gt_glow)" />
-        {/* Arms */}
-        <path d="M-16,30 Q-28,65 -22,90" fill="none" stroke="#00D4E0" strokeWidth="3" strokeLinecap="round" />
-        <path d="M16,30 Q28,65 22,90" fill="none" stroke="#00D4E0" strokeWidth="3" strokeLinecap="round" />
-        {/* Legs */}
-        <line x1="-8" y1="120" x2="-12" y2="180" stroke="#00AACC" strokeWidth="3" strokeLinecap="round" />
-        <line x1="8" y1="120" x2="12" y2="180" stroke="#00AACC" strokeWidth="3" strokeLinecap="round" />
-        {/* Label */}
-        <text x="0" y="200" textAnchor="middle" fill="#1A0E0E" fontSize="10" fontFamily="monospace" fontWeight="bold" opacity="0.8">EVA</text>
-      </g>
-
-      {/* ── ALIADA A (Center) ── */}
-      <g transform="translate(250, 90)">
-        <path d="M-5,-38 C-30,-25 -28,20 -22,80" fill="none" stroke="url(#gt_hair_suy)" strokeWidth="7" strokeLinecap="round" opacity="0.8" />
-        <path d="M5,-38 C30,-25 28,20 22,80" fill="none" stroke="url(#gt_hair_suy)" strokeWidth="7" strokeLinecap="round" opacity="0.8" />
-        <ellipse cx="0" cy="-5" rx="22" ry="26" fill="#1a2520" stroke="#00DD88" strokeWidth="1.5" />
-        <ellipse cx="-8" cy="-8" rx="6" ry="7" fill="#001510" />
-        <ellipse cx="-8" cy="-8" rx="5" ry="6" fill="#00CC77" opacity="0.7" />
-        <circle cx="-6" cy="-10" r="2" fill="#fff" opacity="0.9" />
-        <ellipse cx="8" cy="-8" rx="6" ry="7" fill="#001510" />
-        <ellipse cx="8" cy="-8" rx="5" ry="6" fill="#00CC77" opacity="0.7" />
-        <circle cx="10" cy="-10" r="2" fill="#fff" opacity="0.9" />
-        <path d="M-14,-17 Q-8,-20 -2,-17" fill="none" stroke="#00DD88" strokeWidth="1.2" />
-        <path d="M2,-17 Q8,-20 14,-17" fill="none" stroke="#00DD88" strokeWidth="1.2" />
-        <path d="M0,-1 L-1,3" fill="none" stroke="#00AA66" strokeWidth="0.8" opacity="0.5" />
-        <path d="M-5,8 Q0,12 5,8" fill="none" stroke="#FF88AA" strokeWidth="1.2" />
-        <path d="M-16,22 L-20,125 Q0,133 20,125 L16,22 Q0,18 -16,22Z" fill="#0a201a" stroke="#00DD88" strokeWidth="1" />
-        <line x1="0" y1="25" x2="0" y2="120" stroke="#00DD88" strokeWidth="0.5" opacity="0.3" />
-        <circle cx="0" cy="50" r="3" fill="#00FF88" opacity="0.15" filter="url(#gt_glow)" />
-        <path d="M-16,30 Q-30,70 -20,95" fill="none" stroke="#00DD88" strokeWidth="3" strokeLinecap="round" />
-        <path d="M16,30 Q30,70 20,95" fill="none" stroke="#00DD88" strokeWidth="3" strokeLinecap="round" />
-        <line x1="-8" y1="125" x2="-12" y2="190" stroke="#00AA66" strokeWidth="3" strokeLinecap="round" />
-        <line x1="8" y1="125" x2="12" y2="190" stroke="#00AA66" strokeWidth="3" strokeLinecap="round" />
-        <text x="0" y="210" textAnchor="middle" fill="#00FF88" fontSize="10" fontFamily="monospace" fontWeight="bold" opacity="0.8">ALIADA A</text>
-      </g>
-
-      {/* ── ALIADA B (Center-Right) ── */}
-      <g transform="translate(350, 100)">
-        <path d="M-5,-35 C-22,-28 -32,15 -28,75" fill="none" stroke="url(#gt_hair_ally_b)" strokeWidth="8" strokeLinecap="round" opacity="0.8" />
-        <path d="M5,-35 C22,-28 32,15 28,75" fill="none" stroke="url(#gt_hair_ally_b)" strokeWidth="8" strokeLinecap="round" opacity="0.8" />
-        <ellipse cx="0" cy="-5" rx="22" ry="26" fill="#251520" stroke="#FF3388" strokeWidth="1.5" />
-        <ellipse cx="-8" cy="-8" rx="6" ry="7" fill="#150510" />
-        <ellipse cx="-8" cy="-8" rx="5" ry="6" fill="#FF2277" opacity="0.7" />
-        <circle cx="-6" cy="-10" r="2" fill="#fff" opacity="0.9" />
-        <ellipse cx="8" cy="-8" rx="6" ry="7" fill="#150510" />
-        <ellipse cx="8" cy="-8" rx="5" ry="6" fill="#FF2277" opacity="0.7" />
-        <circle cx="10" cy="-10" r="2" fill="#fff" opacity="0.9" />
-        <path d="M-14,-17 Q-8,-20 -2,-17" fill="none" stroke="#FF3388" strokeWidth="1.2" />
-        <path d="M2,-17 Q8,-20 14,-17" fill="none" stroke="#FF3388" strokeWidth="1.2" />
-        <path d="M0,-1 L-1,3" fill="none" stroke="#CC2266" strokeWidth="0.8" opacity="0.5" />
-        <path d="M-5,8 Q0,12 5,8" fill="none" stroke="#FF88AA" strokeWidth="1.2" />
-        <path d="M-16,22 L-20,120 Q0,128 20,120 L16,22 Q0,18 -16,22Z" fill="#200a15" stroke="#FF3388" strokeWidth="1" />
-        <line x1="0" y1="25" x2="0" y2="115" stroke="#FF3388" strokeWidth="0.5" opacity="0.3" />
-        <circle cx="0" cy="50" r="3" fill="#FF0066" opacity="0.15" filter="url(#gt_glow)" />
-        <path d="M-16,30 Q-28,65 -22,90" fill="none" stroke="#FF3388" strokeWidth="3" strokeLinecap="round" />
-        <path d="M16,30 Q28,65 22,90" fill="none" stroke="#FF3388" strokeWidth="3" strokeLinecap="round" />
-        <line x1="-8" y1="120" x2="-12" y2="180" stroke="#CC2266" strokeWidth="3" strokeLinecap="round" />
-        <line x1="8" y1="120" x2="12" y2="180" stroke="#CC2266" strokeWidth="3" strokeLinecap="round" />
-        <text x="0" y="200" textAnchor="middle" fill="#FF0066" fontSize="10" fontFamily="monospace" fontWeight="bold" opacity="0.8">ALIADA B</text>
-      </g>
-
-      {/* Connection particles between them */}
-      {[0,1,2,3,4,5].map(i => <circle key={`p${i}`} cx={180+i*30} cy={170+Math.sin(i*1.2)*15} r={1.5} fill={['#1A0E0E','#00FF88','#FF0066'][i%3]} opacity="0.4"><animate attributeName="opacity" values="0.2;0.6;0.2" dur={`${2+i*0.3}s`} repeatCount="indefinite" /></circle>)}
-      {/* Dashed connection line */}
-      <line x1="170" y1="200" x2="330" y2="200" stroke="#fff" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.12" />
-
-      {/* Title */}
-      <text x="250" y="370" textAnchor="middle" fill="#1A0E0E" fontSize="14" fontFamily="monospace" fontWeight="bold" filter="url(#gt_soft)" opacity="0.9">JUNTAS</text>
-      <text x="250" y="388" textAnchor="middle" fill="#888" fontSize="8" fontFamily="monospace" opacity="0.4">// memory_fragment_001</text>
-    </svg>
-  );
-}
-
-// ═══════════════════════════════════════
-//  SVG ANIME ILLUSTRATION: Girls Fighting
-// ═══════════════════════════════════════
-function GirlsFightingSVG() {
-  return (
-    <svg viewBox="0 0 500 400" className="w-full max-w-md rounded-lg" style={{ filter: 'drop-shadow(0 0 20px rgba(255,0,102,0.15))' }}>
-      <defs>
-        <radialGradient id="gf_bg" cx="50%" cy="50%" r="60%">
-          <stop offset="0%" stopColor="#1a0510" />
-          <stop offset="100%" stopColor="#050505" />
-        </radialGradient>
-        <filter id="gf_glow"><feGaussianBlur stdDeviation="4" /><feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-      </defs>
-      <rect width="500" height="400" fill="url(#gf_bg)" rx="12" />
-      {/* Tension energy background */}
-      <circle cx="250" cy="200" r="120" fill="none" stroke="#FF0066" strokeWidth="0.5" opacity="0.08"><animate attributeName="r" values="100;140;100" dur="3s" repeatCount="indefinite" /></circle>
-      <circle cx="250" cy="200" r="80" fill="none" stroke="#1A0E0E" strokeWidth="0.5" opacity="0.06"><animate attributeName="r" values="70;90;70" dur="2.5s" repeatCount="indefinite" /></circle>
-
-      {/* ── EVA (Left, defensive pose) ── */}
-      <g transform="translate(130, 100)">
-        <path d="M-5,-35 C-25,-30 -35,10 -30,70" fill="none" stroke="#00D4E0" strokeWidth="7" strokeLinecap="round" opacity="0.8" />
-        <path d="M5,-35 C20,-25 25,5 20,50" fill="none" stroke="#00D4E0" strokeWidth="7" strokeLinecap="round" opacity="0.8" />
-        <ellipse cx="0" cy="-5" rx="22" ry="26" fill="#1a2030" stroke="#00D4E0" strokeWidth="1.5" />
-        {/* Sad/angry eyes */}
-        <ellipse cx="-8" cy="-6" rx="5" ry="5.5" fill="#001520" />
-        <ellipse cx="-8" cy="-6" rx="4" ry="4.5" fill="#00AACC" opacity="0.8" />
-        <circle cx="-7" cy="-8" r="1.5" fill="#fff" opacity="0.8" />
-        <ellipse cx="8" cy="-6" rx="5" ry="5.5" fill="#001520" />
-        <ellipse cx="8" cy="-6" rx="4" ry="4.5" fill="#00AACC" opacity="0.8" />
-        <circle cx="9" cy="-8" r="1.5" fill="#fff" opacity="0.8" />
-        {/* Furrowed brows */}
-        <path d="M-14,-14 L-2,-17" fill="none" stroke="#00D4E0" strokeWidth="1.5" />
-        <path d="M2,-17 L14,-14" fill="none" stroke="#00D4E0" strokeWidth="1.5" />
-        {/* Tight mouth */}
-        <line x1="-4" y1="9" x2="4" y2="9" stroke="#CC8899" strokeWidth="1.2" />
-        {/* Body */}
-        <path d="M-16,22 L-18,120 Q0,126 18,120 L16,22Z" fill="#0a1a2a" stroke="#00D4E0" strokeWidth="1" />
-        {/* Arm raised defensively */}
-        <path d="M-16,30 Q-35,40 -40,20 L-38,15" fill="none" stroke="#00D4E0" strokeWidth="3" strokeLinecap="round" />
-        <path d="M16,30 Q25,50 20,80" fill="none" stroke="#00D4E0" strokeWidth="3" strokeLinecap="round" />
-        <line x1="-8" y1="120" x2="-14" y2="185" stroke="#00AACC" strokeWidth="3" strokeLinecap="round" />
-        <line x1="8" y1="120" x2="14" y2="185" stroke="#00AACC" strokeWidth="3" strokeLinecap="round" />
-        {/* Tear */}
-        <path d="M-14,-2 Q-15,3 -13,6" fill="none" stroke="#1A0E0E" strokeWidth="1" opacity="0.5" />
-      </g>
-
-      {/* ── ALIADA B (Right, aggressive pose) ── */}
-      <g transform="translate(370, 100)">
-        <path d="M5,-35 C25,-28 38,15 30,70" fill="none" stroke="#FF3388" strokeWidth="7" strokeLinecap="round" opacity="0.8" />
-        <path d="M-5,-35 C-20,-25 -25,5 -20,50" fill="none" stroke="#FF3388" strokeWidth="7" strokeLinecap="round" opacity="0.8" />
-        <ellipse cx="0" cy="-5" rx="22" ry="26" fill="#251520" stroke="#FF3388" strokeWidth="1.5" />
-        {/* Angry eyes */}
-        <ellipse cx="-8" cy="-6" rx="5" ry="4.5" fill="#150510" />
-        <ellipse cx="-8" cy="-6" rx="4" ry="3.5" fill="#FF1155" opacity="0.8" />
-        <circle cx="-7" cy="-7" r="1.5" fill="#fff" opacity="0.8" />
-        <ellipse cx="8" cy="-6" rx="5" ry="4.5" fill="#150510" />
-        <ellipse cx="8" cy="-6" rx="4" ry="3.5" fill="#FF1155" opacity="0.8" />
-        <circle cx="9" cy="-7" r="1.5" fill="#fff" opacity="0.8" />
-        {/* Angry brows */}
-        <path d="M-14,-17 L-2,-13" fill="none" stroke="#FF3388" strokeWidth="1.8" />
-        <path d="M2,-13 L14,-17" fill="none" stroke="#FF3388" strokeWidth="1.8" />
-        {/* Shouting mouth */}
-        <ellipse cx="0" cy="10" rx="5" ry="4" fill="#220010" stroke="#FF3388" strokeWidth="0.8" />
-        {/* Body */}
-        <path d="M-16,22 L-18,120 Q0,126 18,120 L16,22Z" fill="#200a15" stroke="#FF3388" strokeWidth="1" />
-        {/* Arm pointing forward aggressively */}
-        <path d="M16,30 Q40,35 55,25" fill="none" stroke="#FF3388" strokeWidth="3" strokeLinecap="round" />
-        <path d="M-16,30 Q-25,50 -20,80" fill="none" stroke="#FF3388" strokeWidth="3" strokeLinecap="round" />
-        <line x1="-8" y1="120" x2="-14" y2="185" stroke="#CC2266" strokeWidth="3" strokeLinecap="round" />
-        <line x1="8" y1="120" x2="14" y2="185" stroke="#CC2266" strokeWidth="3" strokeLinecap="round" />
-      </g>
-
-      {/* Lightning / conflict energy between them */}
-      <g filter="url(#gf_glow)" opacity="0.7">
-        <path d="M200,170 L220,185 L210,200 L235,215 L220,230 L250,250" fill="none" stroke="#FF0066" strokeWidth="2.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.8s" repeatCount="indefinite" /></path>
-        <path d="M300,170 L280,185 L290,200 L265,215 L280,230 L250,250" fill="none" stroke="#1A0E0E" strokeWidth="2.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.7s" repeatCount="indefinite" /></path>
-      </g>
-      {/* Broken heart */}
-      <g transform="translate(250, 200)" opacity="0.5">
-        <path d="M0,-8 C-4,-14 -12,-14 -12,-6 C-12,2 0,10 0,10 C0,10 12,2 12,-6 C12,-14 4,-14 0,-8Z" fill="#FF0066" opacity="0.4" />
-        <line x1="0" y1="-12" x2="0" y2="12" stroke="#1a0510" strokeWidth="2" />
-      </g>
-
-      <text x="250" y="370" textAnchor="middle" fill="#FF0066" fontSize="14" fontFamily="monospace" fontWeight="bold" opacity="0.9">LA PELEA</text>
-      <text x="250" y="388" textAnchor="middle" fill="#888" fontSize="8" fontFamily="monospace" opacity="0.4">// memory_fragment_002</text>
-    </svg>
-  );
-}
-
-// ═══════════════════════════════════════
-//  SVG ANIME ILLUSTRATION: Eva + Grandpa
-// ═══════════════════════════════════════
-function EvaGrandpaSVG() {
-  return (
-    <svg viewBox="0 0 500 400" className="w-full max-w-md rounded-lg" style={{ filter: 'drop-shadow(0 0 20px rgba(255,187,51,0.15))' }}>
-      <defs>
-        <radialGradient id="eg_bg" cx="50%" cy="45%" r="60%">
-          <stop offset="0%" stopColor="#1a1408" />
-          <stop offset="100%" stopColor="#080605" />
-        </radialGradient>
-        <filter id="eg_glow"><feGaussianBlur stdDeviation="3" /><feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-        <linearGradient id="eg_warm" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FFCC66" stopOpacity="0.1" /><stop offset="100%" stopColor="#FF8800" stopOpacity="0" /></linearGradient>
-      </defs>
-      <rect width="500" height="400" fill="url(#eg_bg)" rx="12" />
-      {/* Warm ambient glow */}
-      <ellipse cx="250" cy="250" rx="180" ry="140" fill="url(#eg_warm)" />
-      {/* Stars */}
-      {Array.from({length: 25}).map((_, i) => <circle key={i} cx={(i*53+20)%490} cy={(i*37+5)%150} r={0.5+i%2*0.3} fill="#FFDDAA" opacity={0.15+i%3*0.1} />)}
-
-      {/* ── Young Eva (smaller, left) ── */}
-      <g transform="translate(175, 130) scale(0.85)">
-        <path d="M-4,-30 C-18,-25 -25,8 -22,55" fill="none" stroke="#00D4E0" strokeWidth="6" strokeLinecap="round" opacity="0.7" />
-        <path d="M4,-30 C18,-25 25,8 22,55" fill="none" stroke="#00D4E0" strokeWidth="6" strokeLinecap="round" opacity="0.7" />
-        <ellipse cx="0" cy="-3" rx="18" ry="22" fill="#1a2030" stroke="#00D4E0" strokeWidth="1.2" />
-        {/* Happy eyes (looking up at grandpa) */}
-        <ellipse cx="-7" cy="-5" rx="4.5" ry="5.5" fill="#001520" />
-        <ellipse cx="-7" cy="-5" rx="3.5" ry="4.5" fill="#00CCDD" opacity="0.8" />
-        <circle cx="-5" cy="-7" r="1.8" fill="#fff" opacity="0.9" />
-        <ellipse cx="7" cy="-5" rx="4.5" ry="5.5" fill="#001520" />
-        <ellipse cx="7" cy="-5" rx="3.5" ry="4.5" fill="#00CCDD" opacity="0.8" />
-        <circle cx="9" cy="-7" r="1.8" fill="#fff" opacity="0.9" />
-        {/* Sparkle eyes - happy */}
-        <circle cx="-5" cy="-4" r="0.8" fill="#fff" opacity="0.6" />
-        <circle cx="9" cy="-4" r="0.8" fill="#fff" opacity="0.6" />
-        {/* Big smile */}
-        <path d="M-6,7 Q0,14 6,7" fill="none" stroke="#FF99AA" strokeWidth="1.5" />
-        {/* Rosy cheeks */}
-        <ellipse cx="-12" cy="3" rx="4" ry="2.5" fill="#FF6699" opacity="0.12" />
-        <ellipse cx="12" cy="3" rx="4" ry="2.5" fill="#FF6699" opacity="0.12" />
-        <path d="M-12,20 L-14,95 Q0,102 14,95 L12,20Z" fill="#0a1a2a" stroke="#00D4E0" strokeWidth="0.8" />
-        <path d="M-12,28 Q-20,50 -15,70" fill="none" stroke="#00D4E0" strokeWidth="2.5" strokeLinecap="round" />
-        {/* Arm reaching toward screen */}
-        <path d="M12,28 Q22,45 35,50" fill="none" stroke="#00D4E0" strokeWidth="2.5" strokeLinecap="round" />
-        <line x1="-6" y1="95" x2="-9" y2="145" stroke="#00AACC" strokeWidth="2.5" strokeLinecap="round" />
-        <line x1="6" y1="95" x2="9" y2="145" stroke="#00AACC" strokeWidth="2.5" strokeLinecap="round" />
-        <text x="0" y="165" textAnchor="middle" fill="#1A0E0E" fontSize="9" fontFamily="monospace" opacity="0.7">EVA</text>
-      </g>
-
-      {/* ── GRANDPA (right, taller) ── */}
-      <g transform="translate(320, 95)">
-        {/* Head — warm tones */}
-        <ellipse cx="0" cy="-2" rx="24" ry="28" fill="#2a2018" stroke="#FFBB33" strokeWidth="1.5" />
-        {/* Glasses */}
-        <rect x="-16" y="-10" width="13" height="11" rx="2" fill="none" stroke="#FFCC55" strokeWidth="1.2" />
-        <rect x="3" y="-10" width="13" height="11" rx="2" fill="none" stroke="#FFCC55" strokeWidth="1.2" />
-        <line x1="-3" y1="-4" x2="3" y2="-4" stroke="#FFCC55" strokeWidth="0.8" />
-        {/* Eyes behind glasses — kind */}
-        <circle cx="-9.5" cy="-4" r="2.5" fill="#FFBB33" opacity="0.6" />
-        <circle cx="-9.5" cy="-5" r="1" fill="#fff" opacity="0.7" />
-        <circle cx="9.5" cy="-4" r="2.5" fill="#FFBB33" opacity="0.6" />
-        <circle cx="9.5" cy="-5" r="1" fill="#fff" opacity="0.7" />
-        {/* Warm smile */}
-        <path d="M-7,10 Q0,17 7,10" fill="none" stroke="#DDAA66" strokeWidth="1.5" />
-        {/* Wrinkles — wisdom */}
-        <path d="M-16,2 Q-18,5 -16,8" fill="none" stroke="#AA8855" strokeWidth="0.5" opacity="0.4" />
-        <path d="M16,2 Q18,5 16,8" fill="none" stroke="#AA8855" strokeWidth="0.5" opacity="0.4" />
-        {/* Beard */}
-        <path d="M-15,15 Q-10,40 0,45 Q10,40 15,15" fill="rgba(180,160,130,0.15)" stroke="#CCAA77" strokeWidth="0.5" opacity="0.4" />
-        {/* Body — lab coat */}
-        <path d="M-20,30 L-24,140 Q0,148 24,140 L20,30Z" fill="rgba(255,255,255,0.05)" stroke="#FFBB33" strokeWidth="1" />
-        <line x1="0" y1="35" x2="0" y2="135" stroke="#FFBB33" strokeWidth="0.3" opacity="0.3" />
-        {/* Arm guiding Eva */}
-        <path d="M-20,40 Q-35,70 -30,100" fill="none" stroke="#DDAA55" strokeWidth="3" strokeLinecap="round" />
-        <path d="M20,40 Q30,55 25,75" fill="none" stroke="#DDAA55" strokeWidth="3" strokeLinecap="round" />
-        <line x1="-10" y1="140" x2="-14" y2="200" stroke="#AA8844" strokeWidth="3" strokeLinecap="round" />
-        <line x1="10" y1="140" x2="14" y2="200" stroke="#AA8844" strokeWidth="3" strokeLinecap="round" />
-        <text x="0" y="220" textAnchor="middle" fill="#FFBB33" fontSize="9" fontFamily="monospace" opacity="0.7">ABUELO</text>
-      </g>
-
-      {/* Computer between them */}
-      <g transform="translate(232, 290)">
-        <rect x="-25" y="-18" width="50" height="32" rx="2" fill="rgba(255,0,102,0.04)" stroke="#FFBB33" strokeWidth="1" />
-        <rect x="-22" y="-15" width="44" height="26" rx="1" fill="#0a0a15" />
-        {/* Code on screen */}
-        <text x="-18" y="-4" fill="#00FF88" fontSize="5" fontFamily="monospace">print("hola")</text>
-        <text x="-18" y="2" fill="#00AAFF" fontSize="5" fontFamily="monospace"># mi primer</text>
-        <text x="-18" y="8" fill="#00AAFF" fontSize="5" fontFamily="monospace"># programa</text>
-        {/* Screen glow */}
-        <rect x="-22" y="-15" width="44" height="26" rx="1" fill="none" stroke="#00FF88" strokeWidth="0.3" opacity="0.3" />
-      </g>
-
-      <text x="250" y="365" textAnchor="middle" fill="#FFBB33" fontSize="14" fontFamily="monospace" fontWeight="bold" filter="url(#eg_glow)" opacity="0.9">EL ABUELO</text>
-      <text x="250" y="385" textAnchor="middle" fill="#888" fontSize="8" fontFamily="monospace" opacity="0.4">// memory_fragment_003</text>
-    </svg>
-  );
-}
-
-// ═══════════════════════════════════════
-//  MAIN OVERLAY COMPONENT — with memory flashback effects
-// ═══════════════════════════════════════
 export default function TokenMemoryOverlay() {
-  const currentTokenData = useGameStore((s) => s.currentTokenData);
   const setGameState = useGameStore((s) => s.setGameState);
-  const [phase, setPhase] = useState(0);
-  const [shakeX, setShakeX] = useState(0);
-  const [shakeY, setShakeY] = useState(0);
-  const [glitchBars, setGlitchBars] = useState([]);
-  const [staticOpacity, setStaticOpacity] = useState(1);
-  const intervalRef = useRef(null);
+  const tokenData = useGameStore((s) => s.currentTokenData);
+  const [phase, setPhase] = useState('glitch');
+  // glitch → reveal → reading → fadeout
+  const [shakeStyle, setShakeStyle] = useState({});
 
-  // Phase progression: glitch intro → memory reveal → character suffering → content
   useEffect(() => {
-    if (!currentTokenData) { setPhase(0); return; }
-    // Phase 0: Screen failure / VHS static (0-1.5s)
-    // Phase 1: Flashback flash + character pain (1.5-3s)
-    // Phase 2: Memory image revealed through glitch (3-4.5s)
-    // Phase 3: Content visible, subtle effects (4.5+)
-    setPhase(0);
-    // Vibration
-    if (navigator.vibrate) {
-      navigator.vibrate([50, 30, 100, 50, 80, 30, 60]);
-    }
-    const t1 = setTimeout(() => setPhase(1), 1500);
-    const t2 = setTimeout(() => setPhase(2), 3000);
-    const t3 = setTimeout(() => setPhase(3), 4500);
-    return () => [t1, t2, t3].forEach(clearTimeout);
-  }, [currentTokenData]);
+    if (navigator.vibrate) navigator.vibrate([50, 30, 50, 30, 100, 50, 150]);
 
-  // Screen failure effects
-  useEffect(() => {
-    if (!currentTokenData) return;
-    intervalRef.current = setInterval(() => {
-      const intensity = phase === 0 ? 20 : phase === 1 ? 12 : phase === 2 ? 5 : 1;
-      setShakeX((Math.random() - 0.5) * intensity);
-      setShakeY((Math.random() - 0.5) * intensity);
-      setStaticOpacity(phase === 0 ? 0.3 + Math.random() * 0.4 : phase === 1 ? 0.1 + Math.random() * 0.15 : 0);
+    // Shake during glitch phase
+    let frame = 0;
+    const doShake = () => {
+      frame++;
+      if (frame > 90) { setShakeStyle({}); return; }
+      const decay = 1 - frame / 90;
+      const i = 12 * decay;
+      setShakeStyle({
+        transform: `translate(${(Math.random()-0.5)*i}px, ${(Math.random()-0.5)*i}px)`,
+      });
+      requestAnimationFrame(doShake);
+    };
+    requestAnimationFrame(doShake);
 
-      // Glitch bars
-      const bars = [];
-      const count = phase === 0 ? 15 : phase === 1 ? 8 : phase === 2 ? 3 : 0;
-      for (let i = 0; i < count; i++) {
-        bars.push({
-          top: Math.random() * 100,
-          height: 0.5 + Math.random() * (phase === 0 ? 4 : 2),
-          offset: (Math.random() - 0.5) * 50,
-          color: ['rgba(0,240,255,0.3)', 'rgba(255,0,102,0.3)', 'rgba(157,0,255,0.3)'][Math.floor(Math.random() * 3)],
-        });
-      }
-      setGlitchBars(bars);
-    }, 50);
-    return () => clearInterval(intervalRef.current);
-  }, [currentTokenData, phase]);
+    const t1 = setTimeout(() => setPhase('reveal'), 2000);
+    return () => clearTimeout(t1);
+  }, []);
 
-  const handleClose = useCallback(() => {
-    useGameStore.setState({ currentTokenData: null });
-    setGameState(GameStates.PLAYING);
+  const handleContinue = useCallback(() => {
+    setPhase('fadeout');
+    setTimeout(() => setGameState(GameStates.PLAYING), 600);
   }, [setGameState]);
 
-  if (!currentTokenData) return null;
-
-  const IllustrationMap = {
-    girls_together: GirlsTogetherSVG,
-    girls_fighting: GirlsFightingSVG,
-    eva_grandpa: EvaGrandpaSVG,
-  };
-  const Illustration = IllustrationMap[currentTokenData.image];
-
   return (
-    <div className="fixed inset-0 z-40 overflow-hidden" style={{
-      transform: `translate(${shakeX}px, ${shakeY}px)`,
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9500,
+      ...shakeStyle,
     }}>
-      {/* Phase 0: VHS Static / Screen failure */}
-      {phase === 0 && (
-        <div className="absolute inset-0" style={{ zIndex: 5 }}>
-          {/* VHS static noise */}
-          <div className="absolute inset-0" style={{
-            opacity: staticOpacity,
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-            animation: 'static-noise 0.1s steps(5) infinite',
-            mixBlendMode: 'overlay',
-          }} />
-          {/* Screen failure text */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center" style={{ animation: 'vhs-tracking 0.3s infinite' }}>
-              <div className="font-sharetm text-xl tracking-widest mb-2" style={{
-                color: '#00F0FF',
-                textShadow: '0 0 10px #00F0FF',
-                animation: 'chromatic-split 0.2s infinite',
-              }}>
-                {'> CARGANDO FRAGMENTO DE MEMORIA...'}
-              </div>
-              <div className="font-sharetm text-sm" style={{ color: '#FF0066', opacity: 0.6 }}>
-                {'> ADVERTENCIA: datos corruptos detectados'}
-              </div>
-              {/* Loading bar with glitch */}
-              <div className="mt-4 mx-auto w-64 h-2 rounded" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(0,240,255,0.3)' }}>
-                <div className="h-full rounded" style={{
-                  width: `${Math.min(100, phase === 0 ? 40 + Math.random() * 20 : 100)}%`,
-                  background: 'linear-gradient(90deg, #00F0FF, #FF0066)',
-                  transition: 'width 0.1s',
-                }} />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Memory glitch VHS effect */}
+      <MemoryGlitchEffect
+        active={phase === 'glitch'}
+        onComplete={() => {}}
+      />
 
-      {/* Phase 1: Flashback flash + character suffering */}
-      {phase === 1 && (
-        <div className="absolute inset-0" style={{ zIndex: 5 }}>
-          {/* White flash that fades */}
-          <div className="absolute inset-0" style={{
-            background: 'white',
-            animation: 'memory-flashback 1.5s ease-out forwards',
-          }} />
-          {/* Character suffering from remembering */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <svg width="200" height="280" viewBox="0 0 200 280" style={{
-              animation: 'screen-shake-heavy 0.15s infinite',
-              filter: 'drop-shadow(0 0 20px rgba(157,0,255,0.5))',
-              opacity: 0.3,
-            }}>
-              <g transform="translate(100, 60)">
-                {/* Head clutched */}
-                <ellipse cx="0" cy="0" rx="25" ry="28" fill="none" stroke="#9D00FF" strokeWidth="2" />
-                {/* Teary eyes */}
-                <ellipse cx="-10" cy="-5" rx="5" ry="6" fill="none" stroke="#00F0FF" strokeWidth="1.5" />
-                <ellipse cx="10" cy="-5" rx="5" ry="6" fill="none" stroke="#00F0FF" strokeWidth="1.5" />
-                {/* Tears */}
-                <line x1="-10" y1="2" x2="-12" y2="15" stroke="#00F0FF" strokeWidth="1.5" opacity="0.6">
-                  <animate attributeName="y2" values="15;25;15" dur="0.8s" repeatCount="indefinite" />
-                </line>
-                <line x1="10" y1="2" x2="12" y2="15" stroke="#00F0FF" strokeWidth="1.5" opacity="0.6">
-                  <animate attributeName="y2" values="15;25;15" dur="0.8s" repeatCount="indefinite" begin="0.3s" />
-                </line>
-                {/* Pained mouth */}
-                <path d="M-6,12 Q0,8 6,12" fill="none" stroke="#FF0066" strokeWidth="1.5" />
-                {/* Memory fragments radiating */}
-                {Array.from({ length: 8 }).map((_, i) => {
-                  const a = (i / 8) * Math.PI * 2;
-                  return (
-                    <rect key={i} x={Math.cos(a) * 40 - 3} y={Math.sin(a) * 40 - 3} width="6" height="6"
-                      fill="none" stroke="#FFBB33" strokeWidth="0.8" opacity="0.4"
-                      transform={`rotate(${i * 45} ${Math.cos(a) * 40} ${Math.sin(a) * 40})`}>
-                      <animate attributeName="opacity" values="0.1;0.6;0.1" dur={`${0.5 + i * 0.1}s`} repeatCount="indefinite" />
-                    </rect>
-                  );
-                })}
-                {/* Body hunched */}
-                <path d="M-18,35 Q-22,80 -12,130 Q0,140 12,130 Q22,80 18,35" fill="none" stroke="#9D00FF" strokeWidth="1.5" opacity="0.5" />
-                {/* Arms clutching head */}
-                <path d="M-18,40 Q-35,15 -20,-10" fill="none" stroke="#9D00FF" strokeWidth="2" strokeLinecap="round" />
-                <path d="M18,40 Q35,15 20,-10" fill="none" stroke="#9D00FF" strokeWidth="2" strokeLinecap="round" />
-              </g>
-            </svg>
-          </div>
-          {/* Memory echo text */}
-          <div className="absolute bottom-20 left-0 right-0 text-center">
-            <div className="font-sharetm text-lg tracking-widest" style={{
-              color: '#9D00FF',
-              textShadow: '0 0 15px rgba(157,0,255,0.6)',
-              animation: 'chromatic-split 0.3s infinite',
-            }}>
-              {'> RECUERDO EMERGIENDO... DOLOR DETECTADO'}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Glitch bars overlay (all phases) */}
-      {glitchBars.map((bar, i) => (
-        <div key={i} className="absolute left-0 right-0" style={{
-          top: `${bar.top}%`,
-          height: `${bar.height}%`,
-          background: bar.color,
-          transform: `translateX(${bar.offset}px)`,
-          zIndex: 4,
-        }} />
-      ))}
-
-      {/* Scanlines */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px)',
-        zIndex: 6,
+      {/* Background */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: phase === 'glitch'
+          ? 'rgba(0,0,0,0.85)'
+          : 'rgba(0,0,0,0.92)',
+        transition: 'background 0.5s',
       }} />
 
-      {/* Main content — visible from phase 2+ */}
-      <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-1000"
-        style={{
-          background: phase >= 2 ? 'rgba(255,240,235,0.95)' : 'rgba(10,5,20,0.95)',
-          backdropFilter: 'blur(16px)',
-          opacity: phase >= 2 ? 1 : 0,
+      {/* Glitch phase — suffering */}
+      {phase === 'glitch' && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          pointerEvents: 'none',
         }}>
-        <div className={`max-w-md mx-4 text-center ${phase >= 3 ? 'animate-scale-in' : ''}`}
-          style={{ opacity: phase >= 3 ? 1 : 0, transition: 'opacity 0.5s ease' }}>
-          <div className="mb-4">
-            <span className="font-orbitron text-lg tracking-widest" style={{
-              color: '#FFBB33',
-              textShadow: '0 0 12px rgba(255,187,51,0.4)',
-            }}>
-              🔮 {currentTokenData.title}
-            </span>
-          </div>
-          <div className="mb-6 flex justify-center" style={{
-            animation: phase === 2 ? 'memory-flashback 1.5s ease-out' : 'none',
+          {/* Brain pain icon */}
+          <div style={{
+            fontSize: 'clamp(4rem, 12vw, 8rem)',
+            animation: 'memoryShake 0.1s infinite',
+            filter: 'drop-shadow(0 0 20px #00f0ff)',
           }}>
-            {Illustration && <Illustration />}
+            🧠
           </div>
-          <p className="font-rajdhani text-base mb-6 leading-relaxed" style={{ color: 'var(--dark)', opacity: 0.8 }}>
-            {currentTokenData.text}
-          </p>
-          <button onClick={handleClose} className="px-8 py-3 rounded font-orbitron text-xs tracking-widest cursor-pointer transition-all hover:shadow-lg"
-            style={{ background: 'rgba(255,0,102,0.04)', border: '1px solid rgba(255,0,102,0.3)', color: 'var(--neon-magenta)' }}>
-            CONTINUAR
-          </button>
-          <div className="mt-3 font-sharetm text-sm" style={{ color: '#FFBB33', opacity: 0.6 }}>+150 monedas</div>
-        </div>
-      </div>
 
-      {/* Purple memory vignette */}
-      {phase <= 2 && (
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse at center, transparent 20%, rgba(50,0,80,0.5) 100%)',
-          zIndex: 3,
+          <div style={{
+            fontFamily: 'monospace', fontWeight: 900,
+            fontSize: 'clamp(1.2rem, 4vw, 2.5rem)',
+            color: '#00f0ff',
+            textShadow: '0 0 15px #00f0ff, 0 0 30px #00f0ff',
+            animation: 'memGlitchText 0.12s infinite',
+            marginTop: '1rem', textAlign: 'center',
+          }}>
+            RECUERDO DETECTADO
+          </div>
+
+          <div style={{
+            fontFamily: 'monospace', fontSize: '0.8rem',
+            color: '#ff6688', marginTop: '0.8rem',
+            animation: 'painFlicker 0.2s infinite alternate',
+          }}>
+            ⚡ DOLOR NEURAL — PROCESANDO MEMORIA ⚡
+          </div>
+
+          {/* Static bars */}
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} style={{
+              position: 'absolute',
+              top: `${Math.random() * 100}%`,
+              left: 0, right: 0,
+              height: `${2 + Math.random() * 6}px`,
+              background: `rgba(0,240,255,${0.05 + Math.random() * 0.1})`,
+              animation: `staticBar ${0.1+Math.random()*0.2}s infinite alternate`,
+            }} />
+          ))}
+        </div>
+      )}
+
+      {/* Reveal phase — memory image appears */}
+      {(phase === 'reveal' || phase === 'reading' || phase === 'fadeout') && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          animation: 'memoryFadeIn 1s ease-out',
+          padding: '2rem',
+        }}>
+          {/* Holographic frame */}
+          <div style={{
+            position: 'relative', maxWidth: '500px', width: '90%',
+            background: 'rgba(10,15,25,0.9)',
+            border: '2px solid rgba(0,240,255,0.4)',
+            borderRadius: '12px', padding: '1.5rem',
+            boxShadow: '0 0 30px rgba(0,240,255,0.2), inset 0 0 30px rgba(0,240,255,0.05)',
+          }}>
+            {/* Header */}
+            <div style={{
+              fontFamily: 'monospace', fontSize: '0.7rem',
+              color: 'rgba(0,240,255,0.5)', letterSpacing: '0.2em',
+              marginBottom: '0.5rem',
+            }}>
+              // FRAGMENTO DE MEMORIA RECUPERADO
+            </div>
+
+            {/* Title */}
+            <div style={{
+              fontFamily: 'monospace', fontWeight: 900,
+              fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
+              color: '#00f0ff',
+              textShadow: '0 0 10px rgba(0,240,255,0.5)',
+              marginBottom: '1rem',
+            }}>
+              {tokenData?.title || 'RECUERDO'}
+            </div>
+
+            {/* Memory image placeholder */}
+            <div style={{
+              width: '100%', aspectRatio: '1',
+              background: 'rgba(0,240,255,0.05)',
+              border: '1px solid rgba(0,240,255,0.2)',
+              borderRadius: '8px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              {/* Scan line effect on image */}
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'repeating-linear-gradient(transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)',
+                pointerEvents: 'none', zIndex: 1,
+              }} />
+              <div style={{
+                fontSize: '4rem',
+                filter: 'drop-shadow(0 0 15px rgba(0,240,255,0.3))',
+              }}>
+                {tokenData?.image === 'girls_together' ? '👩‍👩‍👧' :
+                 tokenData?.image === 'girls_fighting' ? '💔' : '👴💻'}
+              </div>
+            </div>
+
+            {/* Memory text */}
+            <div style={{
+              fontFamily: 'monospace', fontSize: 'clamp(0.8rem, 2vw, 1rem)',
+              color: 'rgba(200,220,240,0.8)',
+              marginTop: '1rem', lineHeight: '1.6',
+              fontStyle: 'italic',
+            }}>
+              "{tokenData?.text || '...'}"
+            </div>
+
+            {/* Coins earned */}
+            <div style={{
+              fontFamily: 'monospace', fontSize: '0.8rem',
+              color: '#ffbb33', marginTop: '1rem',
+              textShadow: '0 0 8px rgba(255,187,51,0.5)',
+            }}>
+              +150 MONEDAS
+            </div>
+
+            {/* Continue button */}
+            <button
+              onClick={handleContinue}
+              style={{
+                marginTop: '1.5rem', width: '100%',
+                padding: '0.8rem', fontFamily: 'monospace',
+                fontSize: '1rem', fontWeight: 700,
+                color: '#00f0ff', background: 'rgba(0,240,255,0.08)',
+                border: '1px solid rgba(0,240,255,0.4)',
+                borderRadius: '6px', cursor: 'pointer',
+                letterSpacing: '0.15em',
+                transition: 'all 0.2s',
+              }}
+              onMouseOver={(e) => {
+                e.target.style.background = 'rgba(0,240,255,0.2)';
+                e.target.style.boxShadow = '0 0 20px rgba(0,240,255,0.3)';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = 'rgba(0,240,255,0.08)';
+                e.target.style.boxShadow = 'none';
+              }}
+            >
+              CONTINUAR ▶
+            </button>
+
+            {/* Corner decorations */}
+            {['top-left','top-right','bottom-left','bottom-right'].map(pos => (
+              <div key={pos} style={{
+                position: 'absolute',
+                [pos.includes('top') ? 'top' : 'bottom']: '-1px',
+                [pos.includes('left') ? 'left' : 'right']: '-1px',
+                width: '12px', height: '12px',
+                borderTop: pos.includes('top') ? '2px solid #00f0ff' : 'none',
+                borderBottom: pos.includes('bottom') ? '2px solid #00f0ff' : 'none',
+                borderLeft: pos.includes('left') ? '2px solid #00f0ff' : 'none',
+                borderRight: pos.includes('right') ? '2px solid #00f0ff' : 'none',
+              }} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Fadeout */}
+      {phase === 'fadeout' && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 9700,
+          background: 'rgba(0,0,0,0.5)',
+          animation: 'fadeOut 0.6s ease-out forwards',
+          pointerEvents: 'none',
         }} />
       )}
+
+      <style jsx>{`
+        @keyframes memoryShake {
+          0% { transform: translate(0,0) rotate(0); }
+          25% { transform: translate(-4px,2px) rotate(-2deg); }
+          75% { transform: translate(3px,-2px) rotate(2deg); }
+        }
+        @keyframes memGlitchText {
+          0%,100% { transform: skewX(0); }
+          30% { transform: skewX(-3deg) translate(-2px,0); }
+          70% { transform: skewX(2deg) translate(2px,0); }
+        }
+        @keyframes painFlicker { from { opacity:0.5; } to { opacity:1; } }
+        @keyframes staticBar { from { transform:translateX(-5px); } to { transform:translateX(5px); } }
+        @keyframes memoryFadeIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
+        @keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
+      `}</style>
     </div>
   );
 }
