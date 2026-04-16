@@ -5,6 +5,7 @@
 
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import audioManager from '../../../lib/audioManager';
 
 export default function RocketAnimation({ active, onImpact, onComplete }) {
   const canvasRef = useRef(null);
@@ -25,6 +26,7 @@ export default function RocketAnimation({ active, onImpact, onComplete }) {
     const targetY = H * 0.2; // sky area
     const skyPieces = [];
     let impactDone = false;
+    let launchSoundPlayed = false;
 
     setPhase('launch');
 
@@ -34,6 +36,11 @@ export default function RocketAnimation({ active, onImpact, onComplete }) {
 
       // PHASE 1: Rocket ascending (frames 0-90)
       if (frame < 90) {
+        // Play launch sound once
+        if (!launchSoundPlayed) {
+          launchSoundPlayed = true;
+          audioManager.playRocketLaunch();
+        }
         const progress = frame / 90;
         const eased = 1 - Math.pow(1 - progress, 3);
         rocketY = H + 100 - (H + 100 - targetY) * eased;
@@ -56,6 +63,7 @@ export default function RocketAnimation({ active, onImpact, onComplete }) {
           impactDone = true;
           setPhase('impact');
           onImpact?.();
+          audioManager.playExplosion();
           // Generate sky pieces
           for (let i = 0; i < 40; i++) {
             skyPieces.push({
