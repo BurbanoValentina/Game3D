@@ -48,11 +48,11 @@ export const WORLD_SIZE = 250;
 export const WORLD_HALF = 125;
 
 export const LEVEL1_PUZZLES = [
-  { id: 1, position: { x: 45, z: -40, y: 18 }, question: '¿Qué significa HTML? (siglas en inglés)', answer: 'hypertext markup language', hint: 'HyperText Markup Language', title: 'LENGUAJE WEB', reward: 300 },
-  { id: 2, position: { x: -55, z: 50, y: 18 }, question: '¿Qué símbolo se usa en CSS para seleccionar un ID?', answer: '#', hint: 'No es el punto (.)', title: 'SELECTOR CSS', reward: 300 },
-  { id: 3, position: { x: 70, z: 70, y: 18 }, question: 'En JS, ¿qué palabra declara una variable que NO cambia?', answer: 'const', hint: 'No es "let" ni "var"', title: 'VARIABLE JS', reward: 350 },
-  { id: 4, position: { x: -75, z: -70, y: 18 }, question: '¿Cuántos bits tiene 1 byte?', answer: '8', hint: '8 unidades mínimas', title: 'BITS Y BYTES', reward: 250 },
-  { id: 5, position: { x: 0, z: 80, y: 18 }, question: '¿Qué etiqueta HTML crea un enlace? (sin < >)', answer: 'a', hint: 'Primera letra, de "anchor"', title: 'ENLACES HTML', reward: 350 },
+  { id: 1, position: { x: 45, z: -40, y: 18 }, question: '¿Qué clase de Tailwind centra el texto horizontalmente?', answer: 'text-center', hint: 'Empieza con "text-"', title: 'TAILWIND: TEXTO', reward: 300 },
+  { id: 2, position: { x: -55, z: 50, y: 18 }, question: '¿Qué clase de Tailwind aplica display: flex a un contenedor?', answer: 'flex', hint: 'Solo una palabra, como el modelo de caja', title: 'TAILWIND: FLEXBOX', reward: 300 },
+  { id: 3, position: { x: 70, z: 70, y: 18 }, question: '¿Qué clase de Tailwind oculta un elemento? (display: none)', answer: 'hidden', hint: 'Sinónimo de "oculto" en inglés', title: 'TAILWIND: DISPLAY', reward: 350 },
+  { id: 4, position: { x: -75, z: -70, y: 18 }, question: '¿Qué prefijo de Tailwind aplica estilos en hover? (ej: ___:bg-blue-500)', answer: 'hover', hint: 'Es la acción de pasar el mouse por encima', title: 'TAILWIND: ESTADOS', reward: 250 },
+  { id: 5, position: { x: 0, z: 80, y: 18 }, question: '¿Qué clase de Tailwind redondea completamente un elemento? (border-radius: 9999px)', answer: 'rounded-full', hint: 'rounded + forma circular', title: 'TAILWIND: BORDES', reward: 350 },
 ];
 
 export const LEVEL1_CHECKPOINTS = [
@@ -72,45 +72,45 @@ export const LEVEL1_TOKENS = [
 
 export const LEVEL1_PARKOUR = [
   { puzzleId: 1, blocks: [
-    { x: 25, y: 2, z: -22, w: 4.5, h: 1, d: 4.5 }, { x: 30, y: 5, z: -26, w: 3.5, h: 1, d: 3.5 },
-    { x: 34, y: 8, z: -29, w: 3, h: 1, d: 3 }, { x: 38, y: 11, z: -33, w: 3, h: 1, d: 3 },
-    { x: 41, y: 14, z: -36, w: 3.5, h: 1, d: 3.5 }, { x: 43, y: 16, z: -38, w: 3, h: 1, d: 3 },
+    { x: 20, y: 2, z: -20, w: 4.5, h: 1, d: 4.5 }, { x: 24, y: 5, z: -25, w: 3.5, h: 1, d: 3.5 },
+    { x: 28, y: 8, z: -29, w: 3, h: 1, d: 3 }, { x: 33, y: 11, z: -33, w: 3, h: 1, d: 3 },
+    { x: 37, y: 14, z: -36, w: 3.5, h: 1, d: 3.5 }, { x: 41, y: 16, z: -38, w: 3, h: 1, d: 3 },
     { x: 45, y: 18, z: -40, w: 5, h: 1.2, d: 5 },
   ]},
   { puzzleId: 2, blocks: [
-    { x: -35, y: 2, z: 30, w: 4.5, h: 1, d: 4.5 }, { x: -40, y: 5, z: 34, w: 3.5, h: 1, d: 3.5 },
-    { x: -44, y: 8, z: 38, w: 3, h: 1, d: 3 }, { x: -48, y: 11, z: 42, w: 3, h: 1, d: 3 },
-    { x: -51, y: 14, z: 45, w: 3.5, h: 1, d: 3.5 }, { x: -53, y: 16, z: 48, w: 3, h: 1, d: 3 },
+    { x: -30, y: 2, z: 30, w: 4.5, h: 1, d: 4.5 }, { x: -33, y: 5, z: 34, w: 3.5, h: 1, d: 3.5 },
+    { x: -37, y: 8, z: 40, w: 3, h: 1, d: 3 }, { x: -42, y: 11, z: 45, w: 3, h: 1, d: 3 },
+    { x: -47, y: 14, z: 48, w: 3.5, h: 1, d: 3.5 }, { x: -51, y: 16, z: 49, w: 3, h: 1, d: 3 },
     { x: -55, y: 18, z: 50, w: 5, h: 1.2, d: 5 },
   ]},
   { puzzleId: 3, blocks: [
-    { x: 50, y: 2, z: 50, w: 4.5, h: 1, d: 4.5 }, { x: 55, y: 5, z: 55, w: 3.5, h: 1, d: 3.5 },
-    { x: 59, y: 8, z: 59, w: 3, h: 1, d: 3 }, { x: 63, y: 11, z: 62, w: 3, h: 1, d: 3 },
-    { x: 66, y: 14, z: 65, w: 3.5, h: 1, d: 3.5 }, { x: 68, y: 16, z: 68, w: 3, h: 1, d: 3 },
+    { x: 75, y: 2, z: 42, w: 4.5, h: 1, d: 4.5 }, { x: 74, y: 5, z: 48, w: 3.5, h: 1, d: 3.5 },
+    { x: 73, y: 8, z: 54, w: 3, h: 1, d: 3 }, { x: 72, y: 11, z: 59, w: 3, h: 1, d: 3 },
+    { x: 71, y: 14, z: 63, w: 3.5, h: 1, d: 3.5 }, { x: 70, y: 16, z: 67, w: 3, h: 1, d: 3 },
     { x: 70, y: 18, z: 70, w: 5, h: 1.2, d: 5 },
   ]},
   { puzzleId: 4, blocks: [
-    { x: -55, y: 2, z: -52, w: 4.5, h: 1, d: 4.5 }, { x: -60, y: 5, z: -56, w: 3.5, h: 1, d: 3.5 },
-    { x: -64, y: 8, z: -60, w: 3, h: 1, d: 3 }, { x: -68, y: 11, z: -63, w: 3, h: 1, d: 3 },
-    { x: -71, y: 14, z: -66, w: 3.5, h: 1, d: 3.5 }, { x: -73, y: 16, z: -68, w: 3, h: 1, d: 3 },
+    { x: -50, y: 2, z: -48, w: 4.5, h: 1, d: 4.5 }, { x: -55, y: 5, z: -52, w: 3.5, h: 1, d: 3.5 },
+    { x: -59, y: 8, z: -56, w: 3, h: 1, d: 3 }, { x: -63, y: 11, z: -60, w: 3, h: 1, d: 3 },
+    { x: -67, y: 14, z: -64, w: 3.5, h: 1, d: 3.5 }, { x: -71, y: 16, z: -67, w: 3, h: 1, d: 3 },
     { x: -75, y: 18, z: -70, w: 5, h: 1.2, d: 5 },
   ]},
   { puzzleId: 5, blocks: [
-    { x: -16, y: 2, z: 60, w: 4.5, h: 1, d: 4.5 }, { x: -12, y: 5, z: 64, w: 3.5, h: 1, d: 3.5 },
-    { x: -8, y: 8, z: 68, w: 3, h: 1, d: 3 }, { x: -5, y: 11, z: 72, w: 3, h: 1, d: 3 },
-    { x: -3, y: 14, z: 75, w: 3.5, h: 1, d: 3.5 }, { x: -1, y: 16, z: 78, w: 3, h: 1, d: 3 },
+    { x: -18, y: 2, z: 58, w: 4.5, h: 1, d: 4.5 }, { x: -14, y: 5, z: 62, w: 3.5, h: 1, d: 3.5 },
+    { x: -10, y: 8, z: 66, w: 3, h: 1, d: 3 }, { x: -7, y: 11, z: 70, w: 3, h: 1, d: 3 },
+    { x: -4, y: 14, z: 74, w: 3.5, h: 1, d: 3.5 }, { x: -2, y: 16, z: 77, w: 3, h: 1, d: 3 },
     { x: 0, y: 18, z: 80, w: 5, h: 1.2, d: 5 },
   ]},
 ];
 
 export const GRAFFITI_TEXTS = [
-  { text: 'if (hope) { keep_going(); }', color: '#00f0ff' },
-  { text: 'while(alive) { fight(); }', color: '#ff0066' },
-  { text: 'EVA.find("la_verdad")', color: '#ffbb33' },
-  { text: '/* No estás sola */', color: '#00ff88' },
-  { text: '< No mires atrás >', color: '#9d00ff' },
-  { text: 'echo $EVA $MEMORY', color: '#00ff88' },
-  { text: '// TODO: volver juntas', color: '#ff6600' },
+  { text: 'className="flex items-center"', color: '#00f0ff' },
+  { text: 'hover:bg-violet-500', color: '#ff0066' },
+  { text: '<div class="p-4 rounded-lg">', color: '#ffbb33' },
+  { text: '/* Tailwind lo cambia todo */', color: '#00ff88' },
+  { text: 'md:grid-cols-3 gap-4', color: '#9d00ff' },
+  { text: 'transition-all duration-300', color: '#00ff88' },
+  { text: '// TODO: dark:bg-gray-900', color: '#ff6600' },
 ];
 
 export const NEON_EDGE_COLORS = [0x00f0ff, 0xff0066, 0x9d00ff, 0x00ff88, 0xff6600, 0xFF61D8, 0x61FFD8, 0xD861FF];
@@ -191,7 +191,7 @@ export const TUTORIAL_STEPS = [
   { icon: 'jump', keys: 'ESPACIO', title: 'SALTAR Y PARKOUR', desc: 'Presiona espacio para saltar sobre plataformas de parkour.' },
   { icon: 'interact', keys: 'E', title: 'INTERACTUAR', desc: 'Presiona E cerca de terminales de puzzle o tokens flotantes.' },
   { icon: 'memory', keys: 'Q', title: 'INVOCAR MEMORIAS', desc: 'Presiona Q para invocar ecos de memoria con pistas.' },
-  { icon: 'puzzle', keys: 'TECLADO', title: 'RESOLVER PUZZLES', desc: 'Interactúa con terminales naranjas y responde preguntas de programación.' },
+  { icon: 'puzzle', keys: 'TECLADO', title: 'RESOLVER PUZZLES', desc: 'Interactúa con terminales naranjas y responde preguntas de Tailwind CSS.' },
   { icon: 'map', keys: 'MINIMAP', title: 'EL MAPA', desc: 'El minimapa muestra puzzles, tokens y tu posición.' },
   { icon: 'key', keys: 'PUZZLES', title: 'LAS LLAVES DE HALLIDAY', desc: 'Resuelve puzzles para revelar la Llave de Halliday.' },
   { icon: 'token', keys: 'EXPLORAR', title: 'RECUERDOS Y TOKENS', desc: 'Recoge diamantes flotantes: recuerdos o trampas glitch.' },
