@@ -1,50 +1,68 @@
 // ══════════════════════════════════════════════════════
 //  EYE OPENING — Eyelids open revealing the world
 //  Player "wakes up" — like opening your eyes
+//  Supports fast=true for the second awakening (post-shock)
 // ══════════════════════════════════════════════════════
 
 'use client';
 import { useState, useEffect } from 'react';
 
-export default function EyeOpening({ active, onComplete }) {
+export default function EyeOpening({ active, onComplete, fast = false }) {
   const [openAmount, setOpenAmount] = useState(0);
-  const [blurAmount, setBlurAmount] = useState(20);
+  const [blurAmount, setBlurAmount] = useState(fast ? 10 : 20);
   const [blinkCount, setBlinks] = useState(0);
 
   useEffect(() => {
     if (!active) return;
     let frame = 0;
-    const totalFrames = 180; // ~3 seconds at 60fps
-    let blinks = 0;
+
+    // Fast mode: shorter, no blinks — just a smooth quick open
+    const totalFrames = fast ? 80 : 180;
 
     const animate = () => {
       frame++;
       const progress = frame / totalFrames;
 
-      // Blinking pattern: quick blinks then slow open
-      if (frame < 30) {
-        // First blink
-        const blinkProg = frame / 30;
-        setOpenAmount(Math.sin(blinkProg * Math.PI) * 0.15);
-        if (frame === 15) setBlinks(1);
-      } else if (frame < 50) {
-        // Close again
-        setOpenAmount(0.02);
-      } else if (frame < 80) {
-        // Second blink - slightly more open
-        const blinkProg = (frame - 50) / 30;
-        setOpenAmount(Math.sin(blinkProg * Math.PI) * 0.3);
-        if (frame === 65) setBlinks(2);
-      } else if (frame < 95) {
-        // Close briefly
-        setOpenAmount(0.05);
+      if (fast) {
+        // ── FAST MODE: Quick smooth open (post-shock reopen) ──
+        if (frame < 15) {
+          // Slight flutter
+          setOpenAmount(Math.sin((frame / 15) * Math.PI) * 0.1);
+          setBlinks(1);
+        } else {
+          // Smooth open
+          const openProg = (frame - 15) / (totalFrames - 15);
+          const eased = 1 - Math.pow(1 - openProg, 2);
+          setOpenAmount(eased);
+          setBlurAmount(10 * (1 - eased));
+          if (frame === 20) setBlinks(3);
+        }
       } else {
-        // Final slow open
-        const openProg = (frame - 95) / (totalFrames - 95);
-        const eased = 1 - Math.pow(1 - openProg, 3); // ease out cubic
-        setOpenAmount(eased);
-        setBlurAmount(20 * (1 - eased));
-        if (frame === 100) setBlinks(3);
+        // ── NORMAL MODE: Slow blinking pattern ──
+        if (frame < 30) {
+          // First blink
+          const blinkProg = frame / 30;
+          setOpenAmount(Math.sin(blinkProg * Math.PI) * 0.15);
+          if (frame === 15) setBlinks(1);
+        } else if (frame < 50) {
+          // Close again
+          setOpenAmount(0.02);
+        } else if (frame < 80) {
+          // Second blink - slightly more open
+          const blinkProg = (frame - 50) / 30;
+          setOpenAmount(Math.sin(blinkProg * Math.PI) * 0.3);
+          if (frame === 65) setBlinks(2);
+        } else if (frame < 95) {
+          // Close briefly
+          setOpenAmount(0.05);
+        } else {
+          // Final slow open
+          const openProg = (frame - 95) / (totalFrames - 95);
+          const eased = 1 - Math.pow(1 - openProg, 3);
+          setOpenAmount(eased);
+          setBlurAmount(20 * (1 - eased));
+          if (frame === 100) setBlinks(3);
+        }
       }
 
       if (frame >= totalFrames) {
@@ -56,12 +74,11 @@ export default function EyeOpening({ active, onComplete }) {
       requestAnimationFrame(animate);
     };
     requestAnimationFrame(animate);
-  }, [active, onComplete]);
+  }, [active, onComplete, fast]);
 
   if (!active && openAmount >= 1) return null;
 
-  // Eyelid shape calculations
-  const gapHeight = openAmount * 100; // percentage of screen
+  const gapHeight = openAmount * 100;
   const topLid = 50 - gapHeight / 2;
   const bottomLid = 50 + gapHeight / 2;
 
@@ -131,7 +148,7 @@ export default function EyeOpening({ active, onComplete }) {
         }} />
       )}
 
-      {/* "Waking up" text during blinks */}
+      {/* Text during blinks */}
       {blinkCount > 0 && blinkCount < 3 && openAmount < 0.2 && (
         <div style={{
           position: 'absolute',
@@ -143,7 +160,10 @@ export default function EyeOpening({ active, onComplete }) {
           letterSpacing: '0.3em',
           opacity: 0.6,
         }}>
-          {blinkCount === 1 ? 'SISTEMA INICIANDO...' : 'CONECTANDO NEURAL...'}
+          {fast
+            ? (blinkCount === 1 ? '¿QUÉ FUE ESO...?' : 'REACTIVANDO...')
+            : (blinkCount === 1 ? 'SISTEMA INICIANDO...' : 'CONECTANDO NEURAL...')
+          }
         </div>
       )}
     </div>
