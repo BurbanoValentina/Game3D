@@ -112,6 +112,37 @@ export default function WrongAnswerOverlay() {
             }} />
           ))}
 
+          {/* ERROR IMAGE — Glitching skull / broken circuit */}
+          <svg width="180" height="180" viewBox="0 0 180 180" style={{
+            filter: 'drop-shadow(0 0 30px #ff0044)',
+            animation: 'sufferGlitch 0.1s infinite',
+          }}>
+            {/* Cracked circuit board */}
+            <circle cx="90" cy="80" r="50" fill="none" stroke="#FF0044" strokeWidth="2" opacity="0.6" />
+            <circle cx="90" cy="80" r="35" fill="none" stroke="#FF0044" strokeWidth="1" opacity="0.3" strokeDasharray="5,5">
+              <animateTransform attributeName="transform" type="rotate" from="0 90 80" to="360 90 80" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            {/* X marks */}
+            <line x1="65" y1="65" x2="80" y2="80" stroke="#FF0044" strokeWidth="4" strokeLinecap="round"/>
+            <line x1="80" y1="65" x2="65" y2="80" stroke="#FF0044" strokeWidth="4" strokeLinecap="round"/>
+            <line x1="100" y1="65" x2="115" y2="80" stroke="#FF0044" strokeWidth="4" strokeLinecap="round"/>
+            <line x1="115" y1="65" x2="100" y2="80" stroke="#FF0044" strokeWidth="4" strokeLinecap="round"/>
+            {/* Warning triangle */}
+            <polygon points="90,20 130,90 50,90" fill="none" stroke="#FF4466" strokeWidth="2" opacity="0.8"/>
+            <text x="90" y="78" textAnchor="middle" fill="#FF4466" fontSize="28" fontWeight="bold" fontFamily="monospace">!</text>
+            {/* Broken lines */}
+            <line x1="40" y1="100" x2="60" y2="130" stroke="#FF0044" strokeWidth="1.5" opacity="0.5"/>
+            <line x1="140" y1="100" x2="120" y2="130" stroke="#FF0044" strokeWidth="1.5" opacity="0.5"/>
+            {/* Glitch bars */}
+            <rect x="20" y="140" width="140" height="3" fill="#FF0044" opacity="0.4">
+              <animate attributeName="width" values="140;80;140;60;140" dur="0.3s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="40" y="148" width="100" height="2" fill="#FF4466" opacity="0.3">
+              <animate attributeName="x" values="40;20;60;40" dur="0.2s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="30" y="155" width="120" height="2" fill="#FF0044" opacity="0.2"/>
+          </svg>
+
           {/* Error messages */}
           <div style={{
             fontFamily: 'monospace', fontWeight: 900,
@@ -119,7 +150,7 @@ export default function WrongAnswerOverlay() {
             color: '#FF0044',
             textShadow: '0 0 20px #ff0044',
             animation: 'sufferGlitch 0.1s infinite',
-            textAlign: 'center',
+            textAlign: 'center', marginTop: '1rem',
           }}>
             RESPUESTA INCORRECTA
           </div>
