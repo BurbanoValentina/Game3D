@@ -54,6 +54,12 @@ const useGameStore = create((set, get) => ({
   playerZ: 0,
   setPlayerPosition: (x, z) => set({ playerX: x, playerZ: z }),
 
+  // ─── Level Timer (15 min = 900 seconds) ───
+  levelTimeRemaining: 900,
+  levelTimerActive: false,
+  setLevelTimeRemaining: (val) => set({ levelTimeRemaining: val }),
+  setLevelTimerActive: (val) => set({ levelTimerActive: val }),
+
   // ─── Level Progress ───
   keyObtained: false,
   checkpointsReached: [],
@@ -115,6 +121,7 @@ const useGameStore = create((set, get) => ({
     keyObtained: false, checkpointsReached: [], systemLogs: [],
     bootText: [], bootComplete: false, cinematicText: '', cinematicDone: false,
     glitchIntensity: 0, interactionPrompt: '', showMap: false, victoryChoice: null,
+    levelTimeRemaining: 900, levelTimerActive: false,
   }),
 }));
 
