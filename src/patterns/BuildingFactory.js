@@ -81,31 +81,45 @@ const BuildingFactory = {
   /**
    * Generate the city with exactly 15 unique iconic buildings
    * Each placed at fixed positions with flag/name sign
+   * Validates minimum spacing between buildings
    */
   generateCity(THREE, scene) {
     const buildings = [];
     const colliders = [];
     const flags = [];
     const padding = 3;
+    const MIN_BUILDING_DIST = 18; // Minimum distance between building centers
 
     ICONIC_BUILDINGS.forEach((bData) => {
       const building = BuildingFactory.create(
         bData.type, bData.x, bData.z, THREE, bData.accentColor
       );
 
+      // Validate spacing - warn if too close (debug)
+      buildings.forEach(existing => {
+        const dx = bData.x - existing.mesh.position.x;
+        const dz = bData.z - existing.mesh.position.z;
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        if (dist < MIN_BUILDING_DIST) {
+          console.warn(`[BuildingFactory] Buildings too close: ${bData.name} and existing at dist=${dist.toFixed(1)}`);
+        }
+      });
+
       scene.add(building.mesh);
       buildings.push(building);
 
-      // Add collider
+      // Add collider with extra padding to prevent stacking
+      const halfW = building.width / 2 + padding;
+      const halfD = building.depth / 2 + padding;
       colliders.push({
-        minX: bData.x - building.width / 2 - padding,
-        maxX: bData.x + building.width / 2 + padding,
-        minZ: bData.z - building.depth / 2 - padding,
-        maxZ: bData.z + building.depth / 2 + padding,
+        minX: bData.x - halfW,
+        maxX: bData.x + halfW,
+        minZ: bData.z - halfD,
+        maxZ: bData.z + halfD,
       });
 
       // Add flag with name and location
-      const flag = createBuildingFlag(bData, building.height, THREE, scene);
+      const flag = createBuildingFlag(bData, building.height, building.width, building.depth, THREE, scene);
       flags.push(flag);
     });
 
