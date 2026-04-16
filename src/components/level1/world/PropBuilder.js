@@ -15,7 +15,8 @@ export function buildProps(scene, THREE, streetW) {
 }
 
 function buildTrees(scene, THREE, streetW, spread) {
-  for (let i = 0; i < 25; i++) {
+  // Regular trees
+  for (let i = 0; i < 20; i++) {
     let tx = (Math.random() - 0.5) * spread;
     let tz = (Math.random() - 0.5) * spread;
     if (Math.abs(tx) < streetW + 3 && Math.abs(tz) < 130) continue;
@@ -44,6 +45,90 @@ function buildTrees(scene, THREE, streetW, spread) {
       foliage.rotation.y = Math.random() * Math.PI;
       treeGroup.add(foliage);
     }
+    treeGroup.position.set(tx, 0, tz);
+    scene.add(treeGroup);
+  }
+
+  // ── NEON COLORFUL TREES (cyberpunk bioluminescent) ──
+  const neonTreeColors = [
+    { foliage: 0xFF61D8, emissive: 0xFF0066, trunk: 0x3a2535 },  // Pink
+    { foliage: 0x00F0FF, emissive: 0x0088AA, trunk: 0x1a2a35 },  // Cyan
+    { foliage: 0x9D00FF, emissive: 0x6600AA, trunk: 0x2a1a35 },  // Purple
+    { foliage: 0x61FFD8, emissive: 0x00AA88, trunk: 0x1a3530 },  // Mint
+    { foliage: 0xFFBB33, emissive: 0xCC8800, trunk: 0x352a1a },  // Amber
+    { foliage: 0xFF6600, emissive: 0xAA4400, trunk: 0x35201a },  // Orange
+    { foliage: 0xD861FF, emissive: 0x8800CC, trunk: 0x2a1a35 },  // Violet
+    { foliage: 0x00FF88, emissive: 0x00AA55, trunk: 0x1a3525 },  // Neon green
+  ];
+
+  for (let i = 0; i < 35; i++) {
+    let tx = (Math.random() - 0.5) * spread;
+    let tz = (Math.random() - 0.5) * spread;
+    if (Math.abs(tx) < streetW + 3 && Math.abs(tz) < 130) continue;
+    if (Math.abs(tz) < streetW + 3 && Math.abs(tx) < 130) continue;
+
+    const neonColor = neonTreeColors[Math.floor(Math.random() * neonTreeColors.length)];
+    const treeGroup = new THREE.Group();
+    const trunkH = 3 + Math.random() * 3;
+    const trunkR = 0.15 + Math.random() * 0.1;
+
+    // Glowing trunk
+    const trunkGeo = new THREE.CylinderGeometry(trunkR, trunkR * 1.2, trunkH, 6);
+    const trunkMat = new THREE.MeshPhongMaterial({
+      color: neonColor.trunk, emissive: neonColor.emissive, emissiveIntensity: 0.15, shininess: 40,
+    });
+    const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+    trunk.position.y = trunkH / 2;
+    treeGroup.add(trunk);
+
+    // Glowing sphere / ico foliage
+    const shapeType = Math.random();
+    if (shapeType < 0.4) {
+      // Sphere tree
+      const sphereR = 2 + Math.random() * 1.5;
+      const foliageGeo = new THREE.IcosahedronGeometry(sphereR, 1);
+      const foliageMat = new THREE.MeshPhongMaterial({
+        color: neonColor.foliage, emissive: neonColor.emissive, emissiveIntensity: 0.3,
+        transparent: true, opacity: 0.75, flatShading: true,
+      });
+      const foliage = new THREE.Mesh(foliageGeo, foliageMat);
+      foliage.position.y = trunkH + sphereR * 0.7;
+      treeGroup.add(foliage);
+    } else if (shapeType < 0.7) {
+      // Multi-layer neon cones
+      const layers = 3;
+      for (let l = 0; l < layers; l++) {
+        const layerR = (3 - l * 0.8) * (0.7 + Math.random() * 0.3);
+        const layerH = 2.5 - l * 0.4;
+        const foliageGeo = new THREE.ConeGeometry(layerR, layerH, 6);
+        const foliageMat = new THREE.MeshPhongMaterial({
+          color: neonColor.foliage, emissive: neonColor.emissive, emissiveIntensity: 0.25,
+          transparent: true, opacity: 0.7, flatShading: true,
+        });
+        const foliage = new THREE.Mesh(foliageGeo, foliageMat);
+        foliage.position.y = trunkH + l * 1.8 + layerH / 2;
+        foliage.rotation.y = Math.random() * Math.PI;
+        treeGroup.add(foliage);
+      }
+    } else {
+      // Crystal tree — dodecahedron top
+      const crystalR = 1.5 + Math.random() * 1.5;
+      const crystalGeo = new THREE.DodecahedronGeometry(crystalR, 0);
+      const crystalMat = new THREE.MeshPhongMaterial({
+        color: neonColor.foliage, emissive: neonColor.emissive, emissiveIntensity: 0.4,
+        transparent: true, opacity: 0.6, flatShading: true, wireframe: Math.random() > 0.5,
+      });
+      const crystal = new THREE.Mesh(crystalGeo, crystalMat);
+      crystal.position.y = trunkH + crystalR;
+      crystal.rotation.set(Math.random(), Math.random(), Math.random());
+      treeGroup.add(crystal);
+    }
+
+    // Small point light at canopy
+    const light = new THREE.PointLight(neonColor.foliage, 0.5 + Math.random() * 0.5, 8);
+    light.position.y = trunkH + 2;
+    treeGroup.add(light);
+
     treeGroup.position.set(tx, 0, tz);
     scene.add(treeGroup);
   }
