@@ -165,13 +165,69 @@ export default function TokenMemoryOverlay() {
                 background: 'repeating-linear-gradient(transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)',
                 pointerEvents: 'none', zIndex: 1,
               }} />
-              <div style={{
-                fontSize: '4rem',
-                filter: 'drop-shadow(0 0 15px rgba(0,240,255,0.3))',
-              }}>
-                {tokenData?.image === 'girls_together' ? '👩‍👩‍👧' :
-                 tokenData?.image === 'girls_fighting' ? '💔' : '👴💻'}
-              </div>
+
+              {/* Memory SVG Illustrations */}
+              {tokenData?.image === 'girls_together' ? (
+                <svg width="200" height="200" viewBox="0 0 200 200" style={{ filter: 'drop-shadow(0 0 15px rgba(0,240,255,0.3))' }}>
+                  {/* Three friends together */}
+                  <circle cx="70" cy="60" r="18" fill="none" stroke="#00f0ff" strokeWidth="1.5" opacity="0.7"/>
+                  <circle cx="100" cy="55" r="18" fill="none" stroke="#FF61D8" strokeWidth="1.5" opacity="0.7"/>
+                  <circle cx="130" cy="60" r="18" fill="none" stroke="#61FFD8" strokeWidth="1.5" opacity="0.7"/>
+                  <line x1="70" y1="78" x2="70" y2="130" stroke="#00f0ff" strokeWidth="1.5" opacity="0.6"/>
+                  <line x1="100" y1="73" x2="100" y2="130" stroke="#FF61D8" strokeWidth="1.5" opacity="0.6"/>
+                  <line x1="130" y1="78" x2="130" y2="130" stroke="#61FFD8" strokeWidth="1.5" opacity="0.6"/>
+                  {/* Arms linked */}
+                  <path d="M70,100 Q85,95 100,100" fill="none" stroke="#D861FF" strokeWidth="1" opacity="0.5"/>
+                  <path d="M100,100 Q115,95 130,100" fill="none" stroke="#D861FF" strokeWidth="1" opacity="0.5"/>
+                  {/* Heart above */}
+                  <path d="M100,30 C95,22 82,22 82,32 C82,42 100,50 100,50 C100,50 118,42 118,32 C118,22 105,22 100,30" fill="none" stroke="#FF61D8" strokeWidth="1.5" opacity="0.6">
+                    <animate attributeName="opacity" values="0.4;0.8;0.4" dur="2s" repeatCount="indefinite"/>
+                  </path>
+                  {/* Stars */}
+                  <circle cx="40" cy="40" r="2" fill="#FFBB33" opacity="0.5"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.5s" repeatCount="indefinite"/></circle>
+                  <circle cx="160" cy="35" r="2" fill="#FFBB33" opacity="0.5"><animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite"/></circle>
+                  <text x="100" y="170" textAnchor="middle" fill="#00f0ff" fontSize="10" fontFamily="monospace" opacity="0.5">JUNTAS.mem</text>
+                </svg>
+              ) : tokenData?.image === 'girls_fighting' ? (
+                <svg width="200" height="200" viewBox="0 0 200 200" style={{ filter: 'drop-shadow(0 0 15px rgba(255,0,102,0.3))' }}>
+                  {/* Two figures apart, broken connection */}
+                  <circle cx="60" cy="60" r="18" fill="none" stroke="#FF0066" strokeWidth="1.5" opacity="0.7"/>
+                  <circle cx="140" cy="60" r="18" fill="none" stroke="#FF0066" strokeWidth="1.5" opacity="0.7"/>
+                  <line x1="60" y1="78" x2="60" y2="130" stroke="#FF0066" strokeWidth="1.5" opacity="0.6"/>
+                  <line x1="140" y1="78" x2="140" y2="130" stroke="#FF0066" strokeWidth="1.5" opacity="0.6"/>
+                  {/* Lightning bolt between them */}
+                  <polyline points="88,70 95,85 90,88 100,110" fill="none" stroke="#FFBB33" strokeWidth="2" opacity="0.7">
+                    <animate attributeName="opacity" values="0.3;0.9;0.3" dur="0.5s" repeatCount="indefinite"/>
+                  </polyline>
+                  {/* Broken heart */}
+                  <path d="M100,35 C95,27 82,27 82,37 C82,47 100,55 100,55" fill="none" stroke="#FF0066" strokeWidth="1.5" opacity="0.6"/>
+                  <path d="M100,35 C105,27 118,27 118,37 C118,47 100,55 100,55" fill="none" stroke="#FF0066" strokeWidth="1.5" opacity="0.6"/>
+                  <line x1="96" y1="32" x2="104" y2="55" stroke="#FF4466" strokeWidth="2" opacity="0.8"/>
+                  {/* Glitch fragments */}
+                  <rect x="70" y="140" width="60" height="3" fill="#FF0066" opacity="0.3"><animate attributeName="width" values="60;30;60" dur="0.3s" repeatCount="indefinite"/></rect>
+                  <text x="100" y="170" textAnchor="middle" fill="#FF0066" fontSize="10" fontFamily="monospace" opacity="0.5">PELEA.mem</text>
+                </svg>
+              ) : (
+                <svg width="200" height="200" viewBox="0 0 200 200" style={{ filter: 'drop-shadow(0 0 15px rgba(97,255,216,0.3))' }}>
+                  {/* Grandpa and young Eva at computer */}
+                  <circle cx="70" cy="55" r="20" fill="none" stroke="#61FFD8" strokeWidth="1.5" opacity="0.7"/>
+                  <circle cx="130" cy="60" r="15" fill="none" stroke="#00f0ff" strokeWidth="1.5" opacity="0.7"/>
+                  <line x1="70" y1="75" x2="70" y2="130" stroke="#61FFD8" strokeWidth="1.5" opacity="0.6"/>
+                  <line x1="130" y1="75" x2="130" y2="120" stroke="#00f0ff" strokeWidth="1.5" opacity="0.6"/>
+                  {/* Computer screen */}
+                  <rect x="85" y="90" width="30" height="22" rx="2" fill="none" stroke="#FFBB33" strokeWidth="1.5" opacity="0.6"/>
+                  <rect x="95" y="112" width="10" height="8" fill="none" stroke="#FFBB33" strokeWidth="1" opacity="0.4"/>
+                  {/* Code on screen */}
+                  <line x1="89" y1="96" x2="108" y2="96" stroke="#00FF88" strokeWidth="1" opacity="0.5"/>
+                  <line x1="89" y1="100" x2="103" y2="100" stroke="#00f0ff" strokeWidth="1" opacity="0.4"/>
+                  <line x1="89" y1="104" x2="111" y2="104" stroke="#FF61D8" strokeWidth="1" opacity="0.3"/>
+                  {/* Warmth glow */}
+                  <circle cx="100" cy="100" r="50" fill="none" stroke="#61FFD8" strokeWidth="0.5" opacity="0.2">
+                    <animate attributeName="r" values="45;55;45" dur="3s" repeatCount="indefinite"/>
+                  </circle>
+                  <text x="100" y="170" textAnchor="middle" fill="#61FFD8" fontSize="10" fontFamily="monospace" opacity="0.5">ABUELO.mem</text>
+                </svg>
+              )}
             </div>
 
             {/* Memory text */}
