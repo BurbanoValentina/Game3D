@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { GameStates, CINEMATIC_LINES } from '../../constants/gameConstants';
 import useGameStore from '../../lib/gameStore';
 
@@ -56,22 +56,44 @@ export default function CinematicScreen() {
   const [text, setText] = useState('');
   const [done, setDone] = useState(false);
   const [lineIndex, setLineIndex] = useState(0);
+  const intervalRef = useRef(null);
+
+  // Skip narration with Space
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.code === 'Space' || e.key === ' ') {
+        e.preventDefault();
+        if (!done) {
+          // Skip to end
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          const fullText = CINEMATIC_LINES.join('\n');
+          setText(fullText);
+          setLineIndex(CINEMATIC_LINES.length);
+          setDone(true);
+        } else {
+          setGameState(GameStates.AWAKENING);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [done, setGameState]);
 
   useEffect(() => {
     const fullText = CINEMATIC_LINES.join('\n');
     let charIdx = 0;
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       if (charIdx < fullText.length) {
         setText(fullText.slice(0, charIdx + 1));
         const currentLines = fullText.slice(0, charIdx + 1).split('\n').length;
         setLineIndex(currentLines);
         charIdx++;
       } else {
-        clearInterval(interval);
+        clearInterval(intervalRef.current);
         setTimeout(() => setDone(true), 1500);
       }
     }, 35);
-    return () => clearInterval(interval);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, []);
 
   return (
@@ -114,6 +136,15 @@ export default function CinematicScreen() {
             <button onClick={() => setGameState(GameStates.AWAKENING)} className="oasis-btn-premium">
               ENTRAR AL OASIS →
             </button>
+          </div>
+        )}
+
+        {/* Skip hint */}
+        {!done && (
+          <div className="mt-6 text-center animate-pulse">
+            <span className="font-sharetm text-[10px] tracking-widest" style={{ color: 'rgba(255,0,102,0.4)' }}>
+              [ ESPACIO ] SALTAR NARRACIÓN
+            </span>
           </div>
         )}
       </div>
