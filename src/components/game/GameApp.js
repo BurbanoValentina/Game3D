@@ -60,6 +60,38 @@ export default function GameApp() {
     };
   }, [handleFirstInteraction]);
 
+  // ─── Music scene management based on game state ───
+  useEffect(() => {
+    if (!audioManager.initialized) return;
+    const musicMap = {
+      [GameStates.LOADING]: 'menu',
+      [GameStates.LANDING]: 'menu',
+      [GameStates.REGISTER]: 'menu',
+      [GameStates.LOGIN]: 'menu',
+      [GameStates.MAIN_MENU]: 'menu',
+      [GameStates.TRAINING_ROOM]: 'menu',
+      [GameStates.SETTINGS]: 'menu',
+      [GameStates.TUTORIAL]: 'tutorial',
+      [GameStates.TUTORIAL_GAME]: 'tutorial',
+      [GameStates.CREDITS]: 'menu',
+      [GameStates.BOOT]: 'narration',
+      [GameStates.CINEMATIC]: 'narration',
+      [GameStates.AWAKENING]: 'narration',
+      [GameStates.PLAYING]: 'gameplay',
+      [GameStates.PUZZLE]: 'gameplay',
+      [GameStates.PAUSED]: 'gameplay',
+      [GameStates.WRONG_ANSWER]: 'error',
+      [GameStates.TOKEN_MEMORY]: 'memory',
+      [GameStates.MEMORY]: 'gameplay',
+      [GameStates.SCREAMER]: 'error',
+      [GameStates.KEY_OBTAINED]: 'victory',
+      [GameStates.VICTORY]: 'victory',
+      [GameStates.GAME_OVER]: 'gameover',
+    };
+    const scene = musicMap[gameState];
+    if (scene) audioManager.playScene(scene);
+  }, [gameState]);
+
   useEffect(() => {
     return () => { audioManager.dispose(); };
   }, []);
