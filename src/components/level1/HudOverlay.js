@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { CONTROLS, LEVEL1_PUZZLES, LEVEL1_TOKENS } from '../../constants/gameConstants';
 import useGameStore from '../../lib/gameStore';
+import audioManager from '../../lib/audioManager';
 
 // ── SVG: Heart ──
 function Heart({ active }) {
@@ -119,6 +121,50 @@ function Minimap({ playerX, playerZ, puzzlesSolved, memoriesFound, collectedToke
   );
 }
 
+// ── Music Toggle Button ──
+function MusicToggle() {
+  const [musicOn, setMusicOn] = useState(true);
+
+  const toggle = () => {
+    const enabled = audioManager.toggleMusic();
+    setMusicOn(enabled);
+  };
+
+  return (
+    <div className="absolute bottom-4 right-4 pointer-events-auto">
+      <button
+        onClick={toggle}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all hover:scale-105"
+        style={{
+          background: 'rgba(255,245,240,0.85)',
+          border: `1px solid ${musicOn ? 'rgba(0,240,255,0.3)' : 'rgba(255,0,102,0.2)'}`,
+          boxShadow: musicOn ? '0 0 12px rgba(0,240,255,0.1)' : 'none',
+        }}
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16">
+          {musicOn ? (
+            <>
+              <rect x="2" y="4" width="3" height="8" rx="0.5" fill="#00f0ff" opacity="0.8" />
+              <path d="M5,4 L12,1.5 V14.5 L5,12 Z" fill="#00f0ff" opacity="0.6" />
+              <path d="M13,3 Q15,5 15,8 Q15,11 13,13" fill="none" stroke="#00f0ff" strokeWidth="1" opacity="0.5" />
+              <path d="M13,5.5 Q14.5,6.5 14.5,8 Q14.5,9.5 13,10.5" fill="none" stroke="#00f0ff" strokeWidth="1" opacity="0.7" />
+            </>
+          ) : (
+            <>
+              <rect x="2" y="4" width="3" height="8" rx="0.5" fill="#FF0066" opacity="0.4" />
+              <path d="M5,4 L12,1.5 V14.5 L5,12 Z" fill="#FF0066" opacity="0.3" />
+              <line x1="2" y1="2" x2="14" y2="14" stroke="#FF0066" strokeWidth="1.5" opacity="0.7" />
+            </>
+          )}
+        </svg>
+        <span className="font-sharetm text-[9px] tracking-widest" style={{ color: musicOn ? '#00f0ff' : 'rgba(255,0,102,0.5)' }}>
+          {musicOn ? 'MÚSICA ON' : 'MÚSICA OFF'}
+        </span>
+      </button>
+    </div>
+  );
+}
+
 export default function HudOverlay() {
   const lives = useGameStore((s) => s.lives);
   const coins = useGameStore((s) => s.coins);
@@ -134,6 +180,13 @@ export default function HudOverlay() {
   const playerX = useGameStore((s) => s.playerX);
   const playerZ = useGameStore((s) => s.playerZ);
   const collectedTokens = useGameStore((s) => s.collectedTokens);
+  const levelTimeRemaining = useGameStore((s) => s.levelTimeRemaining);
+
+  const timerMin = Math.floor(levelTimeRemaining / 60);
+  const timerSec = levelTimeRemaining % 60;
+  const timerStr = `${String(timerMin).padStart(2, '0')}:${String(timerSec).padStart(2, '0')}`;
+  const timerUrgent = levelTimeRemaining <= 60;
+  const timerCritical = levelTimeRemaining <= 30;
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10">
@@ -189,12 +242,32 @@ export default function HudOverlay() {
           </div>
         </div>
 
-        {/* Center: Level name */}
+        {/* Center: Level name + Timer */}
         <div className="text-center">
           <div className="font-orbitron text-[10px] tracking-[0.4em] animate-flicker" style={{ color: 'var(--darker)' }}>NIVEL 1</div>
           <div className="font-rajdhani text-sm tracking-widest font-bold" style={{ color: 'var(--neon-amber)', textShadow: '0 0 8px rgba(255,187,51,0.2)' }}>
             LAS CENIZAS DE LA CIUDAD
           </div>
+          {/* Countdown Timer */}
+          <div className="mt-2 flex items-center justify-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 14 14">
+              <circle cx="7" cy="7" r="6" fill="none" stroke={timerCritical ? '#FF0044' : timerUrgent ? '#FFBB33' : '#00f0ff'} strokeWidth="1" opacity="0.6" />
+              <line x1="7" y1="3" x2="7" y2="7" stroke={timerCritical ? '#FF0044' : timerUrgent ? '#FFBB33' : '#00f0ff'} strokeWidth="1" />
+              <line x1="7" y1="7" x2="10" y2="8" stroke={timerCritical ? '#FF0044' : timerUrgent ? '#FFBB33' : '#00f0ff'} strokeWidth="0.8" />
+            </svg>
+            <span className={`font-orbitron text-lg font-bold tracking-widest ${timerCritical ? 'animate-pulse' : ''}`}
+              style={{
+                color: timerCritical ? '#FF0044' : timerUrgent ? '#FFBB33' : '#00f0ff',
+                textShadow: `0 0 12px ${timerCritical ? 'rgba(255,0,68,0.6)' : timerUrgent ? 'rgba(255,187,51,0.4)' : 'rgba(0,240,255,0.3)'}`,
+              }}>
+              {timerStr}
+            </span>
+          </div>
+          {timerUrgent && (
+            <div className="font-sharetm text-[8px] tracking-widest animate-pulse" style={{ color: timerCritical ? '#FF0044' : '#FFBB33' }}>
+              {timerCritical ? '⚠ TIEMPO CRÍTICO ⚠' : '⏰ TIEMPO BAJO'}
+            </div>
+          )}
         </div>
 
         {/* Right: Minimap + Puzzles */}
@@ -238,6 +311,9 @@ export default function HudOverlay() {
           </div>
         </div>
       )}
+
+      {/* ── MUSIC TOGGLE ── */}
+      <MusicToggle />
 
       {/* ── INTERACTION PROMPT ── */}
       {interactionPrompt && (
