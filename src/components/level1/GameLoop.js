@@ -21,6 +21,39 @@ export function createGameLoop({
   const solvedPuzzles = new Set();
   const collectedTokenIds = new Set();
   const unsubs = [];
+  let levelTimerInterval = null;
+
+  // ─── START 15 MINUTE LEVEL TIMER ───
+  const startLevelTimer = () => {
+    if (levelTimerInterval) return;
+    setState({ levelTimerActive: true });
+    levelTimerInterval = setInterval(() => {
+      const s = store();
+      if (stateRef.current !== GameStates.PLAYING) return; // pause timer when not playing
+      const newTime = s.levelTimeRemaining - 1;
+      setState({ levelTimeRemaining: newTime });
+      // Warning beeps at 60s, 30s, 10s
+      if (newTime === 60 || newTime === 30 || newTime <= 10 && newTime > 0) {
+        audioManager.playTimerWarning();
+      }
+      if (newTime <= 0) {
+        clearInterval(levelTimerInterval);
+        levelTimerInterval = null;
+        // Time's up — lose all lives
+        setState({ lives: 0, levelTimerActive: false });
+        useGameStore.getState().setGameState(GameStates.GAME_OVER);
+        document.exitPointerLock();
+        addLog('⏰ TIEMPO AGOTADO — TODAS LAS VIDAS PERDIDAS');
+      }
+    }, 1000);
+  };
+
+  // Start timer when game first enters PLAYING state
+  const checkStartTimer = () => {
+    if (!levelTimerInterval && stateRef.current === GameStates.PLAYING) {
+      startLevelTimer();
+    }
+  };
 
   // ─── MEMORY ECHO ───
   unsubs.push(EventBus.on('activateMemory', () => {
@@ -151,6 +184,9 @@ export function createGameLoop({
     time += 0.016;
     if (stateRef.current !== GameStates.PLAYING) { renderer.render(scene, camera); return; }
 
+    // Activate timer on first play frame
+    checkStartTimer();
+
     // Input
     player.velocity.x = 0; player.velocity.z = 0; player.sprinting = false;
     inputManager.processInput(player);
@@ -213,6 +249,13 @@ export function createGameLoop({
     worldAssets.lightBeams.forEach(lb => { lb.beam.material.opacity = 0.04 + Math.sin(time * 1.5) * 0.02; lb.core.material.opacity = 0.08 + Math.sin(time * 2) * 0.04; lb.beam.rotation.y = time * 0.1; });
     worldAssets.parkourBlocks.forEach(pb => { pb.mesh.position.y = pb.baseY + Math.sin(time * 0.8 + pb.phase) * 0.3; });
     worldAssets.tokenMarkers.forEach(tm => { if (!tm.collected) { tm.mesh.rotation.y = time * 1.5 + tm.phase; tm.mesh.position.y = 2.5 + Math.sin(time * 1.2 + tm.phase) * 0.4; } });
+
+    // Ground glow ring pulse animation
+    if (worldAssets.glowRing) {
+      const scale = 1 + Math.sin(time * 0.5) * 0.3;
+      worldAssets.glowRing.scale.set(scale, scale, 1);
+      worldAssets.glowRingMat.opacity = 0.02 + Math.sin(time * 0.8) * 0.02;
+    }
 
     // Key animation
     const s = store();
@@ -279,5 +322,5 @@ export function createGameLoop({
   };
 
   loop();
-  return () => { cancelAnimationFrame(animId); unsubs.forEach(u => u()); };
+  return () => { cancelAnimationFrame(animId); unsubs.forEach(u => u()); if (levelTimerInterval) clearInterval(levelTimerInterval); };
 }
