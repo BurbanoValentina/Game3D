@@ -7,11 +7,12 @@ import audioManager from '../../lib/audioManager';
 
 export default function KeyObtainedScreen() {
   const setGameState = useGameStore((s) => s.setGameState);
+  const currentLevel = useGameStore((s) => s.currentLevel);
   const puzzlesSolved = useGameStore((s) => s.puzzlesSolved);
   const totalPuzzles = useGameStore((s) => s.totalPuzzles);
   const coins = useGameStore((s) => s.coins);
   const lives = useGameStore((s) => s.lives);
-  const key = KEYS[0];
+  const key = KEYS[currentLevel - 1] || KEYS[0];
 
   useEffect(() => { audioManager.playKeyObtained(); }, []);
 
@@ -39,7 +40,7 @@ export default function KeyObtainedScreen() {
           <line x1="65" y1="37" x2="65" y2="47" stroke={key.color} strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
           <line x1="72" y1="37" x2="72" y2="47" stroke={key.color} strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
           {/* Label */}
-          <text x="50" y="80" textAnchor="middle" fill={key.color} fontSize="7" fontFamily="Share Tech Mono" letterSpacing="3" opacity="0.6">LLAVE ÁMBAR</text>
+          <text x="50" y="80" textAnchor="middle" fill={key.color} fontSize="7" fontFamily="Share Tech Mono" letterSpacing="3" opacity="0.6">{key.name}</text>
         </svg>
 
         <h2 className="font-orbitron text-2xl tracking-widest mb-2 animate-pulse-glow" style={{ color: key.color, textShadow: `0 0 20px ${key.color}66` }}>
@@ -69,7 +70,7 @@ export default function KeyObtainedScreen() {
 
         <div className="space-y-2 mb-8">
           <p className="font-sharetm text-xs" style={{ color: 'var(--darker)' }}>Eva guarda la llave. El sistema registra el evento.</p>
-          <p className="font-sharetm text-xs" style={{ color: 'var(--neon-magenta)', opacity: 0.5 }}>Quedan 4 llaves. Quedan 4 mundos. Zagar observa.</p>
+          <p className="font-sharetm text-xs" style={{ color: 'var(--neon-magenta)', opacity: 0.5 }}>Quedan {5 - currentLevel} llaves. Quedan {5 - currentLevel} mundos. Zagar observa.</p>
         </div>
 
         <button onClick={() => setGameState(GameStates.VICTORY)} className="oasis-btn-premium cursor-pointer" style={{ color: key.color, borderColor: `${key.color}44` }}>
