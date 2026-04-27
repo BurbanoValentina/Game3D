@@ -2,7 +2,13 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { GameStates, CINEMATIC_LINES } from '../../constants/gameConstants';
+import { LEVEL2_CINEMATIC_LINES } from '../../constants/level2Constants';
+import { LEVEL3_CINEMATIC_LINES } from '../../constants/level3Constants';
+import { LEVEL4_CINEMATIC_LINES } from '../../constants/level4Constants';
+import { LEVEL5_CINEMATIC_LINES } from '../../constants/level5Constants';
 import useGameStore from '../../lib/gameStore';
+
+const CINEMATIC_MAP = { 1: CINEMATIC_LINES, 2: LEVEL2_CINEMATIC_LINES, 3: LEVEL3_CINEMATIC_LINES, 4: LEVEL4_CINEMATIC_LINES, 5: LEVEL5_CINEMATIC_LINES };
 
 // ── SVG: Eva Silhouette ──
 function EvaSilhouette() {
@@ -53,6 +59,8 @@ function CorruptionBG() {
 
 export default function CinematicScreen() {
   const setGameState = useGameStore((s) => s.setGameState);
+  const currentLevel = useGameStore((s) => s.currentLevel);
+  const LINES = CINEMATIC_MAP[currentLevel] || CINEMATIC_LINES;
   const [text, setText] = useState('');
   const [done, setDone] = useState(false);
   const [lineIndex, setLineIndex] = useState(0);
@@ -66,9 +74,9 @@ export default function CinematicScreen() {
         if (!done) {
           // Skip to end
           if (intervalRef.current) clearInterval(intervalRef.current);
-          const fullText = CINEMATIC_LINES.join('\n');
+          const fullText = LINES.join('\n');
           setText(fullText);
-          setLineIndex(CINEMATIC_LINES.length);
+          setLineIndex(LINES.length);
           setDone(true);
         } else {
           setGameState(GameStates.AWAKENING);
@@ -77,10 +85,10 @@ export default function CinematicScreen() {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [done, setGameState]);
+  }, [done, setGameState, LINES]);
 
   useEffect(() => {
-    const fullText = CINEMATIC_LINES.join('\n');
+    const fullText = LINES.join('\n');
     let charIdx = 0;
     intervalRef.current = setInterval(() => {
       if (charIdx < fullText.length) {

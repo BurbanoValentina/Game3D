@@ -6,9 +6,10 @@ import audioManager from '../../lib/audioManager';
 
 export default function GameOverScreen() {
   const setGameState = useGameStore((s) => s.setGameState);
+  const resetCurrentLevel = useGameStore((s) => s.resetCurrentLevel);
   const resetGame = useGameStore((s) => s.resetGame);
 
-  const handleRestart = () => { audioManager.stopAll(); resetGame(); setGameState(GameStates.CINEMATIC); };
+  const handleRestart = () => { audioManager.stopAll(); resetCurrentLevel(); setGameState(GameStates.BOOT); };
   const handleMenu = () => { audioManager.stopAll(); resetGame(); setGameState(GameStates.TRAINING_ROOM); };
 
   return (

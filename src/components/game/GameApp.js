@@ -20,7 +20,8 @@ import TutorialScreen from '../tutorial/TutorialScreen';
 import TutorialGame from '../tutorial/TutorialGame';
 import CreditsScreen from '../credits/CreditsScreen';
 import CinematicScreen from '../tutorial/CinematicScreen';
-import GameViewport from '../level1/GameViewport';
+import LevelViewportRouter from '../game/LevelViewportRouter';
+import SuperAdminPanel from '../game/SuperAdminPanel';
 import PuzzleModal from '../level1/PuzzleModal';
 import KeyObtainedScreen from '../level1/KeyObtainedScreen';
 import VictoryScreen from '../level1/VictoryScreen';
@@ -34,8 +35,9 @@ import StatusBar from '../level1/StatusBar';
 import HolographicOverlay from '../effects/HolographicOverlay';
 
 export default function GameApp() {
-  const gameState = useGameStore((s) => s.gameState);
-  const setGameState = useGameStore((s) => s.setGameState);
+  const gameState        = useGameStore((s) => s.gameState);
+  const setGameState     = useGameStore((s) => s.setGameState);
+  const superadminMode   = useGameStore((s) => s.superadminMode);
 
   useEffect(() => {
     const timer = setTimeout(() => setGameState(GameStates.LANDING), 2800);
@@ -126,7 +128,7 @@ export default function GameApp() {
       {gameState === GameStates.CREDITS && <CreditsScreen />}
       {gameState === GameStates.CINEMATIC && <CinematicScreen />}
 
-      {viewportStates.includes(gameState) && <GameViewport />}
+      {viewportStates.includes(gameState) && <LevelViewportRouter />}
 
       {gameState === GameStates.AWAKENING && <AwakeningOverlay />}
       {gameState === GameStates.PUZZLE && <PuzzleModal />}
@@ -137,6 +139,8 @@ export default function GameApp() {
       {gameState === GameStates.KEY_OBTAINED && <KeyObtainedScreen />}
       {gameState === GameStates.VICTORY && <VictoryScreen />}
       {gameState === GameStates.GAME_OVER && <GameOverScreen />}
+
+      {superadminMode && <SuperAdminPanel />}
     </div>
   );
 }

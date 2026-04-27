@@ -54,6 +54,7 @@ class OasisDatabase {
       this.mode = 'memory';
       this.db = null;
       console.warn('[DB] SQLite no disponible, activando modo memoria:', err?.message || err);
+      this._seedAdminMemory();
       if (IS_VERCEL) {
         console.warn('[DB] En Vercel el modo memoria no persiste entre invocaciones. Usa una DB gestionada para producción.');
       }
@@ -79,6 +80,7 @@ class OasisDatabase {
       nickname: user.nickname,
       email: user.email,
       progress: this._safeProgress(user.progress),
+      is_admin: user.is_admin ? 1 : 0,
     };
   }
 
@@ -97,9 +99,44 @@ class OasisDatabase {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         last_login DATETIME DEFAULT NULL,
         session_token TEXT DEFAULT NULL,
-        session_expires DATETIME DEFAULT NULL
+        session_expires DATETIME DEFAULT NULL,
+        is_admin INTEGER DEFAULT 0
       );
     `);
+
+    // Migration: add is_admin to existing DBs that lack the column
+    try { this.db.exec('ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0'); } catch (_) {}
+
+    this._seedAdminUser();
+  }
+
+  _seedAdminMemory() {
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = this._hashPassword('admin12345', salt);
+    const id = this.nextId++;
+    const adminUser = {
+      id, name: 'Superadmin', nickname: 'superadmin',
+      email: 'admin@gmail.com', password_hash: hash, salt,
+      is_admin: 1, progress: { level: 0, keys: [], credits: 0 },
+      session_token: null, session_expires: null,
+    };
+    this.users.set(id, adminUser);
+    this.emailIndex.set('admin@gmail.com', id);
+    this.nicknameIndex.set('superadmin', id);
+  }
+
+  _seedAdminUser() {
+    if (!this.db) return;
+    const existing = this.db.prepare('SELECT id FROM users WHERE email = ?').get('admin@gmail.com');
+    if (existing) {
+      this.db.prepare('UPDATE users SET is_admin = 1 WHERE email = ?').run('admin@gmail.com');
+      return;
+    }
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = this._hashPassword('admin12345', salt);
+    this.db.prepare(
+      'INSERT INTO users (name, nickname, email, password_hash, salt, is_admin) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run('Superadmin', 'superadmin', 'admin@gmail.com', hash, salt, 1);
   }
 
   // ─── HASH PASSWORD ───
@@ -131,6 +168,7 @@ class OasisDatabase {
       email: normalizedEmail,
       password_hash: hash,
       salt,
+      is_admin: 0,
       progress: { level: 0, keys: [], credits: 0 },
       session_token: token,
       session_expires: expires,
@@ -306,6 +344,7 @@ class OasisDatabase {
         nickname: user.nickname,
         email: user.email,
         progress: this._safeProgress(user.progress),
+        is_admin: user.is_admin ? 1 : 0,
       },
     };
   }
@@ -341,6 +380,7 @@ class OasisDatabase {
       nickname: user.nickname,
       email: user.email,
       progress: this._safeProgress(user.progress),
+      is_admin: user.is_admin ? 1 : 0,
     };
   }
 
