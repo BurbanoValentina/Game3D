@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════
-//  OASIS GAME CONSTANTS — NIVEL 1 (MUNDO REDUCIDO)
+//  OASIS GAME CONSTANTS — TODOS LOS NIVELES
 // ══════════════════════════════════════════════════════
 
 export const GameStates = {
@@ -39,7 +39,7 @@ export const StateTransitions = {
   [GameStates.KEY_OBTAINED]: [GameStates.VICTORY],
   [GameStates.PAUSED]: [GameStates.PLAYING, GameStates.MAIN_MENU],
   [GameStates.GAME_OVER]: [GameStates.BOOT, GameStates.MAIN_MENU],
-  [GameStates.VICTORY]: [GameStates.CREDITS, GameStates.TRAINING_ROOM],
+  [GameStates.VICTORY]: [GameStates.CREDITS, GameStates.TRAINING_ROOM, GameStates.BOOT],
 };
 
 export const PLAYER_CONFIG = { speed: 0.28, sprintSpeed: 0.48, jumpForce: 0.35, gravity: 0.012, height: 3, initialLives: 10, initialCoins: 0 };
@@ -206,4 +206,34 @@ export const REGISTER_RULES = {
   nickname: { min: 3, max: 20, label: 'Apodo' },
   email: { min: 5, max: 100, label: 'Correo' },
   password: { min: 8, max: 30, label: 'Contraseña' },
+};
+
+// ══════════════════════════════════════════════════════
+//  MULTI-LEVEL CONFIGURATION
+// ══════════════════════════════════════════════════════
+
+export const TOTAL_LEVELS = 5;
+
+export const LEVEL_NAMES = {
+  1: 'LAS CENIZAS DE LA CIUDAD',
+  2: 'EL RECUERDO',
+  3: 'EL DESAFÍO',
+  4: 'LA CONFIANZA',
+  5: 'EL NÚCLEO',
+};
+
+export const LEVEL_WORLDS = {
+  1: 'Estación Espacial Neón',
+  2: 'Biblioteca de Halliday — Zona de Memoria',
+  3: 'Arena Digital — Zona de Competencia',
+  4: 'Puente Suspendido — Zona de Vínculo',
+  5: 'Corazón del OASIS — Zona Cero',
+};
+
+export const LEVEL_DIFFICULTY = {
+  1: { stars: 1, label: 'Básico' },
+  2: { stars: 2, label: 'Básico' },
+  3: { stars: 3, label: 'Intermedio' },
+  4: { stars: 4, label: 'Avanzado' },
+  5: { stars: 5, label: 'Final' },
 };
