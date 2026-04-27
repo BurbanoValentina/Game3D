@@ -55,7 +55,8 @@ function FuturisticInput({ label, sub, type, value, onChange, maxLen, error, pla
 }
 
 export default function LoginScreen() {
-  const setGameState = useGameStore((s) => s.setGameState);
+  const setGameState     = useGameStore((s) => s.setGameState);
+  const setSuperadminMode = useGameStore((s) => s.setSuperadminMode);
   const [loading, setLoading] = useState(false);
   const [serverMsg, setServerMsg] = useState('');
   const [serverOk, setServerOk] = useState(false);
@@ -80,7 +81,8 @@ export default function LoginScreen() {
       if (data.success || data.userId) {
         setServerOk(true);
         if (data.token) { localStorage.setItem('oasis_token', data.token); localStorage.setItem('oasis_user', JSON.stringify(data.user)); }
-        setServerMsg('¡Bienvenida de vuelta, operaria!');
+        if (data.user?.is_admin) setSuperadminMode(true);
+        setServerMsg(data.user?.is_admin ? '¡Acceso de administrador concedido!' : '¡Bienvenida de vuelta, operaria!');
         setTimeout(() => setGameState(GameStates.MAIN_MENU), 1500);
       } else { setServerOk(false); setServerMsg(data.error || 'Error desconocido.'); }
     } catch { setServerOk(false); setServerMsg('Error de conexión.'); }
