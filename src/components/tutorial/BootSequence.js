@@ -2,8 +2,14 @@
 
 import { useEffect, useCallback, useState } from 'react';
 import { GameStates, BOOT_MESSAGES } from '../../constants/gameConstants';
+import { LEVEL2_BOOT_MESSAGES } from '../../constants/level2Constants';
+import { LEVEL3_BOOT_MESSAGES } from '../../constants/level3Constants';
+import { LEVEL4_BOOT_MESSAGES } from '../../constants/level4Constants';
+import { LEVEL5_BOOT_MESSAGES } from '../../constants/level5Constants';
 import useGameStore from '../../lib/gameStore';
 import audioManager from '../../lib/audioManager';
+
+const BOOT_MAP = { 1: BOOT_MESSAGES, 2: LEVEL2_BOOT_MESSAGES, 3: LEVEL3_BOOT_MESSAGES, 4: LEVEL4_BOOT_MESSAGES, 5: LEVEL5_BOOT_MESSAGES };
 
 // ── SVG: System Diagnostic Panel ──
 function DiagnosticPanel({ progress }) {
@@ -40,12 +46,14 @@ export default function BootSequence() {
   const bootComplete = useGameStore((s) => s.bootComplete);
   const addBootLine = useGameStore((s) => s.addBootLine);
   const setBootComplete = useGameStore((s) => s.setBootComplete);
+  const currentLevel = useGameStore((s) => s.currentLevel);
   const [progress, setProgress] = useState(0);
+  const levelBootMessages = BOOT_MAP[currentLevel] || BOOT_MESSAGES;
 
   useEffect(() => {
     audioManager.startAmbientDrone();
-    const timers = BOOT_MESSAGES.map((msg, i) =>
-      setTimeout(() => { addBootLine(msg); audioManager.playBootBeep(i); setProgress(((i + 1) / BOOT_MESSAGES.length) * 100); }, msg.delay)
+    const timers = levelBootMessages.map((msg, i) =>
+      setTimeout(() => { addBootLine(msg); audioManager.playBootBeep(i); setProgress(((i + 1) / levelBootMessages.length) * 100); }, msg.delay)
     );
     const completeTimer = setTimeout(() => setBootComplete(true), 7000);
     return () => { timers.forEach(clearTimeout); clearTimeout(completeTimer); };
