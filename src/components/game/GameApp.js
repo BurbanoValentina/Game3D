@@ -13,10 +13,10 @@ import LoaderScreen from '../menu/LoaderScreen';
 import LandingPage from '../menu/LandingPage';
 import RegisterScreen from '../registro/RegisterScreen';
 import LoginScreen from '../registro/LoginScreen';
+import RecoverScreen from '../registro/RecoverScreen';
 import MainMenu from '../menu/MainMenu';
 import TrainingRoom from '../menu/TrainingRoom';
 import SettingsScreen from '../ajustes/SettingsScreen';
-import TutorialScreen from '../tutorial/TutorialScreen';
 import TutorialGame from '../tutorial/TutorialGame';
 import CreditsScreen from '../credits/CreditsScreen';
 import CinematicScreen from '../tutorial/CinematicScreen';
@@ -70,10 +70,10 @@ export default function GameApp() {
       [GameStates.LANDING]: 'menu',
       [GameStates.REGISTER]: 'menu',
       [GameStates.LOGIN]: 'menu',
+      [GameStates.RECOVER]: 'menu',
       [GameStates.MAIN_MENU]: 'menu',
       [GameStates.TRAINING_ROOM]: 'menu',
       [GameStates.SETTINGS]: 'menu',
-      [GameStates.TUTORIAL]: 'tutorial',
       [GameStates.TUTORIAL_GAME]: 'tutorial',
       [GameStates.CREDITS]: 'menu',
       [GameStates.BOOT]: 'narration',
@@ -107,7 +107,7 @@ export default function GameApp() {
 
   const showStatusBar = ![
     GameStates.LOADING, GameStates.LANDING, GameStates.REGISTER,
-    GameStates.LOGIN, GameStates.TUTORIAL, GameStates.TUTORIAL_GAME,
+    GameStates.LOGIN, GameStates.RECOVER, GameStates.TUTORIAL_GAME,
     GameStates.CREDITS, GameStates.TRAINING_ROOM, GameStates.AWAKENING,
   ].includes(gameState);
 
@@ -120,10 +120,10 @@ export default function GameApp() {
       {gameState === GameStates.LANDING && <LandingPage />}
       {gameState === GameStates.REGISTER && <RegisterScreen />}
       {gameState === GameStates.LOGIN && <LoginScreen />}
+      {gameState === GameStates.RECOVER && <RecoverScreen />}
       {gameState === GameStates.MAIN_MENU && <MainMenu />}
       {gameState === GameStates.TRAINING_ROOM && <TrainingRoom />}
       {gameState === GameStates.SETTINGS && <SettingsScreen />}
-      {gameState === GameStates.TUTORIAL && <TutorialScreen />}
       {gameState === GameStates.TUTORIAL_GAME && <TutorialGame />}
       {gameState === GameStates.CREDITS && <CreditsScreen />}
       {gameState === GameStates.CINEMATIC && <CinematicScreen />}
