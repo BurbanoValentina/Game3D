@@ -8,7 +8,7 @@ import audioManager from '../../lib/audioManager';
 // ── SVG: Heart ──
 function Heart({ active }) {
   return (
-    <svg width="18" height="16" viewBox="0 0 18 16">
+    <svg width="24" height="22" viewBox="0 0 18 16">
       <path d="M9 14s-7-4.35-7-8.5C2 3.01 3.79 1.5 6 1.5c1.54 0 2.81.99 3 2.36C9.19 2.49 10.46 1.5 12 1.5c2.21 0 4 1.51 4 3.5C16 9.65 9 14 9 14z"
         fill={active ? '#FF4466' : 'rgba(255,68,102,0.12)'}
         stroke={active ? '#FF4466' : 'rgba(255,68,102,0.2)'}
@@ -19,20 +19,19 @@ function Heart({ active }) {
   );
 }
 
-// ── SVG: Coin ──
+// ── Icon: Coin ──
 function CoinIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16">
-      <circle cx="8" cy="8" r="7" fill="#FFBB33" opacity="0.9" stroke="#FF8800" strokeWidth="0.5" style={{ filter: 'drop-shadow(0 0 3px #FFBB33)' }} />
-      <text x="8" y="11" textAnchor="middle" fill="#AA6600" fontSize="8" fontWeight="bold" fontFamily="monospace">$</text>
-    </svg>
+    <span className="material-symbols-outlined" style={{ fontSize: 22, color: '#FFBB33', textShadow: '0 0 6px rgba(255,187,51,0.45)' }}>
+      paid
+    </span>
   );
 }
 
 // ── Puzzle Tracker ──
 function PuzzleTracker({ solved, total }) {
   return (
-    <svg width="44" height="44" viewBox="0 0 50 50">
+    <svg width="56" height="56" viewBox="0 0 50 50">
       <defs><filter id="ptGlow"><feGaussianBlur stdDeviation="1.5" /><feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
       <circle cx="25" cy="25" r="20" fill="none" stroke="rgba(157,0,255,0.1)" strokeWidth="2" />
       <circle cx="25" cy="25" r="20" fill="none" stroke="#9D00FF" strokeWidth="2" strokeLinecap="round" strokeDasharray={`${(solved / total) * 126} 126`} transform="rotate(-90 25 25)" filter="url(#ptGlow)" />
@@ -44,7 +43,7 @@ function PuzzleTracker({ solved, total }) {
 
 // ── Minimap ──
 function Minimap({ playerX, playerZ, puzzlesSolved, memoriesFound, collectedTokens }) {
-  const mapSize = 160;
+  const mapSize = 180;
   const mapScale = mapSize / 250; // ±125 = 250 map range
   const cx = mapSize / 2 + playerX * mapScale;
   const cz = mapSize / 2 + playerZ * mapScale;
@@ -114,7 +113,7 @@ function Minimap({ playerX, playerZ, puzzlesSolved, memoriesFound, collectedToke
       </svg>
 
       {/* Label */}
-      <div className="absolute bottom-1 left-2 font-sharetm text-[7px] tracking-widest" style={{ color: 'rgba(255,0,102,0.5)' }}>
+      <div className="absolute bottom-1 left-2 font-sharetm text-[8px] tracking-widest" style={{ color: 'rgba(255,0,102,0.5)' }}>
         MAPA
       </div>
     </div>
@@ -200,9 +199,6 @@ export default function HudOverlay() {
               <text x="16" y="19" textAnchor="middle" fill="#FF0066" fontSize="10" fontFamily="Orbitron" fontWeight="600">E</text>
             </svg>
             <div>
-              <div className="font-orbitron text-xs tracking-widest" style={{ color: 'var(--neon-magenta)', textShadow: '0 0 8px rgba(255,0,102,0.3)' }}>
-                EVA_STRIDER_∞
-              </div>
               {/* 10 Hearts — 2 rows of 5 */}
               <div className="mt-1">
                 <div className="flex items-center gap-0.5">
@@ -218,27 +214,17 @@ export default function HudOverlay() {
           {/* Coins */}
           <div className="flex items-center gap-2 ml-11">
             <CoinIcon />
-            <span className="font-orbitron text-sm font-bold" style={{ color: '#FFBB33', textShadow: '0 0 8px rgba(255,187,51,0.3)' }}>{coins}</span>
+            <span className="font-orbitron text-lg font-bold" style={{ color: '#FFBB33', textShadow: '0 0 10px rgba(255,187,51,0.35)' }}>{coins}</span>
           </div>
 
           {/* Memories found */}
           <div className="flex items-center gap-2 ml-11">
-            <span className="text-sm">🔮</span>
-            <span className="font-sharetm text-[10px] tracking-widest" style={{ color: '#D861FF' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: 18, color: '#D861FF', textShadow: '0 0 6px rgba(216,97,255,0.45)' }}>
+              auto_awesome
+            </span>
+            <span className="font-sharetm text-[12px] tracking-widest" style={{ color: '#D861FF' }}>
               RECUERDOS: {memoriesFound}/{totalMemories}
             </span>
-          </div>
-
-          {/* Duelo marks */}
-          <div className="flex gap-1.5 ml-11">
-            <div className="flex items-center gap-1 px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,0,102,0.06)', border: '1px solid rgba(255,0,102,0.1)' }}>
-              <div className="w-1 h-3" style={{ background: 'rgba(255,0,102,0.6)' }} />
-              <span className="font-sharetm text-[7px]" style={{ color: 'rgba(255,0,102,0.5)' }}>SYN</span>
-            </div>
-            <div className="flex items-center gap-1 px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,0,102,0.06)', border: '1px solid rgba(255,0,102,0.1)' }}>
-              <div className="w-1 h-3" style={{ background: 'rgba(255,0,102,0.6)' }} />
-              <span className="font-sharetm text-[7px]" style={{ color: 'rgba(255,0,102,0.5)' }}>ZRI</span>
-            </div>
           </div>
         </div>
 
@@ -281,7 +267,7 @@ export default function HudOverlay() {
           />
           <div className="flex items-center gap-3">
             <div className="text-right">
-              <span className="font-sharetm text-[9px] tracking-widest" style={{ color: 'var(--neon-violet)', opacity: 0.6 }}>PUZZLES</span>
+              <span className="font-sharetm text-[11px] tracking-widest" style={{ color: 'var(--neon-violet)', opacity: 0.7 }}>PUZZLES</span>
             </div>
             <PuzzleTracker solved={puzzlesSolved} total={totalPuzzles} />
           </div>
@@ -303,14 +289,7 @@ export default function HudOverlay() {
       )}
 
       {/* ── MEMORY BUTTON ── */}
-      {!memoryActive && memoryAvailable && (
-        <div className="absolute bottom-32 right-4 pointer-events-auto text-center">
-          <div className="font-sharetm text-[10px] mb-1 tracking-widest" style={{ color: 'var(--darker)' }}>[Q]</div>
-          <div className="rounded px-3 py-1 font-sharetm text-[10px]" style={{ background: 'rgba(255,0,102,0.04)', border: '1px solid rgba(255,0,102,0.15)', color: 'var(--neon-magenta)', opacity: 0.6 }}>
-            MEMORIA
-          </div>
-        </div>
-      )}
+      {!memoryActive && memoryAvailable && null}
 
       {/* ── MUSIC TOGGLE ── */}
       <MusicToggle />
