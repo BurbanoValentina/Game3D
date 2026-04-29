@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Exo+2:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Exo+2:wght@300;400;500;600;700;800;900&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -19,6 +19,7 @@
 
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;font-family:'Rajdhani',sans-serif;background:var(--cream);color:var(--darker)}
+html{font-size:clamp(16px,1.1vw + 14px,20px)}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--sand)}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--neon-magenta),var(--neon-violet));border-radius:2px}
 ::selection{background:rgba(255,0,102,0.15);color:var(--neon-magenta)}
 
@@ -28,6 +29,8 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Rajdhani',sans-ser
 .glass{background:rgba(255,240,235,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(212,169,154,0.3)}
 .glass-dark{background:rgba(255,235,225,0.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,0,102,0.12)}
 .glass-void{background:rgba(255,240,235,0.92);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid rgba(255,0,102,0.1)}
+
+.material-symbols-outlined{font-family:'Material Symbols Outlined';font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;line-height:1;display:inline-flex;align-items:center;justify-content:center}
 
 .neon-cyan{color:var(--neon-cyan);text-shadow:0 0 10px var(--neon-cyan),0 0 20px rgba(0,240,255,0.3)}
 .neon-magenta{color:var(--neon-magenta);text-shadow:0 0 10px var(--neon-magenta),0 0 20px rgba(255,0,102,0.3)}
@@ -148,3 +151,13 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Rajdhani',sans-ser
 .futuristic-input-light:focus{border-color:rgba(255,0,102,0.5);box-shadow:0 0 15px rgba(255,0,102,0.1);background:rgba(255,255,255,0.55)}
 .futuristic-input-light::placeholder{color:rgba(139,94,85,0.5);font-size:12px}
 .glass-light{background:rgba(255,245,240,0.4);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,0,102,0.1)}
+
+/* ── GLOBAL TEXT SCALE BOOST ── */
+.text-\[7px\]{font-size:10px}
+.text-\[8px\]{font-size:11px}
+.text-\[9px\]{font-size:12px}
+.text-\[10px\]{font-size:13px}
+.text-\[11px\]{font-size:14px}
+.text-\[12px\]{font-size:15px}
+.text-xs{font-size:0.95rem}
+.text-sm{font-size:1rem}
