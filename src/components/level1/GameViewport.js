@@ -31,7 +31,7 @@ export default function GameViewport() {
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x6CB4E8);
-    scene.fog = new THREE.FogExp2(0x8CC8F0, 0.004);
+    scene.fog = new THREE.FogExp2(0x8CC8F0, 0.008);
 
     const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 400);
     camera.position.set(0, PLAYER_CONFIG.height, 0);
@@ -64,10 +64,13 @@ export default function GameViewport() {
     sunLight.shadow.camera.top = 150;
     sunLight.shadow.camera.bottom = -150;
     scene.add(sunLight);
-    scene.add(new THREE.HemisphereLight(0x88BBEE, 0xD4C4A8, 1.0));
+    scene.add(new THREE.HemisphereLight(0x88BBEE, 0xD4C4A8, 0.9));
     const fillLight = new THREE.DirectionalLight(0xBBDDFF, 0.6);
     fillLight.position.set(-60, 80, -40);
     scene.add(fillLight);
+    const mistLight = new THREE.PointLight(0xBBDDEE, 0.5, 120);
+    mistLight.position.set(0, 30, 0);
+    scene.add(mistLight);
 
     // Accent lights
     [
@@ -126,11 +129,20 @@ export default function GameViewport() {
       }
     }
     // Scattered bright dots (bioluminescent grass)
-    for (let i = 0; i < 800; i++) {
+    for (let i = 0; i < 1200; i++) {
       const dx = Math.random() * 512, dy = Math.random() * 512;
       const colors = ['rgba(0,255,136,0.3)', 'rgba(0,240,255,0.2)', 'rgba(97,255,216,0.25)', 'rgba(255,97,216,0.12)'];
       gCtx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
       gCtx.fillRect(dx, dy, 1 + Math.random() * 2, 1 + Math.random() * 2);
+    }
+    // Dark pores for texture depth
+    for (let i = 0; i < 900; i++) {
+      const dx = Math.random() * 512, dy = Math.random() * 512;
+      const r = 0.6 + Math.random() * 1.6;
+      gCtx.fillStyle = 'rgba(10,20,18,0.35)';
+      gCtx.beginPath();
+      gCtx.arc(dx, dy, r, 0, Math.PI * 2);
+      gCtx.fill();
     }
     // Circuit traces
     gCtx.strokeStyle = 'rgba(0,240,255,0.04)';
