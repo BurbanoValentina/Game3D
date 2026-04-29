@@ -136,7 +136,7 @@ export default function TokenMemoryOverlay() {
               color: 'rgba(0,240,255,0.5)', letterSpacing: '0.2em',
               marginBottom: '0.5rem',
             }}>
-              // FRAGMENTO DE MEMORIA RECUPERADO
+              {'// FRAGMENTO DE MEMORIA RECUPERADO'}
             </div>
 
             {/* Title */}
@@ -237,7 +237,7 @@ export default function TokenMemoryOverlay() {
               marginTop: '1rem', lineHeight: '1.6',
               fontStyle: 'italic',
             }}>
-              "{tokenData?.text || '...'}"
+              &ldquo;{tokenData?.text || '...'}&rdquo;
             </div>
 
             {/* Coins earned */}

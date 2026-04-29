@@ -186,24 +186,7 @@ export default function LandingPage() {
             ◈ INICIAR SESIÓN
           </button>
 
-          <p className="font-sharetm text-[9px] tracking-widest" style={{ color: 'var(--bronze)' }}>
-            Regístrate o inicia sesión para entrar al OASIS
-          </p>
         </div>
-      </div>
-
-      {/* Bottom info */}
-      <div className="absolute left-0 right-0 text-center bottom-6 z-10">
-        <div className="flex items-center justify-center gap-3 mb-1">
-          <div className="w-6 h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,0,102,0.3))' }} />
-          <span className="font-sharetm text-[8px] tracking-[0.3em]" style={{ color: 'var(--bronze)' }}>
-            NEXT.JS + THREE.JS + TAILWIND CSS // DISEÑO DE INTERFACES 2025
-          </span>
-          <div className="w-6 h-[1px]" style={{ background: 'linear-gradient(90deg, rgba(255,0,102,0.3), transparent)' }} />
-        </div>
-        <p className="font-sharetm text-[7px] tracking-[0.2em]" style={{ color: 'var(--bronze)' }}>
-          Vanessa Mena · Valeria Góngora · Valentina Burbano
-        </p>
       </div>
 
       {/* Corner decorations */}

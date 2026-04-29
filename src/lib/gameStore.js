@@ -79,7 +79,7 @@ const useGameStore = create((set, get) => ({
   currentPuzzle: null,
   puzzleInput: '',
   showHint: false,
-  totalPuzzles: 5,
+  totalPuzzles: 3,
   setPuzzlesSolved: (val) => set({ puzzlesSolved: val }),
   setCurrentPuzzle: (puzzle) => set({ currentPuzzle: puzzle }),
   setPuzzleInput: (val) => set({ puzzleInput: val }),

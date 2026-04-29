@@ -109,8 +109,8 @@ export function createGameLoop({
 
     // Key at (0, -95)
     const s = store();
-    if (solvedPuzzles.size >= 5 && s.memoriesFound >= 3) {
-      const dkx = pos.x, dkz = pos.z - (-95);
+    if (solvedPuzzles.size >= 3 && s.memoriesFound >= 3) {
+      const dkx = pos.x, dkz = pos.z - (-75);
       if (Math.sqrt(dkx * dkx + dkz * dkz) < 6) {
         setState({ keyObtained: true });
         useGameStore.getState().setGameState(GameStates.KEY_OBTAINED);
@@ -130,10 +130,10 @@ export function createGameLoop({
     const beam = worldAssets.lightBeams.find((b) => b.puzzleId === id);
     if (beam) { beam.beam.material.opacity = 0.02; beam.core.material.opacity = 0.04; }
     const s = store();
-    if (solvedPuzzles.size >= 5 && s.memoriesFound >= 3) {
+    if (solvedPuzzles.size >= 3 && s.memoriesFound >= 3) {
       worldAssets.keyMat.opacity = 0.9;
       worldAssets.keyLight.intensity = 5;
-      addLog('>>> LLAVE ÁMBAR DETECTADA — (0, 4, -95)');
+      addLog('>>> LLAVE ÁMBAR DETECTADA — (0, 4, -75)');
     }
     addLog(`PUZZLE ${id} RESUELTO — +${puzzle ? puzzle.reward : 250}`);
   }));
@@ -241,25 +241,25 @@ export function createGameLoop({
     }
 
     // Animations
-    worldAssets.neonLights.forEach(nl => { nl.light.intensity = nl.baseIntensity * (0.6 + 0.4 * Math.sin(time * 2 + nl.phase)); });
+    worldAssets.neonLights.forEach(nl => { nl.light.intensity = nl.baseIntensity * (0.7 + 0.2 * Math.sin(time * 1.2 + nl.phase)); });
     const posArr = worldAssets.particles.geometry.attributes.position.array;
-    for (let i = 0; i < posArr.length / 3; i++) { posArr[i * 3 + 1] += Math.sin(time + i) * 0.008; if (posArr[i * 3 + 1] > 50) posArr[i * 3 + 1] = 0; }
+    for (let i = 0; i < posArr.length / 3; i++) { posArr[i * 3 + 1] += Math.sin(time + i) * 0.003; if (posArr[i * 3 + 1] > 50) posArr[i * 3 + 1] = 0; }
     worldAssets.particles.geometry.attributes.position.needsUpdate = true;
-    worldAssets.puzzleMarkers.forEach(pm => { pm.cube.rotation.x = time * 0.8; pm.cube.rotation.y = time * 1.2; pm.cube.position.y += Math.sin(time * 2) * 0.3 - Math.sin((time - 0.016) * 2) * 0.3; });
-    worldAssets.lightBeams.forEach(lb => { lb.beam.material.opacity = 0.04 + Math.sin(time * 1.5) * 0.02; lb.core.material.opacity = 0.08 + Math.sin(time * 2) * 0.04; lb.beam.rotation.y = time * 0.1; });
-    worldAssets.parkourBlocks.forEach(pb => { pb.mesh.position.y = pb.baseY + Math.sin(time * 0.8 + pb.phase) * 0.3; });
-    worldAssets.tokenMarkers.forEach(tm => { if (!tm.collected) { tm.mesh.rotation.y = time * 1.5 + tm.phase; tm.mesh.position.y = 2.5 + Math.sin(time * 1.2 + tm.phase) * 0.4; } });
+    worldAssets.puzzleMarkers.forEach(pm => { pm.cube.rotation.x = time * 0.4; pm.cube.rotation.y = time * 0.6; pm.cube.position.y += Math.sin(time * 1.2) * 0.12 - Math.sin((time - 0.016) * 1.2) * 0.12; });
+    worldAssets.lightBeams.forEach(lb => { lb.beam.material.opacity = 0.03 + Math.sin(time * 0.8) * 0.01; lb.core.material.opacity = 0.06 + Math.sin(time * 1.1) * 0.02; lb.beam.rotation.y = time * 0.05; });
+    worldAssets.parkourBlocks.forEach(pb => { pb.mesh.position.y = pb.baseY; });
+    worldAssets.tokenMarkers.forEach(tm => { if (!tm.collected) { tm.mesh.rotation.y = time * 0.6 + tm.phase; tm.mesh.position.y = 2.5 + Math.sin(time * 0.7 + tm.phase) * 0.15; } });
 
     // Ground glow ring pulse animation
     if (worldAssets.glowRing) {
-      const scale = 1 + Math.sin(time * 0.5) * 0.3;
+      const scale = 1 + Math.sin(time * 0.3) * 0.12;
       worldAssets.glowRing.scale.set(scale, scale, 1);
-      worldAssets.glowRingMat.opacity = 0.02 + Math.sin(time * 0.8) * 0.02;
+      worldAssets.glowRingMat.opacity = 0.02 + Math.sin(time * 0.5) * 0.01;
     }
 
     // Key animation
     const s = store();
-    if (solvedPuzzles.size >= 5 && s.memoriesFound >= 3) {
+    if (solvedPuzzles.size >= 3 && s.memoriesFound >= 3) {
       worldAssets.keyMesh.rotation.x = time * 0.5; worldAssets.keyMesh.rotation.y = time * 0.8;
       worldAssets.keyMesh.position.y = 4 + Math.sin(time * 1.5) * 0.8;
     }
@@ -298,8 +298,8 @@ export function createGameLoop({
       const dx = player.position.x - t.position.x, dz = player.position.z - t.position.z;
       if (Math.sqrt(dx * dx + dz * dz) < 5 && !collectedTokenIds.has(t.id)) { nearSomething = true; setState({ interactionPrompt: t.type === 'memory' ? '🔮 [E] Recuerdo' : '❓ [E] Token' }); }
     });
-    if (solvedPuzzles.size >= 5 && s.memoriesFound >= 3) {
-      const dkx = player.position.x, dkz = player.position.z + 95;
+    if (solvedPuzzles.size >= 3 && s.memoriesFound >= 3) {
+      const dkx = player.position.x, dkz = player.position.z + 75;
       if (Math.sqrt(dkx * dkx + dkz * dkz) < 7) { nearSomething = true; setState({ interactionPrompt: '[E] LLAVE ÁMBAR' }); }
     }
     if (!nearSomething) setState({ interactionPrompt: '' });

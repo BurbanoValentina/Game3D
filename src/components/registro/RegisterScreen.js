@@ -35,7 +35,8 @@ function SecurityIcon() {
   );
 }
 
-function FuturisticInput({ label, sub, type, value, onChange, maxLen, error, placeholder }) {
+function FuturisticInput({ label, sub, type, value, onChange, maxLen, error, placeholder, showToggle, onToggle, inputMode }) {
+  const inputType = type === 'password' && showToggle ? 'text' : type;
   return (
     <div className="mb-5">
       <div className="flex justify-between items-end mb-2">
@@ -49,12 +50,23 @@ function FuturisticInput({ label, sub, type, value, onChange, maxLen, error, pla
       </div>
       <div className="relative">
         <input
-          type={type || 'text'} value={value}
+          type={inputType || 'text'} value={value}
           onChange={(e) => { const v = e.target.value; if (v.length <= maxLen) onChange(v); }}
-          placeholder={placeholder} maxLength={maxLen} autoComplete="off"
+          placeholder={placeholder} maxLength={maxLen} autoComplete="off" inputMode={inputMode}
           className="futuristic-input-light w-full"
-          style={{ borderColor: error ? 'rgba(255,0,102,0.4)' : undefined }}
+          style={{ borderColor: error ? 'rgba(255,0,102,0.4)' : undefined, paddingRight: showToggle !== undefined ? 42 : undefined }}
         />
+        {showToggle !== undefined && (
+          <button type="button" aria-label={showToggle ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            onClick={onToggle} className="absolute right-3 top-1/2 -translate-y-1/2"
+            style={{ color: showToggle ? 'var(--neon-magenta)' : 'rgba(26,14,14,0.45)' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+              <circle cx="12" cy="12" r="3" />
+              {showToggle && <path d="M3 3l18 18" />}
+            </svg>
+          </button>
+        )}
         <div className="absolute top-0 right-0 w-2 h-2 border-t border-r transition-colors"
           style={{ borderColor: error ? 'var(--neon-magenta)' : value.length > 0 ? 'var(--neon-magenta)' : 'transparent' }} />
       </div>
@@ -77,6 +89,7 @@ export default function RegisterScreen() {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -134,8 +147,9 @@ export default function RegisterScreen() {
         }}>
           <FuturisticInput label="Nombre" sub="REAL NAME" type="text" value={name} onChange={setName} maxLen={REGISTER_RULES.name.max} error={errors.name} placeholder="Tu nombre completo" />
           <FuturisticInput label="Apodo" sub="GAMERTAG" type="text" value={nickname} onChange={(v) => setNickname(v.replace(/\s/g, ''))} maxLen={REGISTER_RULES.nickname.max} error={errors.nickname} placeholder="Tu_apodo_OASIS" />
-          <FuturisticInput label="Correo" sub="EMAIL" type="email" value={email} onChange={setEmail} maxLen={REGISTER_RULES.email.max} error={errors.email} placeholder="operaria@oasis.net" />
-          <FuturisticInput label="Contraseña" sub="MIN 8: A-a-0" type="password" value={password} onChange={setPassword} maxLen={REGISTER_RULES.password.max} error={errors.password} placeholder="••••••••" />
+          <FuturisticInput label="Correo" sub="EMAIL" type="email" value={email} onChange={setEmail} maxLen={REGISTER_RULES.email.max} error={errors.email} placeholder="operaria@oasis.net" inputMode="email" />
+          <FuturisticInput label="Contraseña" sub="MIN 8: A-a-0" type="password" value={password} onChange={setPassword} maxLen={REGISTER_RULES.password.max} error={errors.password} placeholder="••••••••"
+            showToggle={showPassword} onToggle={() => setShowPassword((v) => !v)} />
 
           {/* Security note */}
           <div className="flex items-center gap-2 mb-4 px-2 py-1.5 rounded" style={{ background: 'rgba(255,0,102,0.03)', border: '1px solid rgba(255,0,102,0.08)' }}>

@@ -100,6 +100,7 @@ export const createCommandMap = () => ({
 export class InputManager {
   constructor() {
     this.keys = {};
+    this._justPressed = {};
     this.mouse = { x: 0, y: 0, locked: false };
     this.commands = createCommandMap();
     this._onKeyDown = null;
@@ -113,6 +114,7 @@ export class InputManager {
     this._active = true;
 
     this._onKeyDown = (e) => {
+      if (!this.keys[e.code]) this._justPressed[e.code] = true;
       this.keys[e.code] = true;
     };
 
@@ -140,15 +142,22 @@ export class InputManager {
     document.removeEventListener('mousemove', this._onMouseMove);
 
     this.keys = {};
+    this._justPressed = {};
     this.mouse = { x: 0, y: 0, locked: false };
   }
 
   processInput(player) {
     Object.entries(this.keys).forEach(([code, pressed]) => {
       if (pressed && this.commands[code]) {
-        this.commands[code].execute(player);
+        // Jump only on first press, not while held
+        if (code === 'Space') {
+          if (this._justPressed[code]) this.commands[code].execute(player);
+        } else {
+          this.commands[code].execute(player);
+        }
       }
     });
+    this._justPressed = {};
   }
 
   consumeMouse() {
