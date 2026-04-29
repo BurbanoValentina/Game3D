@@ -4,9 +4,9 @@
 
 export const GameStates = {
   LOADING: 'LOADING', LANDING: 'LANDING', REGISTER: 'REGISTER',
-  LOGIN: 'LOGIN', MAIN_MENU: 'MAIN_MENU', SETTINGS: 'SETTINGS',
+  LOGIN: 'LOGIN', RECOVER: 'RECOVER', MAIN_MENU: 'MAIN_MENU', SETTINGS: 'SETTINGS',
   TRAINING_ROOM: 'TRAINING_ROOM',
-  TUTORIAL: 'TUTORIAL', TUTORIAL_GAME: 'TUTORIAL_GAME',
+  TUTORIAL_GAME: 'TUTORIAL_GAME',
   CREDITS: 'CREDITS', BOOT: 'BOOT', CINEMATIC: 'CINEMATIC',
   AWAKENING: 'AWAKENING',
   PLAYING: 'PLAYING', PUZZLE: 'PUZZLE', MEMORY: 'MEMORY',
@@ -18,13 +18,13 @@ export const GameStates = {
 
 export const StateTransitions = {
   [GameStates.LOADING]: [GameStates.LANDING],
-  [GameStates.LANDING]: [GameStates.REGISTER, GameStates.LOGIN, GameStates.MAIN_MENU],
+  [GameStates.LANDING]: [GameStates.REGISTER, GameStates.LOGIN, GameStates.RECOVER, GameStates.MAIN_MENU],
   [GameStates.REGISTER]: [GameStates.LANDING, GameStates.LOGIN, GameStates.MAIN_MENU],
-  [GameStates.LOGIN]: [GameStates.LANDING, GameStates.REGISTER, GameStates.MAIN_MENU],
+  [GameStates.LOGIN]: [GameStates.LANDING, GameStates.REGISTER, GameStates.RECOVER, GameStates.MAIN_MENU],
+  [GameStates.RECOVER]: [GameStates.LOGIN, GameStates.LANDING],
   [GameStates.MAIN_MENU]: [GameStates.TRAINING_ROOM, GameStates.SETTINGS, GameStates.LANDING],
   [GameStates.SETTINGS]: [GameStates.MAIN_MENU],
   [GameStates.TRAINING_ROOM]: [GameStates.TUTORIAL_GAME, GameStates.BOOT, GameStates.CREDITS, GameStates.MAIN_MENU],
-  [GameStates.TUTORIAL]: [GameStates.MAIN_MENU],
   [GameStates.TUTORIAL_GAME]: [GameStates.BOOT, GameStates.TRAINING_ROOM],
   [GameStates.CREDITS]: [GameStates.TRAINING_ROOM],
   [GameStates.BOOT]: [GameStates.CINEMATIC, GameStates.MAIN_MENU],
@@ -48,11 +48,9 @@ export const WORLD_SIZE = 250;
 export const WORLD_HALF = 125;
 
 export const LEVEL1_PUZZLES = [
-  { id: 1, position: { x: 45, z: -40, y: 18 }, question: '¿Qué clase de Tailwind centra el texto horizontalmente?', answer: 'text-center', hint: 'Empieza con "text-"', title: 'TAILWIND: TEXTO', reward: 300 },
-  { id: 2, position: { x: -55, z: 50, y: 18 }, question: '¿Qué clase de Tailwind aplica display: flex a un contenedor?', answer: 'flex', hint: 'Solo una palabra, como el modelo de caja', title: 'TAILWIND: FLEXBOX', reward: 300 },
-  { id: 3, position: { x: 70, z: 70, y: 18 }, question: '¿Qué clase de Tailwind oculta un elemento? (display: none)', answer: 'hidden', hint: 'Sinónimo de "oculto" en inglés', title: 'TAILWIND: DISPLAY', reward: 350 },
-  { id: 4, position: { x: -75, z: -70, y: 18 }, question: '¿Qué prefijo de Tailwind aplica estilos en hover? (ej: ___:bg-blue-500)', answer: 'hover', hint: 'Es la acción de pasar el mouse por encima', title: 'TAILWIND: ESTADOS', reward: 250 },
-  { id: 5, position: { x: 0, z: 80, y: 18 }, question: '¿Qué clase de Tailwind redondea completamente un elemento? (border-radius: 9999px)', answer: 'rounded-full', hint: 'rounded + forma circular', title: 'TAILWIND: BORDES', reward: 350 },
+  { id: 1, position: { x: 30, z: -30, y: 16 }, question: '¿Qué clase de Tailwind centra el texto horizontalmente?', answer: 'text-center', hint: 'Empieza con "text-"', title: 'TAILWIND: TEXTO', reward: 300 },
+  { id: 2, position: { x: -30, z: 40, y: 16 }, question: '¿Qué clase de Tailwind aplica display: flex a un contenedor?', answer: 'flex', hint: 'Solo una palabra, como el modelo de caja', title: 'TAILWIND: FLEXBOX', reward: 300 },
+  { id: 3, position: { x: 12, z: 90, y: 16 }, question: '¿Qué clase de Tailwind oculta un elemento? (display: none)', answer: 'hidden', hint: 'Sinónimo de "oculto" en inglés', title: 'TAILWIND: DISPLAY', reward: 350 },
 ];
 
 export const LEVEL1_CHECKPOINTS = [
@@ -66,40 +64,31 @@ export const LEVEL1_TOKENS = [
   { id: 'mem1', type: 'memory', position: { x: 25, z: 25 }, image: 'girls_together', title: 'RECUERDO: Juntas', text: 'Las tres amigas, inseparables. Antes de que todo cambiara.' },
   { id: 'mem2', type: 'memory', position: { x: -35, z: -25 }, image: 'girls_fighting', title: 'RECUERDO: La Pelea', text: 'El día que discutieron. Las palabras que nunca pudieron retirar.' },
   { id: 'mem3', type: 'memory', position: { x: 55, z: -50, }, image: 'eva_grandpa', title: 'RECUERDO: El Abuelo', text: 'Eva y su abuelo, el día que le enseñó a programar.' },
-  { id: 'scare1', type: 'screamer', position: { x: -20, z: 65 }, color: 'red', title: 'VIRUS DETECTADO' },
+  { id: 'scare1', type: 'screamer', position: { x: -8, z: 78 }, color: 'red', title: 'VIRUS DETECTADO' },
   { id: 'scare2', type: 'screamer', position: { x: 45, z: -20 }, color: 'green', title: 'MALWARE INFILTRADO' },
 ];
 
 export const LEVEL1_PARKOUR = [
   { puzzleId: 1, blocks: [
-    { x: 20, y: 2, z: -20, w: 4.5, h: 1, d: 4.5 }, { x: 24, y: 5, z: -25, w: 3.5, h: 1, d: 3.5 },
-    { x: 28, y: 8, z: -29, w: 3, h: 1, d: 3 }, { x: 33, y: 11, z: -33, w: 3, h: 1, d: 3 },
-    { x: 37, y: 14, z: -36, w: 3.5, h: 1, d: 3.5 }, { x: 41, y: 16, z: -38, w: 3, h: 1, d: 3 },
-    { x: 45, y: 18, z: -40, w: 5, h: 1.2, d: 5 },
+    { x: 14, y: 2, z: -14, w: 4, h: 1.2, d: 4 },
+    { x: 20, y: 5, z: -20, w: 4, h: 1.2, d: 4 },
+    { x: 24, y: 8, z: -26, w: 4, h: 1.2, d: 4 },
+    { x: 28, y: 11, z: -32, w: 4, h: 1.2, d: 4 },
+    { x: 30, y: 14, z: -30, w: 4.6, h: 1.2, d: 4.6 },
   ]},
   { puzzleId: 2, blocks: [
-    { x: -30, y: 2, z: 30, w: 4.5, h: 1, d: 4.5 }, { x: -33, y: 5, z: 34, w: 3.5, h: 1, d: 3.5 },
-    { x: -37, y: 8, z: 40, w: 3, h: 1, d: 3 }, { x: -42, y: 11, z: 45, w: 3, h: 1, d: 3 },
-    { x: -47, y: 14, z: 48, w: 3.5, h: 1, d: 3.5 }, { x: -51, y: 16, z: 49, w: 3, h: 1, d: 3 },
-    { x: -55, y: 18, z: 50, w: 5, h: 1.2, d: 5 },
+    { x: -12, y: 2, z: 20, w: 4, h: 1.2, d: 4 },
+    { x: -18, y: 5, z: 26, w: 4, h: 1.2, d: 4 },
+    { x: -22, y: 8, z: 32, w: 4, h: 1.2, d: 4 },
+    { x: -26, y: 11, z: 38, w: 4, h: 1.2, d: 4 },
+    { x: -30, y: 14, z: 40, w: 4.6, h: 1.2, d: 4.6 },
   ]},
   { puzzleId: 3, blocks: [
-    { x: 75, y: 2, z: 42, w: 4.5, h: 1, d: 4.5 }, { x: 74, y: 5, z: 48, w: 3.5, h: 1, d: 3.5 },
-    { x: 73, y: 8, z: 54, w: 3, h: 1, d: 3 }, { x: 72, y: 11, z: 59, w: 3, h: 1, d: 3 },
-    { x: 71, y: 14, z: 63, w: 3.5, h: 1, d: 3.5 }, { x: 70, y: 16, z: 67, w: 3, h: 1, d: 3 },
-    { x: 70, y: 18, z: 70, w: 5, h: 1.2, d: 5 },
-  ]},
-  { puzzleId: 4, blocks: [
-    { x: -50, y: 2, z: -48, w: 4.5, h: 1, d: 4.5 }, { x: -55, y: 5, z: -52, w: 3.5, h: 1, d: 3.5 },
-    { x: -59, y: 8, z: -56, w: 3, h: 1, d: 3 }, { x: -63, y: 11, z: -60, w: 3, h: 1, d: 3 },
-    { x: -67, y: 14, z: -64, w: 3.5, h: 1, d: 3.5 }, { x: -71, y: 16, z: -67, w: 3, h: 1, d: 3 },
-    { x: -75, y: 18, z: -70, w: 5, h: 1.2, d: 5 },
-  ]},
-  { puzzleId: 5, blocks: [
-    { x: -18, y: 2, z: 58, w: 4.5, h: 1, d: 4.5 }, { x: -14, y: 5, z: 62, w: 3.5, h: 1, d: 3.5 },
-    { x: -10, y: 8, z: 66, w: 3, h: 1, d: 3 }, { x: -7, y: 11, z: 70, w: 3, h: 1, d: 3 },
-    { x: -4, y: 14, z: 74, w: 3.5, h: 1, d: 3.5 }, { x: -2, y: 16, z: 77, w: 3, h: 1, d: 3 },
-    { x: 0, y: 18, z: 80, w: 5, h: 1.2, d: 5 },
+    { x: 8, y: 2, z: 64, w: 4, h: 1.2, d: 4 },
+    { x: 10, y: 5, z: 72, w: 4, h: 1.2, d: 4 },
+    { x: 12, y: 8, z: 80, w: 4, h: 1.2, d: 4 },
+    { x: 12, y: 11, z: 86, w: 4, h: 1.2, d: 4 },
+    { x: 12, y: 14, z: 90, w: 4.6, h: 1.2, d: 4.6 },
   ]},
 ];
 
@@ -126,7 +115,7 @@ export const BOOT_MESSAGES = [
   { text: ' ', delay: 4800, type: 'blank' },
   { text: 'CARGANDO NIVEL 1: LAS CENIZAS DE LA CIUDAD...', delay: 5200, type: 'loading' },
   { text: 'ZONA: Estación Espacial Neón', delay: 5600, type: 'system' },
-  { text: 'OBJETIVO: Resolver 5 puzzles + Encontrar 3 recuerdos + LLAVE ÁMBAR', delay: 6000, type: 'amber' },
+  { text: 'OBJETIVO: Resolver 3 puzzles + Encontrar 3 recuerdos + LLAVE ÁMBAR', delay: 6000, type: 'amber' },
   { text: ' ', delay: 6400, type: 'blank' },
   { text: '▶ PRESIONA ENTER PARA CONTINUAR', delay: 6800, type: 'prompt' },
 ];
@@ -175,31 +164,14 @@ export const CONTROLS = [
 ];
 
 export const CREDITS_DATA = [
-  { name: 'Vanessa Mena', role: 'Diseñadora de Interfaces & UI/UX', description: 'Diseño visual del OASIS, sistema de menús, paleta holográfica.', photo: '/vanessa.png', color: '#00f0ff' },
-  { name: 'Valeria Góngora', role: 'Desarrolladora de Lógica & Motor 3D', description: 'Motor Three.js, sistema de puzzles, física del juego.', photo: '/valeria.png', color: '#FF61D8' },
-  { name: 'Valentina Burbano', role: 'Narrativa, QA & Base de Datos', description: 'Historia del OASIS, sistema de registro, base de datos.', photo: '/valentina.png', color: '#61FFD8' },
+  { name: 'Vanessa Mena', role: 'Diseñadora de Interfaces & UI/UX', description: 'Diseño visual del OASIS, sistema de menús, paleta holográfica.', photo: '/VanessaMena.jpeg', color: '#00f0ff' },
+  { name: 'Valeria Góngora', role: 'Desarrolladora de Lógica & Motor 3D', description: 'Motor Three.js, sistema de puzzles, física del juego.', photo: '/ValeriaGongora.jpeg', color: '#FF61D8' },
+  { name: 'Valentina Burbano', role: 'Desarrolladora Principal & Líder de Proyecto', description: 'Arquitectura del sistema, narrativa, QA, base de datos y coordinación general del proyecto.', photo: '/ValentinaBurbano.jpeg', color: '#61FFD8' },
 ];
 
 export const CHARACTERS = {
   eva: { name: 'Eva', status: 'ACTIVA', color: '#00F0FF' },
 };
-
-export const TUTORIAL_STEPS = [
-  { icon: 'move', keys: 'W A S D', title: 'MOVIMIENTO BÁSICO', desc: 'Usa las teclas W, A, S y D para desplazarte por el mundo del OASIS.' },
-  { icon: 'run', keys: 'SHIFT', title: 'CORRER', desc: 'Mantén SHIFT mientras te mueves para correr a mayor velocidad.' },
-  { icon: 'camera', keys: 'MOUSE', title: 'CONTROL DE CÁMARA', desc: 'Mueve el ratón para girar la cámara en primera persona.' },
-  { icon: 'jump', keys: 'ESPACIO', title: 'SALTAR Y PARKOUR', desc: 'Presiona espacio para saltar sobre plataformas de parkour.' },
-  { icon: 'interact', keys: 'E', title: 'INTERACTUAR', desc: 'Presiona E cerca de terminales de puzzle o tokens flotantes.' },
-  { icon: 'memory', keys: 'Q', title: 'INVOCAR MEMORIAS', desc: 'Presiona Q para invocar ecos de memoria con pistas.' },
-  { icon: 'puzzle', keys: 'TECLADO', title: 'RESOLVER PUZZLES', desc: 'Interactúa con terminales naranjas y responde preguntas de Tailwind CSS.' },
-  { icon: 'map', keys: 'MINIMAP', title: 'EL MAPA', desc: 'El minimapa muestra puzzles, tokens y tu posición.' },
-  { icon: 'key', keys: 'PUZZLES', title: 'LAS LLAVES DE HALLIDAY', desc: 'Resuelve puzzles para revelar la Llave de Halliday.' },
-  { icon: 'token', keys: 'EXPLORAR', title: 'RECUERDOS Y TOKENS', desc: 'Recoge diamantes flotantes: recuerdos o trampas glitch.' },
-  { icon: 'trap', keys: 'CUIDADO', title: 'TRAMPAS Y SCREAMERS', desc: 'Algunos tokens son virus disfrazados que quitan vida.' },
-  { icon: 'health', keys: 'VIDAS', title: 'BARRA DE VIDA', desc: 'Tienes 10 corazones. Cada trampa quita uno. A cero, game over.' },
-  { icon: 'parkour', keys: 'PLATAFORMAS', title: 'PARKOUR', desc: 'Escala bloques neón para alcanzar puzzles en las alturas.' },
-  { icon: 'pause', keys: 'ESC', title: 'PAUSA', desc: 'Presiona ESC para pausar y ajustar configuración.' },
-];
 
 export const REGISTER_RULES = {
   name: { min: 2, max: 50, label: 'Nombre' },
