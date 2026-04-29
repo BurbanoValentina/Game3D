@@ -72,6 +72,21 @@ export default function CreditsScreen() {
           ))}
         </div>
 
+        {/* Team Member for Jhonatan Andres Mideros Narvaez */}
+        <div className="px-4 mb-16 text-center">
+          <img
+            src="/public/JonthanMideros.jpeg"
+            alt="Jhonatan Andres Mideros Narvaez"
+            className="mx-auto mb-4 rounded-full w-32 h-32 object-cover"
+          />
+          <h2 className="font-orbitron text-2xl md:text-3xl tracking-[0.2em] mb-2" style={{ color: 'var(--dark)' }}>
+            Jhonatan Andres Mideros Narvaez
+          </h2>
+          <p className="font-rajdhani text-sm tracking-[0.4em] uppercase" style={{ color: 'var(--neon-magenta)', opacity: 0.7 }}>
+            Créditos — 2026
+          </p>
+        </div>
+
         {/* Tech section */}
         <div className="px-4 mb-16 text-center">
           <div className="w-32 h-[1px] mx-auto mb-8" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,0,102,0.3), transparent)' }} />
