@@ -9,7 +9,7 @@ import audioManager from '../../../lib/audioManager';
 
 export default function RocketAnimation({ active, onImpact, onComplete }) {
   const canvasRef = useRef(null);
-  const [phase, setPhase] = useState('idle'); // idle, launch, impact, shatter, done
+  const [phase, setPhase] = useState('idle'); // idle, launch, glitch, done
 
   useEffect(() => {
     if (!active) { setPhase('idle'); return; }
@@ -22,9 +22,8 @@ export default function RocketAnimation({ active, onImpact, onComplete }) {
 
     let frame = 0;
     const rocketX = W * 0.5;
-    let rocketY = H + 100;
+    let rocketY = H + 140;
     const targetY = H * 0.2; // sky area
-    const skyPieces = [];
     let impactDone = false;
     let launchSoundPlayed = false;
 
@@ -34,105 +33,52 @@ export default function RocketAnimation({ active, onImpact, onComplete }) {
       frame++;
       ctx.clearRect(0, 0, W, H);
 
-      // PHASE 1: Rocket ascending (frames 0-90)
-      if (frame < 90) {
+      // PHASE 1: Rocket ascending (frames 0-60)
+      if (frame < 60) {
         // Play launch sound once
         if (!launchSoundPlayed) {
           launchSoundPlayed = true;
           audioManager.playRocketLaunch();
         }
-        const progress = frame / 90;
+        const progress = frame / 60;
         const eased = 1 - Math.pow(1 - progress, 3);
         rocketY = H + 100 - (H + 100 - targetY) * eased;
 
-        // Rocket body
-        drawRocket(ctx, rocketX, rocketY, frame);
-
-        // Exhaust trail
-        drawExhaust(ctx, rocketX, rocketY, H, frame);
+        // Rocket icon (large, ominous)
+        drawRocketIcon(ctx, rocketX, rocketY, H, frame);
 
         // Screen rumble intensifies
-        if (frame > 60) {
-          const shake = (frame - 60) / 30 * 4;
+        if (frame > 40) {
+          const shake = (frame - 40) / 20 * 4;
           canvas.style.transform = `translate(${(Math.random()-0.5)*shake}px, ${(Math.random()-0.5)*shake}px)`;
         }
       }
-      // PHASE 2: Impact (frames 90-120)
+      // PHASE 2: Glitch warning (frames 60-120)
       else if (frame < 120) {
         if (!impactDone) {
           impactDone = true;
-          setPhase('impact');
+          setPhase('glitch');
           onImpact?.();
-          audioManager.playExplosion();
-          // Generate sky pieces
-          for (let i = 0; i < 40; i++) {
-            skyPieces.push({
-              x: W * 0.3 + Math.random() * W * 0.4,
-              y: Math.random() * H * 0.4,
-              vx: (Math.random() - 0.5) * 8,
-              vy: 2 + Math.random() * 6,
-              rot: Math.random() * Math.PI * 2,
-              vr: (Math.random() - 0.5) * 0.2,
-              w: 20 + Math.random() * 60,
-              h: 15 + Math.random() * 40,
-              color: `rgba(${100+Math.random()*100},${150+Math.random()*100},${200+Math.random()*55},0.7)`,
-            });
-          }
-          if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 500]);
+          if (navigator.vibrate) navigator.vibrate([120, 80, 120]);
         }
 
-        // Impact flash
-        const flashAlpha = 1 - (frame - 90) / 30;
-        ctx.fillStyle = `rgba(255,255,255,${flashAlpha * 0.8})`;
-        ctx.fillRect(0, 0, W, H);
+        // Keep rocket visible with heavy jitter
+        drawRocketIcon(ctx, rocketX, targetY, H, frame, true);
 
-        // Galaxy reveal (dark void with stars)
-        drawGalaxyHole(ctx, rocketX, targetY, (frame - 90) / 30, W, H);
+        // Glitch overlay + warning text
+        drawGlitchOverlay(ctx, W, H, frame, true);
 
-        // Heavy shake
-        const shake = 15 * (1 - (frame - 90) / 30);
-        canvas.style.transform = `translate(${(Math.random()-0.5)*shake}px, ${(Math.random()-0.5)*shake}px)`;
+        const shake = 6 + Math.sin(frame * 0.8) * 3;
+        canvas.style.transform = `translate(${(Math.random() - 0.5) * shake}px, ${(Math.random() - 0.5) * shake}px)`;
       }
-      // PHASE 3: Sky falling (frames 120-240)
-      else if (frame < 240) {
-        setPhase('shatter');
-        const fallProgress = (frame - 120) / 120;
-
-        // Galaxy hole grows
-        drawGalaxyHole(ctx, rocketX, targetY, 1 + fallProgress * 0.5, W, H);
-
-        // Sky pieces falling
-        skyPieces.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.vy += 0.15;
-          p.rot += p.vr;
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate(p.rot);
-          ctx.fillStyle = p.color;
-          ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-          // Crack pattern on piece
-          ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-          ctx.lineWidth = 0.5;
-          ctx.beginPath();
-          ctx.moveTo(-p.w/4, -p.h/2);
-          ctx.lineTo(p.w/4, p.h/2);
-          ctx.stroke();
-          ctx.restore();
-        });
-
-        // Fading shake
-        const shake = 5 * (1 - fallProgress);
-        canvas.style.transform = `translate(${(Math.random()-0.5)*shake}px, ${(Math.random()-0.5)*shake}px)`;
-      }
-      // PHASE 4: Fade out
+      // PHASE 3: Fade out
       else {
         setPhase('done');
         canvas.style.transform = '';
-        const fadeOut = Math.min(1, (frame - 240) / 30);
+        const fadeOut = Math.min(1, (frame - 120) / 20);
         ctx.globalAlpha = 1 - fadeOut;
-        drawGalaxyHole(ctx, rocketX, targetY, 1.5, W, H);
+        drawRocketIcon(ctx, rocketX, targetY, H, frame, true);
+        drawGlitchOverlay(ctx, W, H, frame + 20, true);
         ctx.globalAlpha = 1;
         if (fadeOut >= 1) {
           onComplete?.();
@@ -291,40 +237,68 @@ function drawExhaust(ctx, x, y, H, frame) {
   ctx.globalAlpha = 1;
 }
 
-function drawGalaxyHole(ctx, cx, cy, scale, W, H) {
-  const radius = 80 * scale;
-  // Dark void
-  const voidGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-  voidGrad.addColorStop(0, 'rgba(5,0,20,0.95)');
-  voidGrad.addColorStop(0.5, 'rgba(10,5,40,0.8)');
-  voidGrad.addColorStop(0.8, 'rgba(20,10,60,0.4)');
-  voidGrad.addColorStop(1, 'rgba(40,20,80,0)');
-  ctx.fillStyle = voidGrad;
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-  ctx.fill();
-  // Stars inside
+function drawRocketIcon(ctx, x, y, H, frame, violent = false) {
+  const baseSize = Math.min(H * 0.28, 180);
+  const size = violent ? baseSize * 1.08 : baseSize;
+  const jitter = violent ? 6 : 2;
+  const jx = (Math.random() - 0.5) * jitter;
+  const jy = (Math.random() - 0.5) * jitter;
+
   ctx.save();
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius * 0.85, 0, Math.PI * 2);
-  ctx.clip();
-  for (let i = 0; i < 50; i++) {
-    const sx = cx + (Math.random() - 0.5) * radius * 2;
-    const sy = cy + (Math.random() - 0.5) * radius * 2;
-    ctx.fillStyle = ['#fff', '#aaddff', '#ffddaa', '#ddaaff'][Math.floor(Math.random()*4)];
-    ctx.globalAlpha = 0.4 + Math.random() * 0.6;
-    ctx.beginPath();
-    ctx.arc(sx, sy, 0.5 + Math.random() * 1.5, 0, Math.PI * 2);
-    ctx.fill();
+  ctx.translate(x + jx, y + jy);
+  ctx.fillStyle = '#FF0066';
+  ctx.shadowColor = 'rgba(255,0,102,0.7)';
+  ctx.shadowBlur = violent ? 24 : 12;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = `900 ${size}px "Material Symbols Outlined", sans-serif`;
+  ctx.fillText('coronavirus', 0, 0);
+  ctx.restore();
+
+  if (!violent) {
+    drawExhaust(ctx, x, y, H, frame);
   }
-  // Nebula
-  const nebGrad = ctx.createRadialGradient(cx-20, cy+10, 0, cx, cy, radius*0.6);
-  nebGrad.addColorStop(0, 'rgba(100,50,200,0.3)');
-  nebGrad.addColorStop(0.5, 'rgba(50,100,200,0.15)');
-  nebGrad.addColorStop(1, 'transparent');
-  ctx.fillStyle = nebGrad;
-  ctx.globalAlpha = 0.5;
-  ctx.fillRect(cx-radius, cy-radius, radius*2, radius*2);
-  ctx.globalAlpha = 1;
+}
+
+function drawGlitchOverlay(ctx, W, H, frame, violent = false) {
+  // Scanlines
+  ctx.fillStyle = violent ? 'rgba(255,0,102,0.06)' : 'rgba(255,0,102,0.03)';
+  for (let y = 0; y < H; y += 3) {
+    ctx.fillRect(0, y, W, 1);
+  }
+
+  // Glitch bars
+  const bars = violent ? 18 : 8;
+  for (let i = 0; i < bars; i++) {
+    const h = 6 + Math.random() * (violent ? 36 : 18);
+    const y = Math.random() * (H - h);
+    ctx.fillStyle = `rgba(255,0,102,${0.1 + Math.random() * (violent ? 0.25 : 0.1)})`;
+    ctx.fillRect(0, y, W, h);
+  }
+
+  // Impact flash burst
+  if (violent && frame < 90) {
+    const burst = Math.max(0, 1 - (frame - 60) / 20);
+    ctx.fillStyle = `rgba(255,60,90,${0.5 * burst})`;
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = `rgba(255,255,255,${0.35 * burst})`;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // Warning text with jitter
+  const jitterX = (Math.random() - 0.5) * (violent ? 14 : 6);
+  const jitterY = (Math.random() - 0.5) * (violent ? 10 : 6);
+  ctx.save();
+  ctx.translate(W / 2 + jitterX, H * 0.18 + jitterY);
+  ctx.font = `700 ${violent ? 28 : 20}px Orbitron, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,0,102,0.9)';
+  ctx.shadowColor = 'rgba(255,0,102,0.6)';
+  ctx.shadowBlur = violent ? 20 : 12;
+  ctx.fillText('SISTEMA DAÑADO', 0, 0);
+  ctx.font = `500 ${violent ? 12 : 10}px Share Tech Mono, monospace`;
+  ctx.fillStyle = 'rgba(255,187,51,0.85)';
+  ctx.shadowBlur = violent ? 12 : 6;
+  ctx.fillText('ERROR // SECUENCIA INESTABLE', 0, violent ? 22 : 18);
   ctx.restore();
 }
