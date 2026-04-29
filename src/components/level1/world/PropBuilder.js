@@ -3,16 +3,31 @@
 //  Reduced counts for smaller 250x250 world
 // ══════════════════════════════════════════════════════
 
+import { ICONIC_BUILDINGS } from '../../../constants/buildingData';
+
 export function buildProps(scene, THREE, streetW) {
   const spread = 210;
 
   buildTrees(scene, THREE, streetW, spread);
   buildRocks(scene, THREE, streetW, spread);
-  buildLamps(scene, THREE, streetW, spread);
-  buildBenches(scene, THREE, streetW, spread);
-  buildTrashCans(scene, THREE, streetW, spread);
-  buildHydrants(scene, THREE, streetW, spread);
+  buildFlowers(scene, THREE, streetW, spread);
+  buildLamps(scene, THREE, streetW);
+  buildBenches(scene, THREE, streetW);
+  buildTrashCans(scene, THREE, streetW);
+  buildHydrants(scene, THREE, streetW);
 }
+
+const isNearBuilding = (x, z, minDist = 20) => {
+  return ICONIC_BUILDINGS.some((b) => {
+    const dx = x - b.x;
+    const dz = z - b.z;
+    return Math.sqrt(dx * dx + dz * dz) < minDist;
+  });
+};
+
+const isNearStreet = (x, z, streetW) => {
+  return Math.abs(x) < streetW + 2 || Math.abs(z) < streetW + 2;
+};
 
 function buildTrees(scene, THREE, streetW, spread) {
   // Regular trees
@@ -159,14 +174,16 @@ function buildRocks(scene, THREE, streetW, spread) {
   }
 }
 
-function buildLamps(scene, THREE, streetW, spread) {
+function buildLamps(scene, THREE, streetW) {
   const lampColor = 0xffbb33;
-  for (let i = 0; i < 10; i++) {
-    const side = Math.random() > 0.5 ? 1 : -1;
-    const isNS = Math.random() > 0.5;
-    const pos = (Math.random() - 0.5) * (spread - 20);
-    const lx = isNS ? side * (streetW / 2 + 2.5) : pos;
-    const lz = isNS ? pos : side * (streetW / 2 + 2.5);
+  const lampPositions = [
+    { x: 22, z: -62 },
+    { x: -26, z: 66 },
+    { x: 64, z: 18 },
+    { x: -68, z: -30 },
+  ];
+  lampPositions.forEach(({ x: lx, z: lz }) => {
+    if (isNearStreet(lx, lz, streetW) || isNearBuilding(lx, lz)) return;
 
     const lampGroup = new THREE.Group();
     const poleMat = new THREE.MeshPhongMaterial({ color: 0x444444, emissive: 0x111111, shininess: 40 });
@@ -194,18 +211,18 @@ function buildLamps(scene, THREE, streetW, spread) {
 
     lampGroup.position.set(lx, 0, lz);
     scene.add(lampGroup);
-  }
+  });
 }
 
-function buildBenches(scene, THREE, streetW, spread) {
+function buildBenches(scene, THREE, streetW) {
   const benchMat = new THREE.MeshPhongMaterial({ color: 0x553322, emissive: 0x110500, shininess: 25 });
   const metalMat = new THREE.MeshPhongMaterial({ color: 0x555555, emissive: 0x111111, shininess: 60 });
-  for (let i = 0; i < 5; i++) {
-    const side = Math.random() > 0.5 ? 1 : -1;
-    const isNS = Math.random() > 0.5;
-    const pos = (Math.random() - 0.5) * (spread - 40);
-    const bx = isNS ? side * (streetW / 2 + 3.5) : pos;
-    const bz = isNS ? pos : side * (streetW / 2 + 3.5);
+  const benchPositions = [
+    { x: -12, z: -70, rot: 0 },
+    { x: 28, z: 72, rot: Math.PI / 2 },
+  ];
+  benchPositions.forEach(({ x: bx, z: bz, rot }) => {
+    if (isNearStreet(bx, bz, streetW) || isNearBuilding(bx, bz)) return;
     const benchGroup = new THREE.Group();
     benchGroup.add(new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.12, 0.7), benchMat));
     benchGroup.children[0].position.y = 0.65;
@@ -217,16 +234,18 @@ function buildBenches(scene, THREE, streetW, spread) {
       benchGroup.add(legM);
     }
     benchGroup.position.set(bx, 0, bz);
-    benchGroup.rotation.y = isNS ? 0 : Math.PI / 2;
+    benchGroup.rotation.y = rot;
     scene.add(benchGroup);
-  }
+  });
 }
 
-function buildTrashCans(scene, THREE, streetW, spread) {
-  for (let i = 0; i < 6; i++) {
-    const side = Math.random() > 0.5 ? 1 : -1;
-    const isNS = Math.random() > 0.5;
-    const pos = (Math.random() - 0.5) * (spread - 30);
+function buildTrashCans(scene, THREE, streetW) {
+  const trashPositions = [
+    { x: 12, z: 46 },
+    { x: -42, z: -44 },
+  ];
+  trashPositions.forEach(({ x: tcx, z: tcz }) => {
+    if (isNearStreet(tcx, tcz, streetW) || isNearBuilding(tcx, tcz)) return;
     const trashGroup = new THREE.Group();
     const bodyMat = new THREE.MeshPhongMaterial({ color: 0x444455, emissive: 0x111115, shininess: 30 });
     trashGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.35, 1.2, 6), bodyMat));
@@ -240,18 +259,18 @@ function buildTrashCans(scene, THREE, streetW, spread) {
     );
     neonRing.position.y = 0.9; neonRing.rotation.x = Math.PI / 2;
     trashGroup.add(neonRing);
-    const tcx = isNS ? side * (streetW / 2 + 2) : pos;
-    const tcz = isNS ? pos : side * (streetW / 2 + 2);
     trashGroup.position.set(tcx, 0, tcz);
     scene.add(trashGroup);
-  }
+  });
 }
 
-function buildHydrants(scene, THREE, streetW, spread) {
-  for (let i = 0; i < 4; i++) {
-    const hx = (Math.random() - 0.5) * spread;
-    const hz = (Math.random() - 0.5) * spread;
-    if (Math.abs(hx) < streetW + 1) continue;
+function buildHydrants(scene, THREE, streetW) {
+  const hydrantPositions = [
+    { x: 40, z: -40 },
+    { x: -60, z: 28 },
+  ];
+  hydrantPositions.forEach(({ x: hx, z: hz }) => {
+    if (isNearStreet(hx, hz, streetW) || isNearBuilding(hx, hz)) return;
     const hydrantGroup = new THREE.Group();
     const mat = new THREE.MeshPhongMaterial({ color: 0xcc2222, emissive: 0x330000, shininess: 40 });
     const body = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.25, 0.8, 6), mat);
@@ -262,5 +281,21 @@ function buildHydrants(scene, THREE, streetW, spread) {
     hydrantGroup.add(top);
     hydrantGroup.position.set(hx, 0, hz);
     scene.add(hydrantGroup);
+  });
+}
+
+function buildFlowers(scene, THREE, streetW, spread) {
+  const colors = [0xff61d8, 0x61ffd8, 0xffbb33, 0x00ff88, 0xd861ff];
+  for (let i = 0; i < 90; i++) {
+    let fx = (Math.random() - 0.5) * (spread - 10);
+    let fz = (Math.random() - 0.5) * (spread - 10);
+    if (isNearStreet(fx, fz, streetW) || isNearBuilding(fx, fz, 18)) continue;
+    const petal = new THREE.Mesh(
+      new THREE.CircleGeometry(0.25 + Math.random() * 0.15, 6),
+      new THREE.MeshBasicMaterial({ color: colors[Math.floor(Math.random() * colors.length)], transparent: true, opacity: 0.65 })
+    );
+    petal.rotation.x = -Math.PI / 2;
+    petal.position.set(fx, 0.03 + Math.random() * 0.02, fz);
+    scene.add(petal);
   }
 }
