@@ -7,7 +7,7 @@ import { GameStates, LEVEL_NAMES, LEVEL_WORLDS } from '../../constants/gameConst
 const STATES_MENU = [
   GameStates.MAIN_MENU,
   GameStates.TRAINING_ROOM,
-  GameStates.TUTORIAL,
+  GameStates.TUTORIAL_GAME,
   GameStates.CREDITS,
 ];
 
