@@ -27,21 +27,33 @@ function TerminalIcon() {
   );
 }
 
-function FuturisticInput({ label, sub, type, value, onChange, maxLen, error, placeholder }) {
+function FuturisticInput({ label, sub, type, value, onChange, maxLen, error, placeholder, showToggle, onToggle, inputMode }) {
+  const inputType = type === 'password' && showToggle ? 'text' : type;
   return (
     <div className="mb-5">
-      <div className="flex justify-between items-end mb-2">
+      <div className="flex items-end justify-between mb-2">
         <div className="flex items-center gap-2">
-          <span className="font-rajdhani text-sm font-semibold" style={{ color: 'var(--dark)' }}>{label}</span>
+          <span className="text-sm font-semibold font-rajdhani" style={{ color: 'var(--dark)' }}>{label}</span>
           <span className="font-sharetm text-[8px] tracking-widest" style={{ color: 'var(--bronze)' }}>{sub}</span>
         </div>
         <span className="font-sharetm text-[9px]" style={{ color: 'var(--bronze)' }}>{value.length}/{maxLen}</span>
       </div>
       <div className="relative">
-        <input type={type || 'text'} value={value} onChange={(e) => { const v = e.target.value; if (v.length <= maxLen) onChange(v); }}
-          placeholder={placeholder} maxLength={maxLen} autoComplete="off" className="futuristic-input-light w-full"
-          style={{ borderColor: error ? 'rgba(255,0,102,0.4)' : undefined }} />
-        <div className="absolute top-0 right-0 w-2 h-2 border-t border-r transition-colors"
+        <input type={inputType || 'text'} value={value} onChange={(e) => { const v = e.target.value; if (v.length <= maxLen) onChange(v); }}
+          placeholder={placeholder} maxLength={maxLen} autoComplete="off" inputMode={inputMode}
+          className="w-full futuristic-input-light" style={{ borderColor: error ? 'rgba(255,0,102,0.4)' : undefined, paddingRight: showToggle !== undefined ? 42 : undefined }} />
+        {showToggle !== undefined && (
+          <button type="button" aria-label={showToggle ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            onClick={onToggle} className="absolute -translate-y-1/2 right-3 top-1/2"
+            style={{ color: showToggle ? 'var(--neon-magenta)' : 'rgba(26,14,14,0.45)' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+              <circle cx="12" cy="12" r="3" />
+              {showToggle && <path d="M3 3l18 18" />}
+            </svg>
+          </button>
+        )}
+        <div className="absolute top-0 right-0 w-2 h-2 transition-colors border-t border-r"
           style={{ borderColor: error ? 'var(--neon-magenta)' : value.length > 0 ? 'var(--neon-magenta)' : 'transparent' }} />
       </div>
       {error && (
@@ -62,6 +74,7 @@ export default function LoginScreen() {
   const [serverOk, setServerOk] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -94,30 +107,31 @@ export default function LoginScreen() {
       <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'linear-gradient(rgba(255,0,102,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,0,102,0.012) 1px, transparent 1px)', backgroundSize: '50px 50px' }} />
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 40%, rgba(255,0,102,0.04) 0%, transparent 60%)' }} />
 
-      <div className="w-full max-w-md py-8 relative z-10">
-        <div className="text-center mb-6 animate-fade-in-down">
+      <div className="relative z-10 w-full max-w-md py-8">
+        <div className="mb-6 text-center animate-fade-in-down">
           <h1 className="font-orbitron text-3xl tracking-[0.3em] mb-2" style={{ color: 'var(--dark)' }}>OASIS</h1>
           <div className="w-24 h-[1px] mx-auto mb-3" style={{ background: 'linear-gradient(90deg, transparent, var(--neon-magenta), transparent)' }} />
-          <p className="font-rajdhani text-sm tracking-widest" style={{ color: 'var(--darker)', opacity: 0.7 }}>ACCESO AL SISTEMA</p>
+          <p className="text-sm tracking-widest font-rajdhani" style={{ color: 'var(--darker)', opacity: 0.7 }}>ACCESO AL SISTEMA</p>
         </div>
 
         <TerminalIcon />
 
-        <div className="rounded-lg p-6 animate-fade-in-up" style={{
+        <div className="p-6 rounded-lg animate-fade-in-up" style={{
           background: 'rgba(255,235,225,0.85)', border: '1px solid rgba(255,0,102,0.1)',
           boxShadow: '0 0 40px rgba(255,0,102,0.03)',
         }}>
-          <FuturisticInput label="Correo" sub="EMAIL" type="email" value={email} onChange={setEmail} maxLen={REGISTER_RULES.email.max} error={errors.email} placeholder="operaria@oasis.net" />
-          <FuturisticInput label="Contraseña" sub="PASSWORD" type="password" value={password} onChange={setPassword} maxLen={REGISTER_RULES.password.max} error={errors.password} placeholder="••••••••" />
+          <FuturisticInput label="Correo" sub="EMAIL" type="email" value={email} onChange={setEmail} maxLen={REGISTER_RULES.email.max} error={errors.email} placeholder="operaria@oasis.net" inputMode="email" />
+          <FuturisticInput label="Contraseña" sub="PASSWORD" type="password" value={password} onChange={setPassword} maxLen={REGISTER_RULES.password.max} error={errors.password} placeholder="••••••••"
+            showToggle={showPassword} onToggle={() => setShowPassword((v) => !v)} />
 
           {serverMsg && (
-            <div className="text-center py-2 px-3 rounded mb-4 font-sharetm text-xs"
+            <div className="px-3 py-2 mb-4 text-xs text-center rounded font-sharetm"
               style={{ background: serverOk ? 'rgba(0,255,136,0.06)' : 'rgba(255,0,102,0.06)', color: serverOk ? 'var(--neon-green)' : 'var(--neon-magenta)', border: `1px solid ${serverOk ? 'rgba(0,255,136,0.15)' : 'rgba(255,0,102,0.15)'}` }}>
               {serverMsg}
             </div>
           )}
 
-          <button onClick={handleSubmit} disabled={loading} className="w-full py-3 text-center mb-4 font-orbitron text-sm tracking-widest transition-all"
+          <button onClick={handleSubmit} disabled={loading} className="w-full py-3 mb-4 text-sm tracking-widest text-center transition-all font-orbitron"
             style={{ background: 'linear-gradient(135deg, rgba(255,0,102,0.1), rgba(157,0,255,0.05))', border: '1px solid rgba(255,0,102,0.3)', color: 'var(--dark)', clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))', opacity: loading ? 0.5 : 1, cursor: 'pointer' }}>
             {loading ? '⟳ PROCESANDO...' : '▶ ENTRAR'}
           </button>
@@ -126,6 +140,11 @@ export default function LoginScreen() {
             <button onClick={() => setGameState(GameStates.REGISTER)} className="font-sharetm text-[10px] tracking-widest hover:underline" style={{ color: 'var(--darker)', opacity: 0.6 }}>
               ¿No tienes cuenta? → REGÍSTRATE
             </button>
+            <div className="mt-2">
+              <button onClick={() => setGameState(GameStates.RECOVER)} className="font-sharetm text-[10px] tracking-widest hover:underline" style={{ color: 'var(--darker)', opacity: 0.6 }}>
+                ¿Olvidaste tu contraseña? → RECUPERAR
+              </button>
+            </div>
           </div>
         </div>
 
@@ -137,7 +156,7 @@ export default function LoginScreen() {
         </div>
       </div>
 
-      <div className="fixed inset-0 pointer-events-none z-20" style={{ backgroundImage: 'repeating-linear-gradient(0deg, rgba(255,0,102,0.006) 0px, rgba(255,0,102,0.006) 1px, transparent 1px, transparent 4px)' }} />
+      <div className="fixed inset-0 z-20 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(0deg, rgba(255,0,102,0.006) 0px, rgba(255,0,102,0.006) 1px, transparent 1px, transparent 4px)' }} />
     </div>
   );
 }
